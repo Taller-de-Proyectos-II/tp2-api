@@ -2,6 +2,7 @@ package com.jyellow.tp2api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import com.jyellow.tp2api.service.EmailService;
 import com.jyellow.tp2api.service.UserLoginService;
 import com.jyellow.tp2api.util.PasswordGenerator;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/login")
 public class UserLoginController {

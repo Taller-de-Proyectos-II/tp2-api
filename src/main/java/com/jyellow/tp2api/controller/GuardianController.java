@@ -2,6 +2,7 @@ package com.jyellow.tp2api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import com.jyellow.tp2api.dto.GuardianDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.service.GuardianService;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/guardian")
 public class GuardianController {

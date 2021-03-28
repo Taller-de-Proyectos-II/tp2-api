@@ -2,6 +2,7 @@ package com.jyellow.tp2api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.jyellow.tp2api.service.PsychologistService;
 import com.jyellow.tp2api.service.StudyService;
 import com.jyellow.tp2api.service.WorkExperienceService;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/psychologist")
 public class PsychologistController {
