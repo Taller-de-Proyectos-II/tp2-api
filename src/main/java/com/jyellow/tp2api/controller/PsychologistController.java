@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jyellow.tp2api.dto.ConferenceDTO;
 import com.jyellow.tp2api.dto.CourseDTO;
+import com.jyellow.tp2api.dto.ExperienceDTO;
 import com.jyellow.tp2api.dto.PsychologistDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.dto.StudyDTO;
@@ -282,6 +283,26 @@ public class PsychologistController {
 			responseDTO.setMessage("Eliminación exitosa");
 			responseDTO.setStatus(1);
 
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+	
+	@GetMapping(path = "/", produces = "application/json")
+	public ResponseEntity<?> listExperience(@RequestParam String dni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			ExperienceDTO experienceDTO = new ExperienceDTO();
+			experienceDTO.setConferences(conferenceService.listByDni(dni));
+			experienceDTO.setCourses(courseService.listByDni(dni));
+			experienceDTO.setStudies(studyService.listByDni(dni));
+			experienceDTO.setWorkExperiences(workExperienceService.listByDni(dni));
+			responseDTO.setExperienceDTO(experienceDTO);
+			responseDTO.setMessage("Experiencia profesional");
+			responseDTO.setStatus(1);
+			
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);

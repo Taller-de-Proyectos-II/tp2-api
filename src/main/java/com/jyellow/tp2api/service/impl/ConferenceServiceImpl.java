@@ -1,5 +1,8 @@
 package com.jyellow.tp2api.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +45,22 @@ public class ConferenceServiceImpl implements ConferenceService {
 	@Override
 	public void delete(int idConference) {
 		conferenceRepository.deleteById(idConference);
+	}
+
+	@Override
+	public List<ConferenceDTO> listByDni(String dni) {
+		List<Conference> conferences = conferenceRepository.findByPsychologistUserLoginDni(dni);
+		List<ConferenceDTO> conferencesDTO = new ArrayList<ConferenceDTO>();
+		ConferenceDTO conferenceDTO = new ConferenceDTO();
+		for (Conference conference : conferences) {
+			conferenceDTO.setIdConference(conference.getIdConference());
+			conferenceDTO.setName(conference.getName());
+			conferenceDTO.setDescription(conference.getDescription());
+			conferenceDTO.setPlace(conference.getPlace());
+			conferenceDTO.setPsychologistDni(dni);
+			conferencesDTO.add(conferenceDTO);
+		}
+		return conferencesDTO;
 	}
 
 }

@@ -3,19 +3,12 @@ package com.jyellow.tp2api.dto;
 public class PsychologistDTO {
 
 	private String names;
-
 	private String lastNames;
-
 	private String phone;
-
 	private String email;
-
 	private String description;
-
 	private String birthday;
-	
 	private String cpsp;
-	
 	private UserLoginDTO userLoginDTO;
 
 	public PsychologistDTO() {

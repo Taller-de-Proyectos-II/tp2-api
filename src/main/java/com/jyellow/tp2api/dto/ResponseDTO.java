@@ -12,6 +12,7 @@ public class ResponseDTO {
 	private PsychologistDTO psychologistDTO;
 	private PatientDTO patientDTO;
 	private List<PatientDTO> patientsDTO;
+	private ExperienceDTO experienceDTO;
 
 	public ResponseDTO() {
 		super();
@@ -71,4 +72,11 @@ public class ResponseDTO {
 		this.patientsDTO = patientsDTO;
 	}
 
+	public ExperienceDTO getExperienceDTO() {
+		return experienceDTO;
+	}
+
+	public void setExperienceDTO(ExperienceDTO experienceDTO) {
+		this.experienceDTO = experienceDTO;
+	}
 }

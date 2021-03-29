@@ -3,21 +3,13 @@ package com.jyellow.tp2api.dto;
 public class WorkExperienceDTO {
 
 	private int idWorkExperience;
-	
 	private String place;
-	
 	private String occupation;
-	
 	private String description;
-	
 	private String workingDayType;
-
 	private String startDate;
-	
 	private String endDate;
-	
 	private boolean isCurrent;
-	
 	private String psychologistDni;
 
 	public WorkExperienceDTO() {

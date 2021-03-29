@@ -1,5 +1,8 @@
 package com.jyellow.tp2api.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +44,21 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public void delete(int idCourse) {
 		courseRepository.deleteById(idCourse);
+	}
+
+	@Override
+	public List<CourseDTO> listByDni(String dni) {
+		List<Course> courses = courseRepository.findByPsychologistUserLoginDni(dni);
+		List<CourseDTO> coursesDTO = new ArrayList<CourseDTO>();
+		CourseDTO courseDTO = new CourseDTO();
+		for(Course course: courses) {
+			courseDTO.setIdCourse(course.getIdCourse());
+			courseDTO.setDescription(course.getDescription());
+			courseDTO.setName(course.getName());
+			courseDTO.setStudyCenter(course.getStudyCenter());
+			courseDTO.setPsychologistDni(dni);
+			coursesDTO.add(courseDTO);
+		}
+		return coursesDTO;
 	}
 }
