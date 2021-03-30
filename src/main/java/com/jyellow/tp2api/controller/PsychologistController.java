@@ -289,7 +289,7 @@ public class PsychologistController {
 		return ResponseEntity.ok(responseDTO);
 	}
 	
-	@GetMapping(path = "/", produces = "application/json")
+	@GetMapping(path = "/experience/", produces = "application/json")
 	public ResponseEntity<?> listExperience(@RequestParam String dni) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
