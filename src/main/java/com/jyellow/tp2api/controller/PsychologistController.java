@@ -19,7 +19,6 @@ import com.jyellow.tp2api.dto.PsychologistDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.dto.StudyDTO;
 import com.jyellow.tp2api.dto.WorkExperienceDTO;
-import com.jyellow.tp2api.model.WorkExperience;
 import com.jyellow.tp2api.service.ConferenceService;
 import com.jyellow.tp2api.service.CourseService;
 import com.jyellow.tp2api.service.PsychologistService;
