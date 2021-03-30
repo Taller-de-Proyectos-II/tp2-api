@@ -53,6 +53,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 		List<ConferenceDTO> conferencesDTO = new ArrayList<ConferenceDTO>();
 		ConferenceDTO conferenceDTO = new ConferenceDTO();
 		for (Conference conference : conferences) {
+			conferenceDTO = new ConferenceDTO();
 			conferenceDTO.setIdConference(conference.getIdConference());
 			conferenceDTO.setName(conference.getName());
 			conferenceDTO.setDescription(conference.getDescription());

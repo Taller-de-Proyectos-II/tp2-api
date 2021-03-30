@@ -52,6 +52,7 @@ public class CourseServiceImpl implements CourseService {
 		List<CourseDTO> coursesDTO = new ArrayList<CourseDTO>();
 		CourseDTO courseDTO = new CourseDTO();
 		for(Course course: courses) {
+			courseDTO = new CourseDTO();
 			courseDTO.setIdCourse(course.getIdCourse());
 			courseDTO.setDescription(course.getDescription());
 			courseDTO.setName(course.getName());

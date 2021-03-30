@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jyellow.tp2api.dto.ConferenceDTO;
 import com.jyellow.tp2api.dto.WorkExperienceDTO;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.WorkExperience;
@@ -60,6 +61,7 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
 		List<WorkExperienceDTO> workExperiencesDTO = new ArrayList<WorkExperienceDTO>();
 		WorkExperienceDTO workExperienceDTO = new WorkExperienceDTO();
 		for(WorkExperience workExperience: workExperiences) {
+			workExperienceDTO = new WorkExperienceDTO();
 			workExperienceDTO.setIdWorkExperience(workExperience.getIdWorkExperience());
 			workExperienceDTO.setPlace(workExperience.getPlace());
 			workExperienceDTO.setOccupation(workExperience.getOccupation());

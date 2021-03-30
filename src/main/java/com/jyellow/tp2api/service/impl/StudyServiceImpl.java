@@ -60,6 +60,7 @@ public class StudyServiceImpl implements StudyService {
 		List<StudyDTO> studiesDTO = new ArrayList<StudyDTO>();
 		StudyDTO studyDTO = new StudyDTO();
 		for (Study study : studies) {
+			studyDTO = new StudyDTO();
 			studyDTO.setIdStudy(study.getIdStudy());
 			studyDTO.setAcademicDiscipline(study.getAcademicDiscipline());
 			studyDTO.setTitle(study.getTitle());
