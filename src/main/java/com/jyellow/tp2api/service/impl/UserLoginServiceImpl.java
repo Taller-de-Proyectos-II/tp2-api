@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jyellow.tp2api.model.Guardian;
+import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.UserLogin;
-import com.jyellow.tp2api.repository.GuardianRepository;
+import com.jyellow.tp2api.repository.PatientRepository;
 import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.repository.UserLoginRepository;
 import com.jyellow.tp2api.service.UserLoginService;
@@ -19,7 +19,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 	UserLoginRepository userLoginRepository;
 
 	@Autowired
-	GuardianRepository guardianRepository;
+	PatientRepository patientRepository;
 
 	@Autowired
 	PsychologistRepository psychologistRepository;
@@ -48,9 +48,9 @@ public class UserLoginServiceImpl implements UserLoginService {
 	}
 
 	@Override
-	public boolean existEmailGuardian(String email) {
-		Guardian guardian = guardianRepository.findByEmail(email);
-		if (guardian == null)
+	public boolean existEmailPatient(String email) {
+		Patient patient = patientRepository.findByEmail(email);
+		if (patient == null)
 			return false;
 		else {
 			return true;
@@ -59,10 +59,10 @@ public class UserLoginServiceImpl implements UserLoginService {
 
 	@Transactional
 	@Override
-	public void changePasswordGuardian(String email, String password) {
-		Guardian guardian = guardianRepository.findByEmail(email);
-		guardian.getUserLogin().setPassword(password);
-		guardianRepository.save(guardian);
+	public void changePasswordPatient(String email, String password) {
+		Patient patient = patientRepository.findByEmail(email);
+		patient.getUserLogin().setPassword(password);
+		patientRepository.save(patient);
 	}
 
 	@Transactional
@@ -72,5 +72,5 @@ public class UserLoginServiceImpl implements UserLoginService {
 		psychologist.getUserLogin().setPassword(password);
 		psychologistRepository.save(psychologist);
 	}
-	
+
 }

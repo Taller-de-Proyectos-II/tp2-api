@@ -1,5 +1,7 @@
 package com.jyellow.tp2api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,7 +29,7 @@ public class GuardianController {
 	public ResponseEntity<?> create(@RequestBody GuardianDTO guardianDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			int result = guardianService.create(guardianDTO, guardianDTO.getUserLoginDTO());
+			int result = guardianService.create(guardianDTO);
 			if(result == -1) {
 				responseDTO.setMessage("Email ya registrado");
 				responseDTO.setStatus(0);
@@ -50,7 +52,7 @@ public class GuardianController {
 	public ResponseEntity<?> update(@RequestBody GuardianDTO guardianDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			int result = guardianService.update(guardianDTO, guardianDTO.getUserLoginDTO());
+			int result = guardianService.update(guardianDTO);
 			if(result == -1) {
 				responseDTO.setMessage("Email ya registrado");
 				responseDTO.setStatus(0);
@@ -66,14 +68,29 @@ public class GuardianController {
 		return ResponseEntity.ok(responseDTO);
 	}
 	
-	@GetMapping(path = "/", produces = "application/json")
-	public ResponseEntity<?> listByDni(@RequestParam String dni) {
+	@GetMapping(path = "/listByDniAndPatientDni/", produces = "application/json")
+	public ResponseEntity<?> listByDniAndPatientDni(@RequestParam String dni, @RequestParam String patientDni) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			GuardianDTO guardianDTO = guardianService.listByDni(dni);
+			GuardianDTO guardianDTO = guardianService.listByDniAndPatientDni(dni, patientDni);
 			responseDTO.setMessage("Apoderado");
 			responseDTO.setStatus(1);
 			responseDTO.setGuardianDTO(guardianDTO);
+		} catch(Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+	
+	@GetMapping(path = "/listByPatientDni/", produces = "application/json")
+	public ResponseEntity<?> listByPatientDni(@RequestParam String dni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<GuardianDTO> guardiansDTO = guardianService.listByPatientDni(dni);
+			responseDTO.setMessage("Apoderados");
+			responseDTO.setStatus(1);
+			responseDTO.setGuardiansDTO(guardiansDTO);
 		} catch(Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);

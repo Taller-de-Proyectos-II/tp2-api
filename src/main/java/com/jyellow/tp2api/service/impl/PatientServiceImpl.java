@@ -9,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jyellow.tp2api.dto.PatientDTO;
-import com.jyellow.tp2api.model.Guardian;
+import com.jyellow.tp2api.dto.UserLoginDTO;
 import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.model.Psychologist;
+import com.jyellow.tp2api.model.UserLogin;
 import com.jyellow.tp2api.repository.GuardianRepository;
 import com.jyellow.tp2api.repository.PatientRepository;
 import com.jyellow.tp2api.repository.PsychologistRepository;
@@ -31,14 +32,14 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Patient validatePatientByDni(String dni) {
-		return patientRepository.findByDni(dni);
+		return patientRepository.findByUserLoginDni(dni);
 	}
 
 	@Transactional
 	@Override
 	public int create(PatientDTO patientDTO) {
 		// Comprobar si el dni está registrado con otra cuenta
-		Patient patientExist = patientRepository.findByDni(patientDTO.getDni());
+		Patient patientExist = patientRepository.findByUserLoginDni(patientDTO.getUserLoginDTO().getDni());
 		if (patientExist != null)
 			return -1;
 
@@ -47,18 +48,21 @@ public class PatientServiceImpl implements PatientService {
 		if (patientExist != null)
 			return -2;
 
+		UserLogin userLogin = new UserLogin();
+		userLogin.setDni(patientDTO.getUserLoginDTO().getDni());
+		userLogin.setPassword(patientDTO.getUserLoginDTO().getPassword());
+
 		Patient patient = new Patient();
 		patient.setBirthday(patientDTO.getBirthday());
 		patient.setDescription(patientDTO.getDescription());
-		patient.setDni(patientDTO.getDni());
 		patient.setEmail(patientDTO.getEmail());
 		patient.setLastNames(patientDTO.getLastNames());
 		patient.setNames(patientDTO.getNames());
 		patient.setPhone(patientDTO.getPhone());
-		Guardian guardian = guardianRepository.findByUserLoginDni(patientDTO.getGuardianDni());
-		patient.setGuardian(guardian);
+
+		patient.setUserLogin(userLogin);
 		patientRepository.save(patient);
-		
+
 		return 1;
 	}
 
@@ -67,13 +71,12 @@ public class PatientServiceImpl implements PatientService {
 	public int update(PatientDTO patientDTO) {
 		// Comprobar si el email está registrado con otra cuenta
 		Patient patientExist = patientRepository.findByEmail(patientDTO.getEmail());
-		if (patientExist != null && !patientExist.getDni().equals(patientDTO.getDni()))
+		if (patientExist != null && !patientExist.getUserLogin().getDni().equals(patientDTO.getUserLoginDTO().getDni()))
 			return -1;
 
-		Patient patient = patientRepository.findByDni(patientDTO.getDni());
+		Patient patient = patientRepository.findByUserLoginDni(patientDTO.getUserLoginDTO().getDni());
 		patient.setBirthday(patientDTO.getBirthday());
 		patient.setDescription(patientDTO.getDescription());
-		patient.setDni(patientDTO.getDni());
 		patient.setEmail(patientDTO.getEmail());
 		patient.setLastNames(patientDTO.getLastNames());
 		patient.setNames(patientDTO.getNames());
@@ -84,14 +87,15 @@ public class PatientServiceImpl implements PatientService {
 
 	@Transactional
 	@Override
-	public boolean assign(String patientDni, String psychologistDni) {
-		Patient patient = patientRepository.findByDni(patientDni);
+	public boolean assignToPsychologist(String patientDni, String psychologistDni) {
+		Patient patient = patientRepository.findByUserLoginDni(patientDni);
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(psychologistDni);
-		
+		Patient patientExist = patientRepository.findByUserLoginDniAndPsychologistUserLoginDni(patientDni, psychologistDni);
+
 		// Comprobar si el paciente ya está asignado
-		if (patient.getPsychologist().getUserLogin().getDni().equals(psychologistDni))
+		if (patientExist != null)
 			return false;
-		
+
 		patient.setPsychologist(psychologist);
 		patientRepository.save(patient);
 		return true;
@@ -99,16 +103,15 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public PatientDTO listByDni(String dni) {
-		Patient patient = patientRepository.findByDni(dni);
+		Patient patient = patientRepository.findByUserLoginDni(dni);
 		PatientDTO patientDTO = new PatientDTO();
 		patientDTO.setBirthday(patient.getBirthday());
 		patientDTO.setDescription(patient.getDescription());
-		patientDTO.setDni(patient.getDni());
 		patientDTO.setEmail(patient.getEmail());
-		patientDTO.setGuardianDni(patient.getGuardian().getUserLogin().getDni());
 		patientDTO.setLastNames(patient.getLastNames());
 		patientDTO.setNames(patient.getNames());
 		patientDTO.setPhone(patient.getPhone());
+		patientDTO.setUserLoginDTO(new UserLoginDTO(patient.getUserLogin().getDni(), ""));
 		return patientDTO;
 	}
 
@@ -121,32 +124,11 @@ public class PatientServiceImpl implements PatientService {
 			patientDTO = new PatientDTO();
 			patientDTO.setBirthday(patient.getBirthday());
 			patientDTO.setDescription(patient.getDescription());
-			patientDTO.setDni(patient.getDni());
 			patientDTO.setEmail(patient.getEmail());
-			patientDTO.setGuardianDni(patient.getGuardian().getUserLogin().getDni());
 			patientDTO.setLastNames(patient.getLastNames());
 			patientDTO.setNames(patient.getNames());
 			patientDTO.setPhone(patient.getPhone());
-			patientsDTO.add(patientDTO);
-		}
-		return patientsDTO;
-	}
-
-	@Override
-	public List<PatientDTO> listByGuardianDni(String guardianDni) {
-		List<Patient> patients = patientRepository.findByGuardianUserLoginDni(guardianDni);
-		List<PatientDTO> patientsDTO = new ArrayList<PatientDTO>();
-		PatientDTO patientDTO = new PatientDTO();
-		for (Patient patient : patients) {
-			patientDTO = new PatientDTO();
-			patientDTO.setBirthday(patient.getBirthday());
-			patientDTO.setDescription(patient.getDescription());
-			patientDTO.setDni(patient.getDni());
-			patientDTO.setEmail(patient.getEmail());
-			patientDTO.setGuardianDni(patient.getGuardian().getUserLogin().getDni());
-			patientDTO.setLastNames(patient.getLastNames());
-			patientDTO.setNames(patient.getNames());
-			patientDTO.setPhone(patient.getPhone());
+			patientDTO.setUserLoginDTO(new UserLoginDTO(patient.getUserLogin().getDni(), ""));
 			patientsDTO.add(patientDTO);
 		}
 		return patientsDTO;

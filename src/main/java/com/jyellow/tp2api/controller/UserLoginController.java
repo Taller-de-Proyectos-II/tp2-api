@@ -58,11 +58,9 @@ public class UserLoginController {
 				responseDTO.setStatus(0);
 			} else {
 				String newPassword = PasswordGenerator.getPassword(
-						PasswordGenerator.LOWERCASE + PasswordGenerator.UPPERCASE + PasswordGenerator.SPECIAL,
-						10);
+						PasswordGenerator.LOWERCASE + PasswordGenerator.UPPERCASE + PasswordGenerator.SPECIAL, 10);
 				userLoginService.changePasswordPsychologist(emailDTO.getEmail(), newPassword);
-				emailService.sendEmail(emailDTO.getEmail(),
-						"Su nueva contraseña es: " + newPassword);
+				emailService.sendEmail(emailDTO.getEmail(), "Su nueva contraseña es: " + newPassword);
 				responseDTO.setMessage("Email enviado");
 				responseDTO.setStatus(1);
 			}
@@ -72,22 +70,20 @@ public class UserLoginController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
-	@PostMapping(path = "/restorePasswordGuardian/", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<?> restorePasswordGuardian(@RequestBody EmailDTO emailDTO) {
+
+	@PostMapping(path = "/restorePasswordPatient/", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> restorePasswordPatient(@RequestBody EmailDTO emailDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			boolean existEmail = userLoginService.existEmailGuardian(emailDTO.getEmail());
+			boolean existEmail = userLoginService.existEmailPatient(emailDTO.getEmail());
 			if (existEmail == false) {
 				responseDTO.setMessage("Email no registrado");
 				responseDTO.setStatus(0);
 			} else {
 				String newPassword = PasswordGenerator.getPassword(
-						PasswordGenerator.LOWERCASE + PasswordGenerator.UPPERCASE + PasswordGenerator.SPECIAL,
-						10);
-				userLoginService.changePasswordGuardian(emailDTO.getEmail(), newPassword);
-				emailService.sendEmail(emailDTO.getEmail(),
-						"Su nueva contraseña es: " + newPassword);
+						PasswordGenerator.LOWERCASE + PasswordGenerator.UPPERCASE + PasswordGenerator.SPECIAL, 10);
+				userLoginService.changePasswordPatient(emailDTO.getEmail(), newPassword);
+				emailService.sendEmail(emailDTO.getEmail(), "Su nueva contraseña es: " + newPassword);
 				responseDTO.setMessage("Email enviado");
 				responseDTO.setStatus(1);
 			}

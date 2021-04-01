@@ -1,5 +1,8 @@
 package com.jyellow.tp2api.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -17,14 +22,17 @@ public class Patient {
 	@Column(name = "idPatient")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int idPatient;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idUser", referencedColumnName = "idUser")
+	private UserLogin userLogin;
 
 	@ManyToOne
 	@JoinColumn(name = "idPsychologist", nullable = true)
 	private Psychologist psychologist;
 
-	@ManyToOne
-	@JoinColumn(name = "idGuardian", nullable = false)
-	private Guardian guardian;
+	@OneToMany(mappedBy = "patient")
+	List<Guardian> guardians;
 
 	@Column(name = "names", length = 30)
 	private String names;
@@ -44,26 +52,23 @@ public class Patient {
 	@Column(name = "birthday", length = 10)
 	private String birthday;
 
-	@Column(name = "dni", length = 20)
-	private String dni;
-
 	public Patient() {
 		super();
 	}
 
-	public Patient(int idPatient, Psychologist psychologist, Guardian guardian, String names, String lastNames,
-			String phone, String email, String description, String birthday, String dni) {
+	public Patient(int idPatient, UserLogin userLogin, Psychologist psychologist, List<Guardian> guardians,
+			String names, String lastNames, String phone, String email, String description, String birthday) {
 		super();
 		this.idPatient = idPatient;
+		this.userLogin = userLogin;
 		this.psychologist = psychologist;
-		this.guardian = guardian;
+		this.guardians = guardians;
 		this.names = names;
 		this.lastNames = lastNames;
 		this.phone = phone;
 		this.email = email;
 		this.description = description;
 		this.birthday = birthday;
-		this.dni = dni;
 	}
 
 	public int getIdPatient() {
@@ -74,6 +79,14 @@ public class Patient {
 		this.idPatient = idPatient;
 	}
 
+	public UserLogin getUserLogin() {
+		return userLogin;
+	}
+
+	public void setUserLogin(UserLogin userLogin) {
+		this.userLogin = userLogin;
+	}
+
 	public Psychologist getPsychologist() {
 		return psychologist;
 	}
@@ -82,12 +95,12 @@ public class Patient {
 		this.psychologist = psychologist;
 	}
 
-	public Guardian getGuardian() {
-		return guardian;
+	public List<Guardian> getGuardians() {
+		return guardians;
 	}
 
-	public void setGuardian(Guardian guardian) {
-		this.guardian = guardian;
+	public void setGuardians(List<Guardian> guardians) {
+		this.guardians = guardians;
 	}
 
 	public String getNames() {
@@ -136,14 +149,6 @@ public class Patient {
 
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
-	}
-
-	public String getDni() {
-		return dni;
-	}
-
-	public void setDni(String dni) {
-		this.dni = dni;
 	}
 
 }

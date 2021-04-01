@@ -3,23 +3,14 @@ package com.jyellow.tp2api.dto;
 public class PatientDTO {
 
 	private String names;
-
 	private String lastNames;
-
 	private String phone;
-
 	private String email;
-
 	private String description;
-
 	private String birthday;
+	private UserLoginDTO userLoginDTO;
 
-	private String dni;
-	
-	private String guardianDni;
-
-	public PatientDTO(String names, String lastNames, String phone, String email, String description, String birthday,
-			String dni, String guardianDni) {
+	public PatientDTO(String names, String lastNames, String phone, String email, String description, String birthday) {
 		super();
 		this.names = names;
 		this.lastNames = lastNames;
@@ -27,8 +18,6 @@ public class PatientDTO {
 		this.email = email;
 		this.description = description;
 		this.birthday = birthday;
-		this.dni = dni;
-		this.guardianDni = guardianDni;
 	}
 
 	public PatientDTO() {
@@ -83,20 +72,12 @@ public class PatientDTO {
 		this.birthday = birthday;
 	}
 
-	public String getDni() {
-		return dni;
+	public UserLoginDTO getUserLoginDTO() {
+		return userLoginDTO;
 	}
 
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
-
-	public String getGuardianDni() {
-		return guardianDni;
-	}
-
-	public void setGuardianDni(String guardianDni) {
-		this.guardianDni = guardianDni;
+	public void setUserLoginDTO(UserLoginDTO userLoginDTO) {
+		this.userLoginDTO = userLoginDTO;
 	}
 	
 }

@@ -24,7 +24,7 @@ public class UserLogin {
 	private String password;
 
 	@OneToOne(mappedBy = "userLogin")
-	private Guardian guardian;
+	private Patient patient;
 
 	@OneToOne(mappedBy = "userLogin")
 	private Psychologist psychologist;
@@ -64,20 +64,20 @@ public class UserLogin {
 		this.password = password;
 	}
 
-	public Guardian getGuardian() {
-		return guardian;
-	}
-
-	public void setGuardian(Guardian guardian) {
-		this.guardian = guardian;
-	}
-
 	public Psychologist getPsychologist() {
 		return psychologist;
 	}
 
 	public void setPsychologist(Psychologist psychologist) {
 		this.psychologist = psychologist;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
 }

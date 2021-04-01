@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jyellow.tp2api.dto.ConferenceDTO;
 import com.jyellow.tp2api.dto.WorkExperienceDTO;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.WorkExperience;

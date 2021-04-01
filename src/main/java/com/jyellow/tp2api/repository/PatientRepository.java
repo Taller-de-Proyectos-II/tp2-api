@@ -9,8 +9,8 @@ import com.jyellow.tp2api.model.Patient;
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
-	Patient findByDni(String dni);
+	Patient findByUserLoginDni(String dni);
 	Patient findByEmail(String email);
+	Patient findByUserLoginDniAndPsychologistUserLoginDni(String dni, String psychologistDni);
 	List<Patient> findByPsychologistUserLoginDni(String dni);
-	List<Patient> findByGuardianUserLoginDni(String dni);
 }

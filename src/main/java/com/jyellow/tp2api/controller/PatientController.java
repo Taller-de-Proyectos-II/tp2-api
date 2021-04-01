@@ -52,30 +52,35 @@ public class PatientController {
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody PatientDTO patientDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
-
-		int result = patientService.update(patientDTO);
-		if (result == -1) {
-			responseDTO.setMessage("Email ya registrado");
+		try {
+			int result = patientService.update(patientDTO);
+			if (result == -1) {
+				responseDTO.setMessage("Email ya registrado");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Actualización exitosa");
+				responseDTO.setStatus(1);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);
-		} else {
-			responseDTO.setMessage("Actualización exitosa");
-			responseDTO.setStatus(1);
 		}
 
 		return ResponseEntity.ok(responseDTO);
 	}
 
-	@GetMapping(path = "/validate/", produces = "application/json")
+	@GetMapping(path = "/listByDni/", produces = "application/json")
 	public ResponseEntity<?> listByDni(@RequestParam String dni) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			Patient patient = patientService.validatePatientByDni(dni);
-			if (patient == null) {
-				responseDTO.setMessage("Validación exitosa");
-				responseDTO.setStatus(1);
-			} else {
-				responseDTO.setMessage("Paciente ya registrado");
+			PatientDTO patientDTO = patientService.listByDni(dni);
+			if (patientDTO == null) {
+				responseDTO.setMessage("No se encontró paciente");
 				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Paciente");
+				responseDTO.setStatus(1);
+				responseDTO.setPatientDTO(patientDTO);
 			}
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
@@ -104,31 +109,12 @@ public class PatientController {
 		return ResponseEntity.ok(responseDTO);
 	}
 
-	@GetMapping(path = "/listByGuardianDni/", produces = "application/json")
-	public ResponseEntity<?> listByGuardianDni(@RequestParam String guardianDni) {
+	@GetMapping(path = "/assignToPsychologist/", produces = "application/json")
+	public ResponseEntity<?> assignToPsychologist(@RequestParam String patientDni,
+			@RequestParam String psychologistDni) {
 		ResponseDTO responseDTO = new ResponseDTO();
-		try {
-			List<PatientDTO> patientsDTO = patientService.listByGuardianDni(guardianDni);
-			if (patientsDTO == null || patientsDTO.size() == 0) {
-				responseDTO.setMessage("No existen pacientes");
-				responseDTO.setStatus(0);
-			} else {
-				responseDTO.setPatientsDTO(patientsDTO);
-				responseDTO.setMessage("Pacientes");
-				responseDTO.setStatus(1);
-			}
-		} catch (Exception e) {
-			responseDTO.setMessage("Error");
-			responseDTO.setStatus(0);
-		}
-		return ResponseEntity.ok(responseDTO);
-	}
-
-	@GetMapping(path = "/assign/", produces = "application/json")
-	public ResponseEntity<?> listByGuardianDni(@RequestParam String patientDni, @RequestParam String psychologistDni) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		try {
-			boolean result = patientService.assign(patientDni, psychologistDni);
+	
+			boolean result = patientService.assignToPsychologist(patientDni, psychologistDni);
 			if (result == true) {
 				responseDTO.setMessage("Asignación exitosa");
 				responseDTO.setStatus(1);
@@ -136,10 +122,7 @@ public class PatientController {
 				responseDTO.setMessage("Paciente ya asignado");
 				responseDTO.setStatus(0);
 			}
-		} catch (Exception e) {
-			responseDTO.setMessage("Error");
-			responseDTO.setStatus(0);
-		}
+
 		return ResponseEntity.ok(responseDTO);
 	}
 }

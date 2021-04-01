@@ -9,8 +9,7 @@ public interface PatientService {
 	Patient validatePatientByDni(String dni);
 	int create(PatientDTO patientDTO);
 	int update(PatientDTO patientDTO);
-	boolean assign(String patientDni, String psychologistDni);
+	boolean assignToPsychologist(String patientDni, String psychologistDni);
 	PatientDTO listByDni(String dni);
 	List<PatientDTO> listByPsychologistDni(String psychologistDni);
-	List<PatientDTO> listByGuardianDni(String guardianDni);
 }

@@ -1,16 +1,12 @@
 package com.jyellow.tp2api.model;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -36,20 +32,21 @@ public class Guardian {
 
 	@Column(name = "birthday", length = 10)
 	private String birthday;
+	
+	@Column(name = "dni", length = 8)
+	private String dni;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "idUser", referencedColumnName = "idUser")
-	private UserLogin userLogin;
-
-	@OneToMany(mappedBy = "guardian")
-	List<Patient> patients;
+	@ManyToOne
+	@JoinColumn(name = "idPatient", nullable = false)
+	private Patient patient;
 
 	public Guardian() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public Guardian(int idGuardian, String names, String lastNames, String phone, String email, String birthday,
-			UserLogin userLogin, List<Patient> patients) {
+			String dni, Patient patient) {
 		super();
 		this.idGuardian = idGuardian;
 		this.names = names;
@@ -57,8 +54,8 @@ public class Guardian {
 		this.phone = phone;
 		this.email = email;
 		this.birthday = birthday;
-		this.userLogin = userLogin;
-		this.patients = patients;
+		this.dni = dni;
+		this.patient = patient;
 	}
 
 	public int getIdGuardian() {
@@ -101,14 +98,6 @@ public class Guardian {
 		this.email = email;
 	}
 
-	public UserLogin getUserLogin() {
-		return userLogin;
-	}
-
-	public void setUserLogin(UserLogin userLogin) {
-		this.userLogin = userLogin;
-	}
-
 	public String getBirthday() {
 		return birthday;
 	}
@@ -117,12 +106,20 @@ public class Guardian {
 		this.birthday = birthday;
 	}
 
-	public List<Patient> getPatients() {
-		return patients;
+	public String getDni() {
+		return dni;
 	}
 
-	public void setPatients(List<Patient> patients) {
-		this.patients = patients;
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
 }
