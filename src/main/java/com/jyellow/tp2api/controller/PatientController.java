@@ -113,7 +113,7 @@ public class PatientController {
 	public ResponseEntity<?> assignToPsychologist(@RequestParam String patientDni,
 			@RequestParam String psychologistDni) {
 		ResponseDTO responseDTO = new ResponseDTO();
-	
+		try {
 			boolean result = patientService.assignToPsychologist(patientDni, psychologistDni);
 			if (result == true) {
 				responseDTO.setMessage("Asignación exitosa");
@@ -122,7 +122,29 @@ public class PatientController {
 				responseDTO.setMessage("Paciente ya asignado");
 				responseDTO.setStatus(0);
 			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
 
+	@GetMapping(path = "/removePsychologist/", produces = "application/json")
+	public ResponseEntity<?> removePsychologist(@RequestParam String patientDni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			boolean result = patientService.removePsychologist(patientDni);
+			if (result == true) {
+				responseDTO.setMessage("Eliminación de la asignación exitosa");
+				responseDTO.setStatus(1);
+			} else {
+				responseDTO.setMessage("Error");
+				responseDTO.setStatus(0);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
 		return ResponseEntity.ok(responseDTO);
 	}
 }

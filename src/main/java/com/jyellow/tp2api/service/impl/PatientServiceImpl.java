@@ -134,4 +134,12 @@ public class PatientServiceImpl implements PatientService {
 		return patientsDTO;
 	}
 
+	@Override
+	public boolean removePsychologist(String patientDni) {
+		Patient patient = patientRepository.findByUserLoginDni(patientDni);
+		patient.setPsychologist(null);
+		patientRepository.save(patient);
+		return true;
+	}
+
 }
