@@ -51,6 +51,10 @@ public class Patient {
 
 	@Column(name = "birthday", length = 10)
 	private String birthday;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idImage", referencedColumnName = "idImage")
+	private Image image;
 
 	public Patient() {
 		super();
@@ -151,4 +155,12 @@ public class Patient {
 		this.birthday = birthday;
 	}
 
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+	
 }

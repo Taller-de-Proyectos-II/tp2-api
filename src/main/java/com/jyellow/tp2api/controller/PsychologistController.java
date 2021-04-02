@@ -1,6 +1,8 @@
 package com.jyellow.tp2api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jyellow.tp2api.dto.ConferenceDTO;
 import com.jyellow.tp2api.dto.CourseDTO;
@@ -138,7 +141,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@DeleteMapping(path = "/conferences/", produces = "application/json")
 	public ResponseEntity<?> deleteConference(@RequestParam int idConference) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -153,7 +156,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@PostMapping(path = "/courses/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> createCourse(@RequestBody CourseDTO courseDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -183,7 +186,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@DeleteMapping(path = "/courses/", produces = "application/json")
 	public ResponseEntity<?> deleteCouse(@RequestParam int idCourse) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -198,7 +201,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@PostMapping(path = "/studies/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> createStudy(@RequestBody StudyDTO studyDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -228,7 +231,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@DeleteMapping(path = "/studies/", produces = "application/json")
 	public ResponseEntity<?> deleteStudy(@RequestParam int idStudy) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -243,7 +246,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@PostMapping(path = "/workExperience/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> createWorkExperience(@RequestBody WorkExperienceDTO workExperienceDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -273,7 +276,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@DeleteMapping(path = "/workExperience/", produces = "application/json")
 	public ResponseEntity<?> deleteWorkExperience(@RequestParam int idWorkExperience) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -288,7 +291,7 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@GetMapping(path = "/experience/", produces = "application/json")
 	public ResponseEntity<?> listExperience(@RequestParam String dni) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -301,11 +304,31 @@ public class PsychologistController {
 			responseDTO.setExperienceDTO(experienceDTO);
 			responseDTO.setMessage("Experiencia profesional");
 			responseDTO.setStatus(1);
-			
+
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);
 		}
 		return ResponseEntity.ok(responseDTO);
+	}
+ 
+	@PostMapping(path = "/image/")
+	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni) throws Exception {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			this.psychologistService.uploadImage(multipartImage, dni);
+			responseDTO.setMessage("Imagen actualizada");
+			responseDTO.setStatus(1);
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(value = "/image/", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ByteArrayResource getImage(@RequestParam String dni) {
+		ByteArrayResource image = psychologistService.getImage(dni);
+		return image;
 	}
 }

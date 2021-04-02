@@ -1,5 +1,6 @@
 package com.jyellow.tp2api.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -39,6 +41,10 @@ public class Guardian {
 	@ManyToOne
 	@JoinColumn(name = "idPatient", nullable = false)
 	private Patient patient;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idImage", referencedColumnName = "idImage")
+	private Image image;
 
 	public Guardian() {
 		super();
@@ -120,6 +126,14 @@ public class Guardian {
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
 	}
 
 }

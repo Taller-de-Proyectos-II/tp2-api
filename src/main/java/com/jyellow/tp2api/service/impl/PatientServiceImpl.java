@@ -6,10 +6,13 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jyellow.tp2api.dto.PatientDTO;
 import com.jyellow.tp2api.dto.UserLoginDTO;
+import com.jyellow.tp2api.model.Image;
 import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.UserLogin;
@@ -142,4 +145,27 @@ public class PatientServiceImpl implements PatientService {
 		return true;
 	}
 
+	@Transactional
+	@Override
+	public void uploadImage(MultipartFile multipartImage, String dni) throws Exception {
+		Image image = new Image();
+		try {
+			image.setName(multipartImage.getName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		image.setContent(multipartImage.getBytes());
+
+		Patient patient = patientRepository.findByUserLoginDni(dni);
+		patient.setImage(image);
+		patientRepository.save(patient);
+	}
+
+	@Transactional
+	@Override
+	public ByteArrayResource getImage(String dni) {
+		byte[] image = patientRepository.findByUserLoginDni(dni).getImage().getContent();
+		return new ByteArrayResource(image);
+	}
 }

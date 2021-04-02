@@ -46,6 +46,10 @@ public class Psychologist {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "idUser", referencedColumnName = "idUser")
 	private UserLogin userLogin;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idImage", referencedColumnName = "idImage")
+	private Image image;
 
 	@OneToMany(mappedBy = "psychologist")
 	List<Study> studies;
@@ -197,6 +201,14 @@ public class Psychologist {
 
 	public void setPatients(List<Patient> patients) {
 		this.patients = patients;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
 	}
 
 }

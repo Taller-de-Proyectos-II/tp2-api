@@ -3,6 +3,8 @@ package com.jyellow.tp2api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jyellow.tp2api.dto.PatientDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
-import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.service.PatientService;
 
 @CrossOrigin
@@ -146,5 +148,25 @@ public class PatientController {
 			responseDTO.setStatus(0);
 		}
 		return ResponseEntity.ok(responseDTO);
+	}
+	
+	@PostMapping(path = "/image/")
+	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni) throws Exception {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			this.patientService.uploadImage(multipartImage, dni);
+			responseDTO.setMessage("Imagen actualizada");
+			responseDTO.setStatus(1);
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(value = "/image/", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ByteArrayResource getImage(@RequestParam String dni) {
+		ByteArrayResource image = patientService.getImage(dni);
+		return image;
 	}
 }

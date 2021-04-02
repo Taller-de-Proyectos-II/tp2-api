@@ -1,11 +1,14 @@
 package com.jyellow.tp2api.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jyellow.tp2api.dto.PsychologistDTO;
 import com.jyellow.tp2api.dto.UserLoginDTO;
+import com.jyellow.tp2api.model.Image;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.UserLogin;
 import com.jyellow.tp2api.repository.PsychologistRepository;
@@ -29,7 +32,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 		Psychologist psychologistExist = psychologistRepository.findByUserLoginDni(userLoginDTO.getDni());
 		if (psychologistExist != null)
 			return -2;
-		
+
 		// Comprobar si el email está registrado con otra cuenta
 		psychologistExist = psychologistRepository.findByEmail(psychologistDTO.getEmail());
 		if (psychologistExist != null)
@@ -100,5 +103,28 @@ public class PsychologistServiceImpl implements PsychologistService {
 
 		return psychologistDTO;
 	}
+	
+	@Transactional
+	@Override
+	public void uploadImage(MultipartFile multipartImage, String dni) throws Exception {
+		Image image = new Image();
+		try {
+			image.setName(multipartImage.getName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		image.setContent(multipartImage.getBytes());
 
+		Psychologist psychologist = psychologistRepository.findByUserLoginDni(dni);
+		psychologist.setImage(image);
+		psychologistRepository.save(psychologist);
+	}
+
+	@Transactional
+	@Override
+	public ByteArrayResource getImage(String dni) {
+		byte[] image = psychologistRepository.findByUserLoginDni(dni).getImage().getContent();
+		return new ByteArrayResource(image);
+	}
 }

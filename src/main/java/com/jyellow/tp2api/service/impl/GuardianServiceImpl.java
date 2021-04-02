@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jyellow.tp2api.dto.GuardianDTO;
 import com.jyellow.tp2api.model.Guardian;
+import com.jyellow.tp2api.model.Image;
 import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.repository.GuardianRepository;
 import com.jyellow.tp2api.repository.PatientRepository;
@@ -43,6 +46,7 @@ public class GuardianServiceImpl implements GuardianService {
 		guardianRepository.save(guardian);
 		return 1;
 	}
+
 	// find by dni and patient dni
 	@Transactional
 	@Override
@@ -89,5 +93,29 @@ public class GuardianServiceImpl implements GuardianService {
 			guardiansDTO.add(guardianDTO);
 		}
 		return guardiansDTO;
+	}
+
+	@Transactional
+	@Override
+	public void uploadImage(MultipartFile multipartImage, String dni) throws Exception {
+		Image image = new Image();
+		try {
+			image.setName(multipartImage.getName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		image.setContent(multipartImage.getBytes());
+
+		Guardian guardian = guardianRepository.findByDni(dni);
+		guardian.setImage(image);
+		guardianRepository.save(guardian);
+	}
+
+	@Transactional
+	@Override
+	public ByteArrayResource getImage(String dni) {
+		byte[] image = guardianRepository.findByDni(dni).getImage().getContent();
+		return new ByteArrayResource(image);
 	}
 }
