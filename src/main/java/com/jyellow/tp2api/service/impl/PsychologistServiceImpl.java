@@ -89,6 +89,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 		return 1;
 	}
 
+	@Transactional
 	@Override
 	public PsychologistDTO listByDni(String dni) {
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(dni);

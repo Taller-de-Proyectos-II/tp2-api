@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jyellow.tp2api.dto.ConferenceDTO;
 import com.jyellow.tp2api.model.Conference;
@@ -22,6 +23,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 	@Autowired
 	PsychologistRepository psychologistRepository;
 
+	@Transactional
 	@Override
 	public void create(ConferenceDTO conferenceDTO) {
 		Conference conference = new Conference();
@@ -33,6 +35,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 		conferenceRepository.save(conference);
 	}
 
+	@Transactional
 	@Override
 	public void update(ConferenceDTO conferenceDTO) {
 		Conference conference = conferenceRepository.findById(conferenceDTO.getIdConference()).get();
@@ -42,11 +45,13 @@ public class ConferenceServiceImpl implements ConferenceService {
 		conferenceRepository.save(conference);
 	}
 
+	@Transactional
 	@Override
 	public void delete(int idConference) {
 		conferenceRepository.deleteById(idConference);
 	}
 
+	@Transactional
 	@Override
 	public List<ConferenceDTO> listByDni(String dni) {
 		List<Conference> conferences = conferenceRepository.findByPsychologistUserLoginDni(dni);

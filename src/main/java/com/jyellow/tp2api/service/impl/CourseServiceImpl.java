@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jyellow.tp2api.dto.CourseDTO;
 import com.jyellow.tp2api.model.Course;
@@ -21,6 +22,7 @@ public class CourseServiceImpl implements CourseService {
 	@Autowired
 	PsychologistRepository psychologistRepository;
 
+	@Transactional
 	@Override
 	public void create(CourseDTO courseDTO) {
 		Course course = new Course();
@@ -32,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
 		courseRepository.save(course);
 	}
 
+	@Transactional
 	@Override
 	public void update(CourseDTO courseDTO) {
 		Course course = courseRepository.findById(courseDTO.getIdCourse()).get();
@@ -41,11 +44,13 @@ public class CourseServiceImpl implements CourseService {
 		courseRepository.save(course);
 	}
 
+	@Transactional
 	@Override
 	public void delete(int idCourse) {
 		courseRepository.deleteById(idCourse);
 	}
 
+	@Transactional
 	@Override
 	public List<CourseDTO> listByDni(String dni) {
 		List<Course> courses = courseRepository.findByPsychologistUserLoginDni(dni);

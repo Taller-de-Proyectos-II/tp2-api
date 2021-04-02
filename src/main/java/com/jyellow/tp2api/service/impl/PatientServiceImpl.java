@@ -104,6 +104,7 @@ public class PatientServiceImpl implements PatientService {
 		return true;
 	}
 
+	@Transactional
 	@Override
 	public PatientDTO listByDni(String dni) {
 		Patient patient = patientRepository.findByUserLoginDni(dni);
@@ -118,6 +119,7 @@ public class PatientServiceImpl implements PatientService {
 		return patientDTO;
 	}
 
+	@Transactional
 	@Override
 	public List<PatientDTO> listByPsychologistDni(String psychologistDni) {
 		List<Patient> patients = patientRepository.findByPsychologistUserLoginDni(psychologistDni);
@@ -137,6 +139,7 @@ public class PatientServiceImpl implements PatientService {
 		return patientsDTO;
 	}
 
+	@Transactional
 	@Override
 	public boolean removePsychologist(String patientDni) {
 		Patient patient = patientRepository.findByUserLoginDni(patientDni);

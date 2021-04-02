@@ -25,6 +25,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 	PsychologistRepository psychologistRepository;
 
 	@Override
+	@Transactional
 	public int loginSuccessful(String dni, String password) {
 		UserLogin userLogin = userLoginRepository.findByDni(dni);
 		if (userLogin == null)
@@ -38,6 +39,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 	}
 
 	@Override
+	@Transactional
 	public boolean existEmailPsychologist(String email) {
 		Psychologist psychologist = psychologistRepository.findByEmail(email);
 		if (psychologist == null)
@@ -48,6 +50,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 	}
 
 	@Override
+	@Transactional
 	public boolean existEmailPatient(String email) {
 		Patient patient = patientRepository.findByEmail(email);
 		if (patient == null)

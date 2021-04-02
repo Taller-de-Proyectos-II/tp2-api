@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jyellow.tp2api.dto.StudyDTO;
 import com.jyellow.tp2api.model.Psychologist;
@@ -21,6 +22,7 @@ public class StudyServiceImpl implements StudyService {
 	@Autowired
 	PsychologistRepository psychologistRepository;
 
+	@Transactional
 	@Override
 	public void create(StudyDTO studyDTO) {
 		Study study = new Study();
@@ -36,6 +38,7 @@ public class StudyServiceImpl implements StudyService {
 		studyRepository.save(study);
 	}
 
+	@Transactional
 	@Override
 	public void update(StudyDTO studyDTO) {
 		Study study = studyRepository.findById(studyDTO.getIdStudy()).get();
@@ -49,11 +52,13 @@ public class StudyServiceImpl implements StudyService {
 		studyRepository.save(study);
 	}
 
+	@Transactional
 	@Override
 	public void delete(int idStudy) {
 		studyRepository.deleteById(idStudy);
 	}
 
+	@Transactional
 	@Override
 	public List<StudyDTO> listByDni(String dni) {
 		List<Study> studies = studyRepository.findByPsychologistUserLoginDni(dni);

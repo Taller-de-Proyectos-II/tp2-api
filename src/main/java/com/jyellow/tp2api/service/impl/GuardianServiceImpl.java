@@ -47,7 +47,6 @@ public class GuardianServiceImpl implements GuardianService {
 		return 1;
 	}
 
-	// find by dni and patient dni
 	@Transactional
 	@Override
 	public int update(GuardianDTO guardianDTO) {
@@ -61,6 +60,7 @@ public class GuardianServiceImpl implements GuardianService {
 		return 1;
 	}
 
+	@Transactional
 	@Override
 	public GuardianDTO listByDniAndPatientDni(String dni, String patientDni) {
 		Guardian guardian = guardianRepository.findByDniAndPatientUserLoginDni(dni, patientDni);
@@ -75,6 +75,7 @@ public class GuardianServiceImpl implements GuardianService {
 		return guardianDTO;
 	}
 
+	@Transactional
 	@Override
 	public List<GuardianDTO> listByPatientDni(String patientDni) {
 		List<Guardian> guardians = guardianRepository.findByPatientUserLoginDni(patientDni);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jyellow.tp2api.dto.WorkExperienceDTO;
 import com.jyellow.tp2api.model.Psychologist;
@@ -21,6 +22,7 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
 	@Autowired
 	PsychologistRepository psychologistRepository;
 
+	@Transactional
 	@Override
 	public void create(WorkExperienceDTO workExperienceDTO) {
 		WorkExperience workExperience = new WorkExperience();
@@ -36,6 +38,7 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
 		workExperienceRepository.save(workExperience);
 	}
 
+	@Transactional
 	@Override
 	public void update(WorkExperienceDTO workExperienceDTO) {
 		WorkExperience workExperience = workExperienceRepository.findById(workExperienceDTO.getIdWorkExperience()).get();
@@ -49,11 +52,13 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
 		workExperienceRepository.save(workExperience);
 	}
 
+	@Transactional
 	@Override
 	public void delete(int idWorkExperience) {
 		workExperienceRepository.deleteById(idWorkExperience);
 	}
 
+	@Transactional
 	@Override
 	public List<WorkExperienceDTO> listByDni(String dni) {
 		List<WorkExperience> workExperiences = workExperienceRepository.findByPsychologistUserLoginDni(dni);
