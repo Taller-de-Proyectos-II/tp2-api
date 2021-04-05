@@ -1,5 +1,7 @@
 package com.jyellow.tp2api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
@@ -311,9 +313,10 @@ public class PsychologistController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
- 
+
 	@PostMapping(path = "/image/")
-	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni) throws Exception {
+	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni)
+			throws Exception {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			this.psychologistService.uploadImage(multipartImage, dni);
@@ -330,5 +333,44 @@ public class PsychologistController {
 	public ByteArrayResource getImage(@RequestParam String dni) {
 		ByteArrayResource image = psychologistService.getImage(dni);
 		return image;
+	}
+
+	@GetMapping(path = "/listAll/", produces = "application/json")
+	public ResponseEntity<?> listAll() {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<PsychologistDTO> psychologistsDTO = psychologistService.listAll();
+			responseDTO.setPsychologistsDTO(psychologistsDTO);
+			responseDTO.setMessage("Psicólogos");
+			responseDTO.setStatus(1);
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(path = "/listByFilter/", produces = "application/json")
+	public ResponseEntity<?> listByFilter(@RequestParam(value = "names", required = false) String names,
+			@RequestParam(value = "lastNames", required = false) String lastNames) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<PsychologistDTO> psychologistsDTO = psychologistService.listByNamesAndLastNames(names, lastNames);
+			if (psychologistsDTO.size() == 0) {
+				responseDTO.setMessage("No se encontraron psicólogos");
+				responseDTO.setStatus(1);
+			} else {
+
+				responseDTO.setPsychologistsDTO(psychologistsDTO);
+				responseDTO.setMessage("Psicólogos filtrados");
+				responseDTO.setStatus(1);
+			}
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
 	}
 }

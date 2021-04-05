@@ -1,5 +1,8 @@
 package com.jyellow.tp2api.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -104,7 +107,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 
 		return psychologistDTO;
 	}
-	
+
 	@Transactional
 	@Override
 	public void uploadImage(MultipartFile multipartImage, String dni) throws Exception {
@@ -127,5 +130,53 @@ public class PsychologistServiceImpl implements PsychologistService {
 	public ByteArrayResource getImage(String dni) {
 		byte[] image = psychologistRepository.findByUserLoginDni(dni).getImage().getContent();
 		return new ByteArrayResource(image);
+	}
+
+	@Transactional
+	@Override
+	public List<PsychologistDTO> listAll() {
+		List<Psychologist> psychologists = psychologistRepository.findAll();
+		List<PsychologistDTO> psychologistsDTO = new ArrayList<PsychologistDTO>();
+		PsychologistDTO psychologistDTO = new PsychologistDTO();
+		for (Psychologist psychologist : psychologists) {
+			psychologistDTO = new PsychologistDTO();
+			psychologistDTO.setBirthday(psychologist.getBirthday());
+			psychologistDTO.setCpsp(psychologist.getCpsp());
+			psychologistDTO.setDescription(psychologist.getDescription());
+			psychologistDTO.setEmail(psychologist.getEmail());
+			psychologistDTO.setLastNames(psychologist.getLastNames());
+			psychologistDTO.setNames(psychologist.getNames());
+			psychologistDTO.setPhone(psychologist.getPhone());
+			psychologistsDTO.add(psychologistDTO);
+		}
+		return psychologistsDTO;
+	}
+
+	@Transactional
+	@Override
+	public List<PsychologistDTO> listByNamesAndLastNames(String names, String lastNames) {
+		List<Psychologist> psychologists = new ArrayList<Psychologist>();
+		if (names == null && lastNames == null)
+			psychologists = psychologistRepository.findAll();
+		else if (lastNames == null)
+			psychologists = psychologistRepository.findByNamesContainingIgnoreCase(names);
+		else if (names == null)
+			psychologists = psychologistRepository.findByLastNamesContainingIgnoreCase(lastNames);
+		else
+			psychologists = psychologistRepository.findByNamesContainingIgnoreCaseAndLastNamesContainingIgnoreCase(names, lastNames);
+		List<PsychologistDTO> psychologistsDTO = new ArrayList<PsychologistDTO>();
+		PsychologistDTO psychologistDTO = new PsychologistDTO();
+		for (Psychologist psychologist : psychologists) {
+			psychologistDTO = new PsychologistDTO();
+			psychologistDTO.setBirthday(psychologist.getBirthday());
+			psychologistDTO.setCpsp(psychologist.getCpsp());
+			psychologistDTO.setDescription(psychologist.getDescription());
+			psychologistDTO.setEmail(psychologist.getEmail());
+			psychologistDTO.setLastNames(psychologist.getLastNames());
+			psychologistDTO.setNames(psychologist.getNames());
+			psychologistDTO.setPhone(psychologist.getPhone());
+			psychologistsDTO.add(psychologistDTO);
+		}
+		return psychologistsDTO;
 	}
 }

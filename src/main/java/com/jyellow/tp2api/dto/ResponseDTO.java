@@ -14,6 +14,7 @@ public class ResponseDTO {
 	private List<PatientDTO> patientsDTO;
 	private ExperienceDTO experienceDTO;
 	private List<GuardianDTO> guardiansDTO;
+	private List<PsychologistDTO> psychologistsDTO;
 
 	public ResponseDTO() {
 		super();
@@ -88,4 +89,13 @@ public class ResponseDTO {
 	public void setGuardiansDTO(List<GuardianDTO> guardiansDTO) {
 		this.guardiansDTO = guardiansDTO;
 	}
+
+	public List<PsychologistDTO> getPsychologistsDTO() {
+		return psychologistsDTO;
+	}
+
+	public void setPsychologistsDTO(List<PsychologistDTO> psychologistsDTO) {
+		this.psychologistsDTO = psychologistsDTO;
+	}
+	
 }
