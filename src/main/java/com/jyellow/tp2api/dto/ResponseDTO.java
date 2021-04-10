@@ -24,4 +24,5 @@ public class ResponseDTO {
 	private ExperienceDTO experienceDTO;
 	private List<GuardianDTO> guardiansDTO;
 	private List<PsychologistDTO> psychologistsDTO;
+	private ManifestationsDTO manifestationsDTO;
 }

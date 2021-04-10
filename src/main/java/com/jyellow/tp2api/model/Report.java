@@ -11,25 +11,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class WorkExperience {
-
+@NoArgsConstructor
+public class Report {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int idWorkExperience;
-	private String place;
-	private String occupation;
-	private String description;
-	private String workingDayType;
-	private String startDate;
-	private String endDate;
-	private boolean isCurrent;
-
+	private int idReport;
+	private String date;
+	
+	@ManyToOne
+	private Patient patient;
+	
 	@ManyToOne
 	private Psychologist psychologist;
-
 }

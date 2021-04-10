@@ -1,10 +1,12 @@
 package com.jyellow.tp2api.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,20 +18,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class WorkExperience {
-
+public class Manifestation {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int idWorkExperience;
-	private String place;
-	private String occupation;
+	private int idManifestation;
+	private String name;
 	private String description;
-	private String workingDayType;
-	private String startDate;
-	private String endDate;
-	private boolean isCurrent;
-
-	@ManyToOne
-	private Psychologist psychologist;
-
+	
+	@OneToMany(mappedBy = "manifestation")
+	private List<Symptom> symptoms;
 }

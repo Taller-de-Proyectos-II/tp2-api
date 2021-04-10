@@ -1,9 +1,13 @@
 package com.jyellow.tp2api.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
@@ -16,20 +20,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class WorkExperience {
-
+public class Test {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int idWorkExperience;
-	private String place;
-	private String occupation;
-	private String description;
-	private String workingDayType;
+	private int idTest;
+	
 	private String startDate;
 	private String endDate;
-	private boolean isCurrent;
-
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Symptom> symptoms;
+	
 	@ManyToOne
-	private Psychologist psychologist;
-
+	private Patient patient;
 }

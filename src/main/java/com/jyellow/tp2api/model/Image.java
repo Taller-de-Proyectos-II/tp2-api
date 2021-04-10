@@ -1,6 +1,6 @@
 package com.jyellow.tp2api.model;
 
-import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -15,18 +15,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Image {
 
 	@Id
-	@Column(name = "idimage")
 	@GeneratedValue
-	Long idImage;
+	private Long idImage;
 
 	@Lob
-	byte[] content;
+	private byte[] content;
 
-	@Column(name = "name")
-	String name;
+	private String name;
 
 	@OneToOne(mappedBy = "image")
 	private Psychologist psychologist;
