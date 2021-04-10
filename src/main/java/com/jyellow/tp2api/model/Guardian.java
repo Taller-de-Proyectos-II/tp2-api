@@ -11,6 +11,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "guardians")
 public class Guardian {
@@ -34,106 +43,16 @@ public class Guardian {
 
 	@Column(name = "birthday", length = 10)
 	private String birthday;
-	
+
 	@Column(name = "dni", length = 8)
 	private String dni;
 
 	@ManyToOne
 	@JoinColumn(name = "idPatient", nullable = false)
 	private Patient patient;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "idImage", referencedColumnName = "idImage")
 	private Image image;
-
-	public Guardian() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Guardian(int idGuardian, String names, String lastNames, String phone, String email, String birthday,
-			String dni, Patient patient) {
-		super();
-		this.idGuardian = idGuardian;
-		this.names = names;
-		this.lastNames = lastNames;
-		this.phone = phone;
-		this.email = email;
-		this.birthday = birthday;
-		this.dni = dni;
-		this.patient = patient;
-	}
-
-	public int getIdGuardian() {
-		return idGuardian;
-	}
-
-	public void setIdGuardian(int idGuardian) {
-		this.idGuardian = idGuardian;
-	}
-
-	public String getNames() {
-		return names;
-	}
-
-	public void setNames(String names) {
-		this.names = names;
-	}
-
-	public String getLastNames() {
-		return lastNames;
-	}
-
-	public void setLastNames(String lastNames) {
-		this.lastNames = lastNames;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
-	}
-
-	public String getDni() {
-		return dni;
-	}
-
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
-
-	public Patient getPatient() {
-		return patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
-
-	public Image getImage() {
-		return image;
-	}
-
-	public void setImage(Image image) {
-		this.image = image;
-	}
 
 }
