@@ -2,6 +2,7 @@ HELP.md
 target/
 bin/
 src/main/resources/
+**/application.properties
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -27,3 +28,4 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/resources/application.properties
