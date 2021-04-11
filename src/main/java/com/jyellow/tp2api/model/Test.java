@@ -21,17 +21,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 public class Test {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int idTest;
-	
+
 	private String startDate;
 	private String endDate;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
+	private boolean finished;
+
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	private List<Symptom> symptoms;
-	
+
 	@ManyToOne
 	private Patient patient;
 }

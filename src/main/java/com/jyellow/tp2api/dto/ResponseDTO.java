@@ -25,4 +25,9 @@ public class ResponseDTO {
 	private List<GuardianDTO> guardiansDTO;
 	private List<PsychologistDTO> psychologistsDTO;
 	private ManifestationsDTO manifestationsDTO;
+	private TestDTO testDTO;
+	private List<TestDTO> testsDTO;
+	private List<ReportDTO> reportsDTO;
+	private ReportDTO reportDTO;
+	private List<ScheduleDTO> schedulesDTO;
 }

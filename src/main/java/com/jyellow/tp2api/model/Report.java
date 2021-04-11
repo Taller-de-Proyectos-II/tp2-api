@@ -22,6 +22,7 @@ public class Report {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int idReport;
 	private String date;
+	private String description;
 	
 	@ManyToOne
 	private Patient patient;
