@@ -3,6 +3,8 @@ package com.jyellow.tp2api.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ public class SymptomServiceImpl implements SymptomService {
 	@Autowired
 	private SymptomRepository symptomRepository;
 
+	@Transactional
 	@Override
 	public List<SymptomDTO> listAll() {
 		List<Symptom> symptoms = symptomRepository.findAll();

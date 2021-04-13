@@ -69,6 +69,7 @@ public class ReportServiceImpl implements ReportService {
 		return modelMapper.map(report, ReportDTO.class);
 	}
 
+	@Transactional
 	@Override
 	public List<ReportDTO> listByPatientDni(String patientDni) {
 		List<Report> reports = reportRepository.findByPatientUserLoginDni(patientDni);

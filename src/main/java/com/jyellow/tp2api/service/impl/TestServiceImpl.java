@@ -37,12 +37,14 @@ public class TestServiceImpl implements TestService {
 
 	ModelMapper modelMapper = new ModelMapper();
 
+	@Transactional
 	@Override
 	public List<TestDTO> listByPatientDni(String patientDni) {
 		List<Test> tests = testRepository.findByPatientUserLoginDni(patientDni);
 		return tests.stream().map(test -> modelMapper.map(test, TestDTO.class)).collect(Collectors.toList());
 	}
 
+	@Transactional
 	@Override
 	public List<TestDTO> listByPatientDniAndFinished(String patientDni, boolean finished) {
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, finished);

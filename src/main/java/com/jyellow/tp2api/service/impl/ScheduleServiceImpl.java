@@ -27,6 +27,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	private PsychologistRepository psychologistRepository;
 	ModelMapper modelMapper = new ModelMapper();
 
+	@Transactional
 	@Override
 	public List<ScheduleDTO> listAll() {
 		List<Schedule> schedules = scheduleRepository.findAll();
@@ -34,6 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 				.collect(Collectors.toList());
 	}
 
+	@Transactional
 	@Override
 	public List<ScheduleDTO> listByPsychologistDni(String psychologistDni) {
 		List<Schedule> schedules = scheduleRepository.findByPsychologistsUserLoginDni(psychologistDni);
