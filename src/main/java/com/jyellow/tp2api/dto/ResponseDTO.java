@@ -30,4 +30,5 @@ public class ResponseDTO {
 	private List<ReportDTO> reportsDTO;
 	private ReportDTO reportDTO;
 	private List<ScheduleDTO> schedulesDTO;
+	private List<SymptomDTO> symptomsDTO;
 }
