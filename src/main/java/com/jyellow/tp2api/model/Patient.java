@@ -50,6 +50,9 @@ public class Patient {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Test> tests;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Session> sessions;
 
 	@OneToMany(mappedBy = "patient")
 	private List<Report> reports;

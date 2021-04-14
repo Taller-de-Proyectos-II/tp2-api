@@ -58,6 +58,9 @@ public class Psychologist {
 	@OneToMany(mappedBy = "psychologist")
 	private List<Report> reports;
 	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Session> sessions;
+	
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	private List<Schedule> schedules;
 }

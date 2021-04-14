@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 	List<Schedule> findByPsychologistsUserLoginDni(String dni);
+	Schedule findByDayAndHour(int day, int hour);
 }

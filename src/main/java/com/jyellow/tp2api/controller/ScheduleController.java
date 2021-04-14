@@ -59,6 +59,26 @@ public class ScheduleController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
+	
+	@GetMapping(path = "/listSchedulesByPsychologistDniPatientView/", produces = "application/json")
+	public ResponseEntity<?> listSchedulesByPsychologistDniPatientView(@RequestParam String psychologistDni, @RequestParam String date) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<ScheduleDTO> schedulesDTO = scheduleServcie.listByPsychologistDniPatientView(psychologistDni, date);
+			if (schedulesDTO == null || schedulesDTO.size() == 0) {
+				responseDTO.setMessage("No se encontraron Horarios");
+				responseDTO.setStatus(1);
+			} else {
+				responseDTO.setMessage("Horarios");
+				responseDTO.setStatus(1);
+				responseDTO.setSchedulesDTO(schedulesDTO);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
 
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody ScheduleUpdateDTO scheduleUpdateDTO) {

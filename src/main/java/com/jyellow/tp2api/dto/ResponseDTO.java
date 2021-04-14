@@ -31,4 +31,6 @@ public class ResponseDTO {
 	private ReportDTO reportDTO;
 	private List<ScheduleDTO> schedulesDTO;
 	private List<SymptomDTO> symptomsDTO;
+	private SessionDTO sessionDTO;
+	private List<SessionDTO> sessionsDTO;
 }

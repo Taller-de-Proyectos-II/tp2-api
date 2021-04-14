@@ -1,6 +1,5 @@
 package com.jyellow.tp2api.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,19 +16,22 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Report {
-	
+public class Session {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int idReport;
+	private int idSession;
 	private String date;
-	
-	@Column(length = 600)
-	private String description;
-	
+	private boolean acepted;
+	private boolean finished;
+	private String meetingLink;
+
+	@ManyToOne
+	private Schedule schedule;
+
 	@ManyToOne
 	private Patient patient;
-	
+
 	@ManyToOne
 	private Psychologist psychologist;
 }
