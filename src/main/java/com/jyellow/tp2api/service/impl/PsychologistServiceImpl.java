@@ -104,7 +104,9 @@ public class PsychologistServiceImpl implements PsychologistService {
 		psychologistDTO.setLastNames(psychologist.getLastNames());
 		psychologistDTO.setNames(psychologist.getNames());
 		psychologistDTO.setPhone(psychologist.getPhone());
-
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
+		userLoginDTO.setDni(psychologist.getUserLogin().getDni());
+		psychologistDTO.setUserLoginDTO(userLoginDTO);
 		return psychologistDTO;
 	}
 
@@ -138,6 +140,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 		List<Psychologist> psychologists = psychologistRepository.findAll();
 		List<PsychologistDTO> psychologistsDTO = new ArrayList<PsychologistDTO>();
 		PsychologistDTO psychologistDTO = new PsychologistDTO();
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
 		for (Psychologist psychologist : psychologists) {
 			psychologistDTO = new PsychologistDTO();
 			psychologistDTO.setBirthday(psychologist.getBirthday());
@@ -147,6 +150,9 @@ public class PsychologistServiceImpl implements PsychologistService {
 			psychologistDTO.setLastNames(psychologist.getLastNames());
 			psychologistDTO.setNames(psychologist.getNames());
 			psychologistDTO.setPhone(psychologist.getPhone());
+			userLoginDTO = new UserLoginDTO();
+			userLoginDTO.setDni(psychologist.getUserLogin().getDni());
+			psychologistDTO.setUserLoginDTO(userLoginDTO);
 			psychologistsDTO.add(psychologistDTO);
 		}
 		return psychologistsDTO;
@@ -166,6 +172,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 			psychologists = psychologistRepository.findByNamesContainingIgnoreCaseAndLastNamesContainingIgnoreCase(names, lastNames);
 		List<PsychologistDTO> psychologistsDTO = new ArrayList<PsychologistDTO>();
 		PsychologistDTO psychologistDTO = new PsychologistDTO();
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
 		for (Psychologist psychologist : psychologists) {
 			psychologistDTO = new PsychologistDTO();
 			psychologistDTO.setBirthday(psychologist.getBirthday());
@@ -175,6 +182,9 @@ public class PsychologistServiceImpl implements PsychologistService {
 			psychologistDTO.setLastNames(psychologist.getLastNames());
 			psychologistDTO.setNames(psychologist.getNames());
 			psychologistDTO.setPhone(psychologist.getPhone());
+			userLoginDTO = new UserLoginDTO();
+			userLoginDTO.setDni(psychologist.getUserLogin().getDni());
+			psychologistDTO.setUserLoginDTO(userLoginDTO);
 			psychologistsDTO.add(psychologistDTO);
 		}
 		return psychologistsDTO;
