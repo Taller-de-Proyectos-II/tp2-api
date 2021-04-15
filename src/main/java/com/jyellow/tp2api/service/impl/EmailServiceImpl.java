@@ -20,14 +20,35 @@ public class EmailServiceImpl implements EmailService {
 		return sendEmailTool(textMessage, to);
 	}
 	
+	@Override
+	public boolean sendEmailSession(String to, String textMessage, String subject) throws javax.mail.MessagingException  {
+		return sendEmailToolSession(textMessage, to, subject);
+	}
+	
 	private boolean sendEmailTool(String textMessage, String email) {
 		boolean send = false;
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);		
 		try {
 			helper.setTo(email);
-			helper.setText(textMessage, true);
+			helper.setText(textMessage, false);
 			helper.setSubject("Recuperación de contraseña");
+			sender.send(message);
+			send = true;
+		} catch (Exception e) {
+			System.out.println("Error al enviar email");
+		}
+		return send;
+	}
+	
+	private boolean sendEmailToolSession(String textMessage, String email, String subject) {
+		boolean send = false;
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);		
+		try {
+			helper.setTo(email);
+			helper.setText(textMessage, false);
+			helper.setSubject(subject);
 			sender.send(message);
 			send = true;
 		} catch (Exception e) {

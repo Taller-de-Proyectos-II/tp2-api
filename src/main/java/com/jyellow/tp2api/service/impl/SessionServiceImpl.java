@@ -81,6 +81,8 @@ public class SessionServiceImpl implements SessionService {
 		Session session = new Session();
 		Patient patient = patientRepository.findByUserLoginDni(sessionCreateDTO.getPatientDni());
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(sessionCreateDTO.getPsychologistDni());
+		List<Session> sessions = sessionRepository
+				.findByPsychologistUserLoginDni(sessionCreateDTO.getPsychologistDni());
 		session.setAcepted(false);
 		session.setDate(sessionCreateDTO.getDate());
 		session.setFinished(false);
@@ -104,14 +106,14 @@ public class SessionServiceImpl implements SessionService {
 		boolean inRange = psychologist.getSchedules().contains(schedule);
 		if (inRange == false)
 			return "Horario fuera del rango de atención del psicólogo";
-		for (Session sessionAux : psychologist.getSessions()) {
+		for (Session sessionAux : sessions) {
 			if (sessionAux.getSchedule().getDay() == day && sessionAux.getSchedule().getHour() == hour
-					&& sessionCreateDTO.getDate() == sessionAux.getDate())
-				return "Horario ya reservado por otro paciente";
+					&& sessionCreateDTO.getDate().equals(session.getDate()))
+				return "Horario ya reservado";
 		}
 		session.setSchedule(schedule);
 		sessionRepository.save(session);
-		return "";
+		return "#" + session.getIdSession();
 	}
 
 	@Transactional

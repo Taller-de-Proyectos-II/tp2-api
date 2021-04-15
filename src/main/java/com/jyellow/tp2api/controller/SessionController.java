@@ -17,6 +17,7 @@ import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.dto.SessionCreateDTO;
 import com.jyellow.tp2api.dto.SessionDTO;
 import com.jyellow.tp2api.dto.SessionUpdateDTO;
+import com.jyellow.tp2api.service.EmailService;
 import com.jyellow.tp2api.service.SessionService;
 
 @CrossOrigin
@@ -26,15 +27,32 @@ public class SessionController {
 
 	@Autowired
 	SessionService sessionService;
+	@Autowired
+	EmailService emailService;
 
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody SessionCreateDTO sessionCreateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			String message = sessionService.create(sessionCreateDTO);
-			if (message == "") {
+			if (message.contains("#") == true) {
+				message = message.substring(1);
+				SessionDTO sessionDTO = sessionService.listById(Integer.parseInt(message));
 				responseDTO.setMessage("Registro exitoso");
 				responseDTO.setStatus(1);
+				responseDTO.setSessionDTO(sessionDTO);
+				emailService.sendEmailSession(sessionDTO.getPatient().getEmail(),
+						"Se ha registrado una sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Fecha: "
+								+ sessionDTO.getDate() + "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00" + "\r\n"
+								+ "Paciente: " + sessionDTO.getPatient().getLastNames() + ", "
+								+ sessionDTO.getPatient().getNames() + "\r\n" + "Psicólogo: "
+								+ sessionDTO.getPsychologist().getLastNames() + ", " + sessionDTO.getPsychologist().getNames(), "Registro de sesión");
+				emailService.sendEmailSession(sessionDTO.getPsychologist().getEmail(),
+						"Se ha registrado una sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Fecha: "
+								+ sessionDTO.getDate() + "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00" + "\r\n"
+								+ "Paciente: " + sessionDTO.getPatient().getLastNames() + ", "
+								+ sessionDTO.getPatient().getNames() + "\r\n" + "Psicólogo: "
+								+ sessionDTO.getPsychologist().getLastNames() + ", " + sessionDTO.getPsychologist().getNames(), "Registro de sesión");			
 			} else {
 				responseDTO.setMessage(message);
 				responseDTO.setStatus(0);
@@ -52,6 +70,22 @@ public class SessionController {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			SessionDTO sessionDTO = sessionService.updateAcepted(sessionUPdateDTO);
+			emailService.sendEmailSession(sessionDTO.getPatient().getEmail(),
+					"Se ha actualizado el enlace a la sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Enlace: "
+							+ sessionDTO.getMeetingLink() + "\r\n" + "Fecha: " + sessionDTO.getDate() + "\r\n" + "Hora: "
+							+ sessionDTO.getSchedule().getHour() + ":00" + "\r\n" + "Paciente: "
+							+ sessionDTO.getPatient().getLastNames() + ", " + sessionDTO.getPatient().getNames() + "\r\n"
+							+ "Psicólogo: " + sessionDTO.getPsychologist().getLastNames() + ", "
+							+ sessionDTO.getPsychologist().getNames(),
+					"Actualización de sesión");
+			emailService.sendEmailSession(sessionDTO.getPsychologist().getEmail(),
+					"Se ha actualizado el enlace a la sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Enlace: "
+							+ sessionDTO.getMeetingLink() + "\r\n" + "Fecha: " + sessionDTO.getDate() + "\r\n" + "Hora: "
+							+ sessionDTO.getSchedule().getHour() + ":00" + "\r\n" + "Paciente: "
+							+ sessionDTO.getPatient().getLastNames() + ", " + sessionDTO.getPatient().getNames() + "\r\n"
+							+ "Psicólogo: " + sessionDTO.getPsychologist().getLastNames() + ", "
+							+ sessionDTO.getPsychologist().getNames(),
+					"Actualización de sesión");
 			responseDTO.setMessage("Actualización exitosa");
 			responseDTO.setStatus(1);
 			responseDTO.setSessionDTO(sessionDTO);
