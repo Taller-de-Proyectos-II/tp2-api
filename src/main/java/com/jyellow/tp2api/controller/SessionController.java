@@ -43,16 +43,20 @@ public class SessionController {
 				responseDTO.setSessionDTO(sessionDTO);
 				emailService.sendEmailSession(sessionDTO.getPatient().getEmail(),
 						"Se ha registrado una sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Fecha: "
-								+ sessionDTO.getDate() + "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00" + "\r\n"
-								+ "Paciente: " + sessionDTO.getPatient().getLastNames() + ", "
+								+ sessionDTO.getDate() + "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00"
+								+ "\r\n" + "Paciente: " + sessionDTO.getPatient().getLastNames() + ", "
 								+ sessionDTO.getPatient().getNames() + "\r\n" + "Psicólogo: "
-								+ sessionDTO.getPsychologist().getLastNames() + ", " + sessionDTO.getPsychologist().getNames(), "Registro de sesión");
+								+ sessionDTO.getPsychologist().getLastNames() + ", "
+								+ sessionDTO.getPsychologist().getNames(),
+						"Registro de sesión");
 				emailService.sendEmailSession(sessionDTO.getPsychologist().getEmail(),
 						"Se ha registrado una sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Fecha: "
-								+ sessionDTO.getDate() + "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00" + "\r\n"
-								+ "Paciente: " + sessionDTO.getPatient().getLastNames() + ", "
+								+ sessionDTO.getDate() + "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00"
+								+ "\r\n" + "Paciente: " + sessionDTO.getPatient().getLastNames() + ", "
 								+ sessionDTO.getPatient().getNames() + "\r\n" + "Psicólogo: "
-								+ sessionDTO.getPsychologist().getLastNames() + ", " + sessionDTO.getPsychologist().getNames(), "Registro de sesión");			
+								+ sessionDTO.getPsychologist().getLastNames() + ", "
+								+ sessionDTO.getPsychologist().getNames(),
+						"Registro de sesión");
 			} else {
 				responseDTO.setMessage(message);
 				responseDTO.setStatus(0);
@@ -71,19 +75,19 @@ public class SessionController {
 		try {
 			SessionDTO sessionDTO = sessionService.updateAcepted(sessionUPdateDTO);
 			emailService.sendEmailSession(sessionDTO.getPatient().getEmail(),
-					"Se ha actualizado el enlace a la sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Enlace: "
-							+ sessionDTO.getMeetingLink() + "\r\n" + "Fecha: " + sessionDTO.getDate() + "\r\n" + "Hora: "
-							+ sessionDTO.getSchedule().getHour() + ":00" + "\r\n" + "Paciente: "
-							+ sessionDTO.getPatient().getLastNames() + ", " + sessionDTO.getPatient().getNames() + "\r\n"
-							+ "Psicólogo: " + sessionDTO.getPsychologist().getLastNames() + ", "
+					"Se ha actualizado el enlace a la sessión con ID: " + sessionDTO.getIdSession() + "\r\n"
+							+ "Enlace: " + sessionDTO.getMeetingLink() + "\r\n" + "Fecha: " + sessionDTO.getDate()
+							+ "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00" + "\r\n" + "Paciente: "
+							+ sessionDTO.getPatient().getLastNames() + ", " + sessionDTO.getPatient().getNames()
+							+ "\r\n" + "Psicólogo: " + sessionDTO.getPsychologist().getLastNames() + ", "
 							+ sessionDTO.getPsychologist().getNames(),
 					"Actualización de sesión");
 			emailService.sendEmailSession(sessionDTO.getPsychologist().getEmail(),
-					"Se ha actualizado el enlace a la sessión con ID: " + sessionDTO.getIdSession() + "\r\n" + "Enlace: "
-							+ sessionDTO.getMeetingLink() + "\r\n" + "Fecha: " + sessionDTO.getDate() + "\r\n" + "Hora: "
-							+ sessionDTO.getSchedule().getHour() + ":00" + "\r\n" + "Paciente: "
-							+ sessionDTO.getPatient().getLastNames() + ", " + sessionDTO.getPatient().getNames() + "\r\n"
-							+ "Psicólogo: " + sessionDTO.getPsychologist().getLastNames() + ", "
+					"Se ha actualizado el enlace a la sessión con ID: " + sessionDTO.getIdSession() + "\r\n"
+							+ "Enlace: " + sessionDTO.getMeetingLink() + "\r\n" + "Fecha: " + sessionDTO.getDate()
+							+ "\r\n" + "Hora: " + sessionDTO.getSchedule().getHour() + ":00" + "\r\n" + "Paciente: "
+							+ sessionDTO.getPatient().getLastNames() + ", " + sessionDTO.getPatient().getNames()
+							+ "\r\n" + "Psicólogo: " + sessionDTO.getPsychologist().getLastNames() + ", "
 							+ sessionDTO.getPsychologist().getNames(),
 					"Actualización de sesión");
 			responseDTO.setMessage("Actualización exitosa");
@@ -97,11 +101,11 @@ public class SessionController {
 		return ResponseEntity.ok(responseDTO);
 	}
 
-	@PutMapping(path = "/updateFinished/", produces = "application/json")
-	public ResponseEntity<?> updateFinished(@RequestBody SessionUpdateDTO sessionUPdateDTO) {
+	@PutMapping(path = "/updateFinished/", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> updateFinished(@RequestBody SessionUpdateDTO sessionUpdateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			SessionDTO sessionDTO = sessionService.updateFinished(sessionUPdateDTO.getIdSession());
+			SessionDTO sessionDTO = sessionService.updateFinished(sessionUpdateDTO.getIdSession());
 			responseDTO.setMessage("Actualización exitosa");
 			responseDTO.setStatus(1);
 			responseDTO.setSessionDTO(sessionDTO);
