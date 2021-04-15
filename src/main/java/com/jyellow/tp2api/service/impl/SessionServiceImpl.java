@@ -135,6 +135,7 @@ public class SessionServiceImpl implements SessionService {
 		return modelMapper.map(session, SessionDTO.class);
 	}
 
+	@Transactional
 	@Override
 	public SessionDTO listById(int idSession) {
 		Session session = sessionRepository.findById(idSession).get();
