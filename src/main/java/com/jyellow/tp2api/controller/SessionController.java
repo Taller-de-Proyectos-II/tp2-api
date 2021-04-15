@@ -98,10 +98,10 @@ public class SessionController {
 	}
 
 	@PutMapping(path = "/updateFinished/", produces = "application/json")
-	public ResponseEntity<?> updateFinished(@RequestParam int idSession) {
+	public ResponseEntity<?> updateFinished(@RequestBody SessionUpdateDTO sessionUPdateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			SessionDTO sessionDTO = sessionService.updateFinished(idSession);
+			SessionDTO sessionDTO = sessionService.updateFinished(sessionUPdateDTO.getIdSession());
 			responseDTO.setMessage("Actualización exitosa");
 			responseDTO.setStatus(1);
 			responseDTO.setSessionDTO(sessionDTO);
