@@ -69,7 +69,7 @@ public class ScoreOperation {
 		int score = 0;
 		for (Answer answer : answers)
 			score += answer.getRealScore();
-		if (questionTypeName.equals("Depresión")) {
+		if (questionTypeName.equals("Ansiedad")) {
 			if (score >= 75)
 				return "Ansiedad grave";
 			else if (score <= 74 && score >= 60)
