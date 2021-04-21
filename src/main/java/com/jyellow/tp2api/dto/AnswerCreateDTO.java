@@ -1,7 +1,5 @@
 package com.jyellow.tp2api.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestUpdateDTO {
-	private int idTest;
-	private List<AnswerCreateDTO> answersDTO;
+public class AnswerCreateDTO {
+	private int idAnswer;
+	private int score;
 }

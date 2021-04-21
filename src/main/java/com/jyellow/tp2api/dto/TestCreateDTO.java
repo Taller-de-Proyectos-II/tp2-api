@@ -11,4 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TestCreateDTO {
 	private String patientDni;
+	private int idQuestionType;
 }

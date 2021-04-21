@@ -11,12 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestDTO {
-	private int idTest;
-	private String startDate;
-	private String endDate;
-	private boolean finished;
-	private String diagnostic;
-	private String testType;
-	List<AnswerDTO> answersDTO;
+public class QuestionTypeDTO {
+	private int idQuestionType;
+	private String name;
+	private String description;
+	private List<QuestionDTO> questionsDTO;
 }

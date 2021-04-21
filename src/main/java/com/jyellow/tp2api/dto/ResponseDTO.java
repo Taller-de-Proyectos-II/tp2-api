@@ -33,4 +33,7 @@ public class ResponseDTO {
 	private List<SymptomDTO> symptomsDTO;
 	private SessionDTO sessionDTO;
 	private List<SessionDTO> sessionsDTO;
+	private List<QuestionDTO> questionsDTO;
+	private List<QuestionTypeDTO> questionTypesDTO;
+	private QuestionTypeDTO questionTypeDTO;
 }

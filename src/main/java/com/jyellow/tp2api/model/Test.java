@@ -2,13 +2,12 @@ package com.jyellow.tp2api.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,9 +28,11 @@ public class Test {
 	private String startDate;
 	private String endDate;
 	private boolean finished;
+	private String diagnostic;
+	private String testType;
 
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	private List<Symptom> symptoms;
+	@OneToMany(mappedBy = "test")
+	private List<Answer> answers;
 
 	@ManyToOne
 	private Patient patient;

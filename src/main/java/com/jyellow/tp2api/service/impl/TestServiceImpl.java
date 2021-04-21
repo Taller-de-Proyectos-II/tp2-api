@@ -14,16 +14,22 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jyellow.tp2api.dto.AnswerCreateDTO;
+import com.jyellow.tp2api.dto.AnswerDTO;
+import com.jyellow.tp2api.dto.QuestionDTO;
 import com.jyellow.tp2api.dto.TestCreateDTO;
 import com.jyellow.tp2api.dto.TestDTO;
 import com.jyellow.tp2api.dto.TestUpdateDTO;
+import com.jyellow.tp2api.model.Answer;
 import com.jyellow.tp2api.model.Patient;
-import com.jyellow.tp2api.model.Symptom;
+import com.jyellow.tp2api.model.Question;
 import com.jyellow.tp2api.model.Test;
+import com.jyellow.tp2api.repository.AnswerRepository;
 import com.jyellow.tp2api.repository.PatientRepository;
-import com.jyellow.tp2api.repository.SymptomRepository;
+import com.jyellow.tp2api.repository.QuestionRepository;
 import com.jyellow.tp2api.repository.TestRepository;
 import com.jyellow.tp2api.service.TestService;
+import com.jyellow.tp2api.util.ScoreOperation;
 
 @Service
 public class TestServiceImpl implements TestService {
@@ -33,7 +39,9 @@ public class TestServiceImpl implements TestService {
 	@Autowired
 	private PatientRepository patientRepository;
 	@Autowired
-	private SymptomRepository symptomRepository;
+	private QuestionRepository questionRepository;
+	@Autowired
+	private AnswerRepository answerRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
 
@@ -41,14 +49,60 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public List<TestDTO> listByPatientDni(String patientDni) {
 		List<Test> tests = testRepository.findByPatientUserLoginDni(patientDni);
-		return tests.stream().map(test -> modelMapper.map(test, TestDTO.class)).collect(Collectors.toList());
+		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
+		TestDTO testDTO = new TestDTO();
+
+		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
+		AnswerDTO answerDTO = new AnswerDTO();
+		QuestionDTO questionDTO = new QuestionDTO();
+		for (Test test : tests) {
+			testDTO = new TestDTO();
+			testDTO = modelMapper.map(test, TestDTO.class);
+			answersDTO = new ArrayList<AnswerDTO>();
+			answerDTO = new AnswerDTO();
+			questionDTO = new QuestionDTO();
+			for (Answer answer : test.getAnswers()) {
+				answerDTO = new AnswerDTO();
+				questionDTO = new QuestionDTO();
+				answerDTO = modelMapper.map(answer, AnswerDTO.class);
+				questionDTO = modelMapper.map(answer.getQuestion(), QuestionDTO.class);
+				answerDTO.setQuestionDTO(questionDTO);
+				answersDTO.add(answerDTO);
+			}
+			testDTO.setAnswersDTO(answersDTO);
+			testsDTO.add(testDTO);
+		}
+		return testsDTO;
 	}
 
 	@Transactional
 	@Override
 	public List<TestDTO> listByPatientDniAndFinished(String patientDni, boolean finished) {
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, finished);
-		return tests.stream().map(test -> modelMapper.map(test, TestDTO.class)).collect(Collectors.toList());
+		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
+		TestDTO testDTO = new TestDTO();
+
+		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
+		AnswerDTO answerDTO = new AnswerDTO();
+		QuestionDTO questionDTO = new QuestionDTO();
+		for (Test test : tests) {
+			testDTO = new TestDTO();
+			testDTO = modelMapper.map(test, TestDTO.class);
+			answersDTO = new ArrayList<AnswerDTO>();
+			answerDTO = new AnswerDTO();
+			questionDTO = new QuestionDTO();
+			for (Answer answer : test.getAnswers()) {
+				answerDTO = new AnswerDTO();
+				questionDTO = new QuestionDTO();
+				answerDTO = modelMapper.map(answer, AnswerDTO.class);
+				questionDTO = modelMapper.map(answer.getQuestion(), QuestionDTO.class);
+				answerDTO.setQuestionDTO(questionDTO);
+				answersDTO.add(answerDTO);
+			}
+			testDTO.setAnswersDTO(answersDTO);
+			testsDTO.add(testDTO);
+		}
+		return testsDTO;
 	}
 
 	@Transactional
@@ -59,18 +113,44 @@ public class TestServiceImpl implements TestService {
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		String strDate = dateFormat.format(date);
-		
 		test.setStartDate(strDate);
 		test.setFinished(false);
 		test.setPatient(patient);
+
+		List<Question> questions = questionRepository
+				.findByQuestionTypeIdQuestionType(testCreateDTO.getIdQuestionType());
+		List<Answer> answers = new ArrayList<Answer>();
+		for (Question question : questions) {
+			answers.add(new Answer(0, 0, 0, question, test));
+		}
+		List<Answer> answersAux = answerRepository.saveAll(answers);
+		test.setAnswers(answersAux);
+		test.setTestType(answers.get(0).getQuestion().getQuestionType().getName());
+		test.setDiagnostic("");
 		testRepository.save(test);
-		return modelMapper.map(test, TestDTO.class);
+
+		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
+		AnswerDTO answerDTO = new AnswerDTO();
+		QuestionDTO questionDTO = new QuestionDTO();
+		for (Answer answer : answersAux) {
+			answerDTO = new AnswerDTO();
+			questionDTO = new QuestionDTO();
+			answerDTO = modelMapper.map(answer, AnswerDTO.class);
+			questionDTO = modelMapper.map(answer.getQuestion(), QuestionDTO.class);
+			answerDTO.setQuestionDTO(questionDTO);
+			answersDTO.add(answerDTO);
+		}
+		TestDTO testDTO = modelMapper.map(test, TestDTO.class);
+		testDTO.setAnswersDTO(answersDTO);
+
+		return testDTO;
 	}
 
 	@Transactional
 	@Override
 	public TestDTO cancel(int idTest) {
 		Test test = testRepository.findById(idTest).get();
+		answerRepository.deleteAll(test.getAnswers());
 		testRepository.deleteById(idTest);
 		return modelMapper.map(test, TestDTO.class);
 	}
@@ -82,17 +162,36 @@ public class TestServiceImpl implements TestService {
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		String strDate = dateFormat.format(date);
-		
+
 		test.setEndDate(strDate);
 		test.setFinished(true);
-		List<Symptom> symptoms = new ArrayList<Symptom>();
-		Symptom symptom = new Symptom();
-		for(int idSymptom: testUpdateDTO.getSymptoms()) {
-			symptom = symptomRepository.findById(idSymptom).get();
-			symptoms.add(symptom);
+
+		List<Answer> answers = new ArrayList<Answer>();
+		Answer answer = new Answer();
+		for (AnswerCreateDTO answerDTO : testUpdateDTO.getAnswersDTO()) {
+			answer = answerRepository.findById(answerDTO.getIdAnswer()).get();
+			answer.setScore(answerDTO.getScore());
+			answers.add(answer);
 		}
-		test.setSymptoms(symptoms);
+		List<Answer> answersAux = ScoreOperation.asignRealScore(answers, test.getTestType());
+		test.setDiagnostic(ScoreOperation.getDiagnostic(answersAux, test.getTestType()));
+		answerRepository.saveAll(answersAux);
 		testRepository.save(test);
-		return modelMapper.map(test, TestDTO.class);
+
+		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
+		AnswerDTO answerDTO = new AnswerDTO();
+		QuestionDTO questionDTO = new QuestionDTO();
+		for (Answer answerAux : answersAux) {
+			answerDTO = new AnswerDTO();
+			questionDTO = new QuestionDTO();
+			answerDTO = modelMapper.map(answerAux, AnswerDTO.class);
+			questionDTO = modelMapper.map(answerAux.getQuestion(), QuestionDTO.class);
+			answerDTO.setQuestionDTO(questionDTO);
+			answersDTO.add(answerDTO);
+		}
+		TestDTO testDTO = modelMapper.map(test, TestDTO.class);
+		testDTO.setAnswersDTO(answersDTO);
+
+		return testDTO;
 	}
 }

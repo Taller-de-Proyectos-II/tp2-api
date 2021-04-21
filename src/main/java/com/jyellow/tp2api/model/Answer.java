@@ -16,15 +16,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Symptom {
-	
+public class Answer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int idSymptom;
-	private String name;
-	private String description;
+	private int idAnswer;
+	private int score;
+	private int realScore;
 	
 	@ManyToOne
-	private Manifestation manifestation;
+	private Question question;
 	
+	@ManyToOne
+	private Test test;
 }

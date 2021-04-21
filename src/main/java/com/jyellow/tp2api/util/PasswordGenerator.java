@@ -10,7 +10,6 @@ public class PasswordGenerator {
 
 	public static String SPECIAL = "ñÑ";
 
-	//
 	public static String getPinNumber() {
 		return getPassword(NUMBERS, 4);
 	}

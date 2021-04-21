@@ -22,7 +22,7 @@ public class SymptomController {
 	private SymptomService symptomService;
 	
 	@GetMapping(path = "/listAll/", produces = "application/json")
-	public ResponseEntity<?> listSchedules() {
+	public ResponseEntity<?> listAll() {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SymptomDTO> symptomsDTO = symptomService.listAll();
