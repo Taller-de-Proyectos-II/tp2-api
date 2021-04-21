@@ -115,4 +115,18 @@ public class ScheduleController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
+	
+	@GetMapping(path = "/createDefault/", produces = "application/json")
+	public ResponseEntity<?> createDefault() {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			scheduleServcie.createDefault();
+			responseDTO.setMessage("Creación Default exitosa");
+			responseDTO.setStatus(1);
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
 }

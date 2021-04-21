@@ -32,6 +32,6 @@ public class Schedule {
 	private List<Psychologist> psychologists;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Session> session;
+	private List<Session> sessions;
 
 }

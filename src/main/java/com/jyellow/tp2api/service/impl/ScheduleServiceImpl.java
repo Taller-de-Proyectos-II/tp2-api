@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
@@ -117,5 +119,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 		}
 		return schedules.stream().map(schedule -> modelMapper.map(schedule, ScheduleDTO.class))
 				.collect(Collectors.toList());
+	}
+
+	@Transactional
+	@Override
+	public void createDefault() {
+		List<Schedule> schedules = new ArrayList<Schedule>();
+		List<Psychologist> psychologists = new ArrayList<Psychologist>();
+		List<Session> sessions = new ArrayList<Session>();
+		
+		for(int i = 1; i < 8; i++) {
+			for(int j = 8; j < 20; j++) {
+				schedules.add(new Schedule(0, j, i, psychologists, sessions));
+			}
+		}
+		scheduleRepository.saveAll(schedules);
 	}
 }
