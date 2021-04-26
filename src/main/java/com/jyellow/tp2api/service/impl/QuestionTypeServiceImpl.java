@@ -40,6 +40,7 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 		if (defaultCreation == false) {
 			questionTypes.add(new QuestionType(0, "Depresión", "Test de Depresión", questions));
 			questionTypes.add(new QuestionType(0, "Ansiedad", "Test de Ansiedad", questions));
+			questionTypes.add(new QuestionType(0, "Manifestaciones", "Test de Manifestaciones", questions));
 		}
 		questionTypeRepository.saveAll(questionTypes);
 	}

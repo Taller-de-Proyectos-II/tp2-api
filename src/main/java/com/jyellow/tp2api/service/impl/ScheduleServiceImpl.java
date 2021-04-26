@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
@@ -71,49 +69,55 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Transactional
 	@Override
-	public List<ScheduleDTO> listByPsychologistDniPatientView(String psychologistDni, String dateRequest) throws ParseException {
+	public List<ScheduleDTO> listByPsychologistDniPatientView(String psychologistDni, String dateRequest)
+			throws ParseException {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 		List<Schedule> schedules = scheduleRepository.findByPsychologistsUserLoginDni(psychologistDni);
 		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDni(psychologistDni);
-		for(Session session: sessions) {
-			
+		for (Session session : sessions) {
+
 			Date date = formatter.parse(session.getDate());
 			cal.setTime(date);
 			int weekSession = cal.get(Calendar.WEEK_OF_YEAR);
-			if(cal.get(Calendar.DAY_OF_WEEK) == 1) weekSession++; 
+			if (cal.get(Calendar.DAY_OF_WEEK) == 1)
+				weekSession++;
 			date = formatter.parse(dateRequest);
 			cal.setTime(date);
 			int weekSearch = cal.get(Calendar.WEEK_OF_YEAR);
-			if(cal.get(Calendar.DAY_OF_WEEK) == 1) weekSearch++; 
-			
-			if(schedules.contains(session.getSchedule()) && weekSession == weekSearch) {
+			if (cal.get(Calendar.DAY_OF_WEEK) == 1)
+				weekSearch++;
+
+			if (schedules.contains(session.getSchedule()) && weekSession == weekSearch) {
 				schedules.remove(session.getSchedule());
 			}
 		}
 		return schedules.stream().map(schedule -> modelMapper.map(schedule, ScheduleDTO.class))
 				.collect(Collectors.toList());
 	}
-	
+
 	@Transactional
 	@Override
-	public List<ScheduleDTO> listByPsychologistDniSessionsInSchedule(String psychologistDni, String dateRequest) throws ParseException {
+	public List<ScheduleDTO> listByPsychologistDniSessionsInSchedule(String psychologistDni, String dateRequest)
+			throws ParseException {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 		List<Schedule> schedules = new ArrayList<Schedule>();
 		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDni(psychologistDni);
-		for(Session session: sessions) {
-			
+		for (Session session : sessions) {
+
 			Date date = formatter.parse(session.getDate());
 			cal.setTime(date);
 			int weekSession = cal.get(Calendar.WEEK_OF_YEAR);
-			if(cal.get(Calendar.DAY_OF_WEEK) == 1) weekSession++; 
+			if (cal.get(Calendar.DAY_OF_WEEK) == 1)
+				weekSession++;
 			date = formatter.parse(dateRequest);
 			cal.setTime(date);
 			int weekSearch = cal.get(Calendar.WEEK_OF_YEAR);
-			if(cal.get(Calendar.DAY_OF_WEEK) == 1) weekSearch++; 
-			
-			if(weekSession == weekSearch) {
+			if (cal.get(Calendar.DAY_OF_WEEK) == 1)
+				weekSearch++;
+
+			if (weekSession == weekSearch) {
 				schedules.add(session.getSchedule());
 			}
 		}
@@ -127,9 +131,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 		List<Schedule> schedules = new ArrayList<Schedule>();
 		List<Psychologist> psychologists = new ArrayList<Psychologist>();
 		List<Session> sessions = new ArrayList<Session>();
-		
-		for(int i = 1; i < 8; i++) {
-			for(int j = 8; j < 20; j++) {
+
+		for (int i = 1; i < 8; i++) {
+			for (int j = 8; j < 20; j++) {
 				schedules.add(new Schedule(0, j, i, psychologists, sessions));
 			}
 		}

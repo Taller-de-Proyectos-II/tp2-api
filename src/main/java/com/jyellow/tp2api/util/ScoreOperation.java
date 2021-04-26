@@ -1,6 +1,12 @@
 package com.jyellow.tp2api.util;
 
+import java.util.Arrays;
 import java.util.List;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.MediaType;
 
 import com.jyellow.tp2api.model.Answer;
 
@@ -12,53 +18,84 @@ public class ScoreOperation {
 						|| i == 19) {
 					switch (answers.get(i).getScore()) {
 					case 1:
-						answers.get(i).setRealScore(4); break;
+						answers.get(i).setRealScore(4);
+						break;
 					case 2:
-						answers.get(i).setRealScore(3); break;
+						answers.get(i).setRealScore(3);
+						break;
 					case 3:
-						answers.get(i).setRealScore(2); break;
+						answers.get(i).setRealScore(2);
+						break;
 					case 4:
-						answers.get(i).setRealScore(1); break;
+						answers.get(i).setRealScore(1);
+						break;
 					}
-				}
-				else {
+				} else {
 					switch (answers.get(i).getScore()) {
 					case 1:
-						answers.get(i).setRealScore(1); break;
+						answers.get(i).setRealScore(1);
+						break;
 					case 2:
-						answers.get(i).setRealScore(2); break;
+						answers.get(i).setRealScore(2);
+						break;
 					case 3:
-						answers.get(i).setRealScore(3); break;
+						answers.get(i).setRealScore(3);
+						break;
 					case 4:
-						answers.get(i).setRealScore(4); break;
+						answers.get(i).setRealScore(4);
+						break;
 					}
 				}
 			}
-		} else {
+		} else if (questionTypeName.equals("Ansiedad")) {
 			for (int i = 0; i < answers.size(); i++) {
 				if (i == 4 || i == 8 || i == 12 || i == 16 || i == 19) {
 					switch (answers.get(i).getScore()) {
 					case 1:
-						answers.get(i).setRealScore(1); break;
+						answers.get(i).setRealScore(4);
+						break;
 					case 2:
-						answers.get(i).setRealScore(2); break;
+						answers.get(i).setRealScore(3);
+						break;
 					case 3:
-						answers.get(i).setRealScore(3); break;
+						answers.get(i).setRealScore(2);
+						break;
 					case 4:
-						answers.get(i).setRealScore(4); break;
+						answers.get(i).setRealScore(1);
+						break;
 					}
-				}
-				else {
+				} else {
 					switch (answers.get(i).getScore()) {
 					case 1:
-						answers.get(i).setRealScore(1); break;
+						answers.get(i).setRealScore(1);
+						break;
 					case 2:
-						answers.get(i).setRealScore(2); break;
+						answers.get(i).setRealScore(2);
+						break;
 					case 3:
-						answers.get(i).setRealScore(3); break;
+						answers.get(i).setRealScore(3);
+						break;
 					case 4:
-						answers.get(i).setRealScore(4); break;
+						answers.get(i).setRealScore(4);
+						break;
 					}
+				}
+			}
+		} else if (questionTypeName.equals("Manifestaciones")) {
+			for (int i = 0; i < answers.size(); i++) {
+				switch (answers.get(i).getScore()) {
+				case 1:
+					answers.get(i).setRealScore(1);
+					break;
+				case 2:
+					answers.get(i).setRealScore(2);
+					break;
+				case 3:
+					answers.get(i).setRealScore(3);
+					break;
+				case 4:
+					answers.get(i).setRealScore(4);
+					break;
 				}
 			}
 		}
@@ -67,8 +104,11 @@ public class ScoreOperation {
 
 	public static String getDiagnostic(List<Answer> answers, String questionTypeName) {
 		int score = 0;
-		for (Answer answer : answers)
+		String chain = "";
+		for (Answer answer : answers) {
 			score += answer.getRealScore();
+			chain = chain + "," + answer.getRealScore();
+		}
 		if (questionTypeName.equals("Ansiedad")) {
 			if (score >= 75)
 				return "Ansiedad grave";
@@ -78,7 +118,7 @@ public class ScoreOperation {
 				return "Ansiedad leve";
 			else
 				return "No hay ansiedad presente";
-		} else {
+		} else if (questionTypeName.equals("Depresión")) {
 			if (score >= 53)
 				return "Depresión grave";
 			else if (score <= 52 && score >= 42)
@@ -87,6 +127,17 @@ public class ScoreOperation {
 				return "Depresión leve";
 			else
 				return "No hay depresión presente";
+		} else {
+			final String uri = "https://app-tp2-ia.herokuapp.com/manifestations";
+			chain = chain.substring(1, chain.length());
+			RestTemplate restTemplate = new RestTemplate();
+			String reqBody = "{ \"manifestations\": [" + chain + "] }";
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> result = new HttpEntity<String>(reqBody, headers);
+			String resultString = restTemplate.postForObject(uri, result, String.class);
+			return resultString;
 		}
 	}
 }

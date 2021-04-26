@@ -107,16 +107,13 @@ public class TestController {
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody TestUpdateDTO testUpdateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
-		try {
+
 			TestDTO testDTO = testService.update(testUpdateDTO);
 			responseDTO.setMessage("Actualización exitosa");
 			responseDTO.setStatus(1);
 			responseDTO.setTestDTO(testDTO);
 
-		} catch (Exception e) {
-			responseDTO.setMessage("Error");
-			responseDTO.setStatus(0);
-		}
+
 		return ResponseEntity.ok(responseDTO);
 	}
 	
