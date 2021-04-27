@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.MediaType;
 
+import com.jyellow.tp2api.model.AlertAnswer;
 import com.jyellow.tp2api.model.Answer;
 
 public class ScoreOperation {
@@ -139,5 +140,26 @@ public class ScoreOperation {
 			String resultString = restTemplate.postForObject(uri, result, String.class);
 			return resultString;
 		}
+	}
+
+	public static boolean getDiagnosticAlert(List<AlertAnswer> alertAnswers) {
+		String chain = "";
+		for (AlertAnswer alertAnswer : alertAnswers)
+			chain = chain + "," + alertAnswer.getScore();
+
+		final String uri = "https://app-tp2-ia.herokuapp.com/alerts";
+		chain = chain.substring(1, chain.length());
+		RestTemplate restTemplate = new RestTemplate();
+		String reqBody = "{ \"alerts\": [" + chain + "] }";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> result = new HttpEntity<String>(reqBody, headers);
+		String resultString = restTemplate.postForObject(uri, result, String.class);
+		
+		if (resultString.equals("Sí"))
+			return true;
+		else
+			return false;
 	}
 }

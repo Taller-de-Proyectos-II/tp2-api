@@ -36,4 +36,6 @@ public class ResponseDTO {
 	private List<QuestionDTO> questionsDTO;
 	private List<QuestionTypeDTO> questionTypesDTO;
 	private QuestionTypeDTO questionTypeDTO;
+	private List<AlertDTO> alertsDTO;
+	private AlertDTO alertDTO;
 }

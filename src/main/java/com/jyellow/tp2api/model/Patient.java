@@ -47,10 +47,13 @@ public class Patient {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Image image;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Test> tests;
-	
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Alert> alerts;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Session> sessions;
 
