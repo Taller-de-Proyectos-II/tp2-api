@@ -27,6 +27,8 @@ public class Test {
 
 	private String startDate;
 	private String endDate;
+	private String startHour;
+	private String endHour;
 	private boolean finished;
 	private String diagnostic;
 	private String testType;

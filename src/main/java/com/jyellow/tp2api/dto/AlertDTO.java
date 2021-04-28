@@ -14,6 +14,7 @@ import lombok.Setter;
 public class AlertDTO {
 	private int idAlert;
 	private String date;
+	private String hour;
 	private boolean important;
 	List<AlertAnswerDTO> alertAnswersDTO;
 }

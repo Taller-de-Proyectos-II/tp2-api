@@ -25,6 +25,7 @@ public class Alert {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int idAlert;
 	private String date;
+	private String hour;
 	private boolean important;
 
 	@OneToMany(mappedBy = "alert")

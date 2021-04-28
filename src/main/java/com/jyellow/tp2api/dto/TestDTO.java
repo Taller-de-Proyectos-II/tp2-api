@@ -19,5 +19,7 @@ public class TestDTO {
 	private String diagnostic;
 	private String testType;
 	private String color;
+	private String startHour;
+	private String endHour;
 	List<AnswerDTO> answersDTO;
 }

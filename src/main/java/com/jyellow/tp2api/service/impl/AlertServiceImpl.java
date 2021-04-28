@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -15,18 +16,18 @@ import org.springframework.stereotype.Service;
 
 import com.jyellow.tp2api.dto.AlertAnswerCreateDTO;
 import com.jyellow.tp2api.dto.AlertAnswerDTO;
-import com.jyellow.tp2api.dto.SymptomDTO;
 import com.jyellow.tp2api.dto.AlertCreateDTO;
 import com.jyellow.tp2api.dto.AlertDTO;
 import com.jyellow.tp2api.dto.AlertUpdateDTO;
+import com.jyellow.tp2api.dto.SymptomDTO;
+import com.jyellow.tp2api.model.Alert;
 import com.jyellow.tp2api.model.AlertAnswer;
 import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.model.Symptom;
-import com.jyellow.tp2api.model.Alert;
 import com.jyellow.tp2api.repository.AlertAnswerRepository;
+import com.jyellow.tp2api.repository.AlertRepository;
 import com.jyellow.tp2api.repository.PatientRepository;
 import com.jyellow.tp2api.repository.SymptomRepository;
-import com.jyellow.tp2api.repository.AlertRepository;
 import com.jyellow.tp2api.service.AlertService;
 import com.jyellow.tp2api.util.ScoreOperation;
 
@@ -40,16 +41,15 @@ public class AlertServiceImpl implements AlertService {
 	private SymptomRepository symptomRepository;
 	@Autowired
 	private AlertAnswerRepository alertAnswerRepository;
-
 	ModelMapper modelMapper = new ModelMapper();
-
+	
 	@Transactional
 	@Override
 	public List<AlertDTO> listByPatientDni(String patientDni) {
 		List<Alert> alerts = alertRepository.findByPatientUserLoginDni(patientDni);
+		Collections.reverse(alerts);
 		List<AlertDTO> alertsDTO = new ArrayList<AlertDTO>();
 		AlertDTO alertDTO = new AlertDTO();
-
 		List<AlertAnswerDTO> alertAnswersDTO = new ArrayList<AlertAnswerDTO>();
 		AlertAnswerDTO alertAnswerDTO = new AlertAnswerDTO();
 		SymptomDTO symptomDTO = new SymptomDTO();
@@ -77,9 +77,9 @@ public class AlertServiceImpl implements AlertService {
 	@Override
 	public List<AlertDTO> listByPatientDniAndImportant(String patientDni, boolean important) {
 		List<Alert> alerts = alertRepository.findByPatientUserLoginDniAndImportant(patientDni, important);
+		Collections.reverse(alerts);
 		List<AlertDTO> alertsDTO = new ArrayList<AlertDTO>();
 		AlertDTO alertDTO = new AlertDTO();
-
 		List<AlertAnswerDTO> alertAnswersDTO = new ArrayList<AlertAnswerDTO>();
 		AlertAnswerDTO alertAnswerDTO = new AlertAnswerDTO();
 		SymptomDTO symptomDTO = new SymptomDTO();
@@ -110,8 +110,9 @@ public class AlertServiceImpl implements AlertService {
 		Alert alert = new Alert();
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-		String strDate = dateFormat.format(date);
-		alert.setDate(strDate);
+		DateFormat dateFormatHour = new SimpleDateFormat("HH:mm");
+		alert.setDate(dateFormat.format(date));
+		alert.setHour(dateFormatHour.format(date));
 		alert.setPatient(patient);
 
 		List<Symptom> symptoms = symptomRepository.findAll();

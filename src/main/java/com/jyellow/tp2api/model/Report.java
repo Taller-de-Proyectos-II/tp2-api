@@ -23,7 +23,7 @@ public class Report {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int idReport;
 	private String date;
-	
+	private String hour;
 	@Column(length = 600)
 	private String description;
 	

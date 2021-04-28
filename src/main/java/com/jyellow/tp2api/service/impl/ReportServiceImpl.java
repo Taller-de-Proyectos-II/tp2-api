@@ -3,6 +3,7 @@ package com.jyellow.tp2api.service.impl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,8 +44,9 @@ public class ReportServiceImpl implements ReportService {
 		Report report = new Report();
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-		String strDate = dateFormat.format(date);
-		report.setDate(strDate);
+		DateFormat dateFormatHour = new SimpleDateFormat("HH:mm");
+		report.setDate(dateFormat.format(date));
+		report.setHour(dateFormatHour.format(date));
 		report.setDescription(reportCreateDTO.getDescription());
 		report.setPatient(patient);
 		report.setPsychologist(psychologist);
@@ -73,6 +75,7 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public List<ReportDTO> listByPatientDni(String patientDni) {
 		List<Report> reports = reportRepository.findByPatientUserLoginDni(patientDni);
+		Collections.reverse(reports);
 		return reports.stream().map(report -> modelMapper.map(report, ReportDTO.class)).collect(Collectors.toList());
 	}
 }

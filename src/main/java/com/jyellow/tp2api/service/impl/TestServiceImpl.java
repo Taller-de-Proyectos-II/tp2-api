@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -48,9 +49,9 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public List<TestDTO> listByPatientDni(String patientDni) {
 		List<Test> tests = testRepository.findByPatientUserLoginDni(patientDni);
+		Collections.reverse(tests);
 		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
 		TestDTO testDTO = new TestDTO();
-
 		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
 		AnswerDTO answerDTO = new AnswerDTO();
 		QuestionDTO questionDTO = new QuestionDTO();
@@ -78,9 +79,9 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public List<TestDTO> listByPatientDniAndFinished(String patientDni, boolean finished) {
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, finished);
+		Collections.reverse(tests);
 		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
 		TestDTO testDTO = new TestDTO();
-
 		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
 		AnswerDTO answerDTO = new AnswerDTO();
 		QuestionDTO questionDTO = new QuestionDTO();
@@ -111,8 +112,9 @@ public class TestServiceImpl implements TestService {
 		Test test = new Test();
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-		String strDate = dateFormat.format(date);
-		test.setStartDate(strDate);
+		DateFormat dateFormatHour = new SimpleDateFormat("HH:mm");
+		test.setStartDate(dateFormat.format(date));
+		test.setStartHour(dateFormatHour.format(date));
 		test.setFinished(false);
 		test.setPatient(patient);
 		test.setColor("white");
@@ -161,9 +163,9 @@ public class TestServiceImpl implements TestService {
 		Test test = testRepository.findById(testUpdateDTO.getIdTest()).get();
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-		String strDate = dateFormat.format(date);
-
-		test.setEndDate(strDate);
+		DateFormat dateFormatHour = new SimpleDateFormat("HH:mm");
+		test.setEndDate(dateFormat.format(date));
+		test.setEndHour(dateFormatHour.format(date));
 		test.setFinished(true);
 
 		List<Answer> answers = new ArrayList<Answer>();

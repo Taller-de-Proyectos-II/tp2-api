@@ -13,4 +13,5 @@ public class ReportDTO {
 	private int idReport;
 	private String date;
 	private String description;
+	private String hour;
 }
