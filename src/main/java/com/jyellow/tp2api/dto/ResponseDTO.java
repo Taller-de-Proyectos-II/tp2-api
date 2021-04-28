@@ -43,4 +43,5 @@ public class ResponseDTO {
 	private List<ConferenceDTO> conferencesDTO;
 	private List<StudyDTO> studiesDTO;
 	private List<WorkExperienceDTO> workExperiencesDTO;
+	private List<RecomendationDTO> recomendationsDTO;
 }
