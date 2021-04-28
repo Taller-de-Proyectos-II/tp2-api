@@ -1,5 +1,6 @@
 package com.jyellow.tp2api.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -340,9 +341,14 @@ public class PsychologistController {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<PsychologistDTO> psychologistsDTO = psychologistService.listAll();
-			responseDTO.setPsychologistsDTO(psychologistsDTO);
-			responseDTO.setMessage("Psicólogos");
-			responseDTO.setStatus(1);
+			if (psychologistsDTO.size() == 0) {
+				responseDTO.setMessage("No se encontraron psicólogos");
+				responseDTO.setStatus(1);
+			} else {
+				responseDTO.setPsychologistsDTO(psychologistsDTO);
+				responseDTO.setMessage("Psicólogos");
+				responseDTO.setStatus(1);
+			}
 
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
@@ -361,9 +367,96 @@ public class PsychologistController {
 				responseDTO.setMessage("No se encontraron psicólogos");
 				responseDTO.setStatus(1);
 			} else {
-
 				responseDTO.setPsychologistsDTO(psychologistsDTO);
 				responseDTO.setMessage("Psicólogos filtrados");
+				responseDTO.setStatus(1);
+			}
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(path = "/courses/", produces = "application/json")
+	public ResponseEntity<?> listCourses(@RequestParam String dni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<CourseDTO> coursesDTO = new ArrayList<CourseDTO>();
+			coursesDTO = courseService.listByDni(dni);
+			if (coursesDTO == null || coursesDTO.isEmpty()) {
+				responseDTO.setMessage("No se encontraron cursos");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setCoursesDTO(coursesDTO);
+				responseDTO.setMessage("Cursos");
+				responseDTO.setStatus(1);
+			}
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(path = "/conferences/", produces = "application/json")
+	public ResponseEntity<?> listConferences(@RequestParam String dni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<ConferenceDTO> conferencesDTO = new ArrayList<ConferenceDTO>();
+			conferencesDTO = conferenceService.listByDni(dni);
+			if (conferencesDTO == null || conferencesDTO.isEmpty()) {
+				responseDTO.setMessage("No se encontraron seminarios");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setConferencesDTO(conferencesDTO);
+				responseDTO.setMessage("Seminarios");
+				responseDTO.setStatus(1);
+			}
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(path = "/studies/", produces = "application/json")
+	public ResponseEntity<?> listStudies(@RequestParam String dni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<StudyDTO> studiesDTO = new ArrayList<StudyDTO>();
+			studiesDTO = studyService.listByDni(dni);
+			if (studiesDTO == null || studiesDTO.isEmpty()) {
+				responseDTO.setMessage("No se encontraron estudios");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setStudiesDTO(studiesDTO);
+				responseDTO.setMessage("Estudios");
+				responseDTO.setStatus(1);
+			}
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(path = "/workExperiences/", produces = "application/json")
+	public ResponseEntity<?> listWorkExperiences(@RequestParam String dni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<WorkExperienceDTO> workExperiencesDTO = new ArrayList<WorkExperienceDTO>();
+			workExperiencesDTO = workExperienceService.listByDni(dni);
+			if (workExperiencesDTO == null || workExperiencesDTO.isEmpty()) {
+				responseDTO.setMessage("No se encontró experiencia laboral");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setWorkExperiencesDTO(workExperiencesDTO);
+				responseDTO.setMessage("Experiencia laboral");
 				responseDTO.setStatus(1);
 			}
 

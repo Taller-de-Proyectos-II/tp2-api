@@ -38,4 +38,9 @@ public class ResponseDTO {
 	private QuestionTypeDTO questionTypeDTO;
 	private List<AlertDTO> alertsDTO;
 	private AlertDTO alertDTO;
+	private String[] days;
+	private List<CourseDTO> coursesDTO;
+	private List<ConferenceDTO> conferencesDTO;
+	private List<StudyDTO> studiesDTO;
+	private List<WorkExperienceDTO> workExperiencesDTO;
 }
