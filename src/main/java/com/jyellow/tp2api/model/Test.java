@@ -30,6 +30,7 @@ public class Test {
 	private boolean finished;
 	private String diagnostic;
 	private String testType;
+	private String color;
 
 	@OneToMany(mappedBy = "test")
 	private List<Answer> answers;

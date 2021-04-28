@@ -18,5 +18,6 @@ public class TestDTO {
 	private boolean finished;
 	private String diagnostic;
 	private String testType;
+	private String color;
 	List<AnswerDTO> answersDTO;
 }

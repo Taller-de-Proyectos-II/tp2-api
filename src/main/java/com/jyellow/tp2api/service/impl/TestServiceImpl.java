@@ -115,6 +115,7 @@ public class TestServiceImpl implements TestService {
 		test.setStartDate(strDate);
 		test.setFinished(false);
 		test.setPatient(patient);
+		test.setColor("white");
 
 		List<Question> questions = questionRepository
 				.findByQuestionTypeIdQuestionType(testCreateDTO.getIdQuestionType());
@@ -174,6 +175,7 @@ public class TestServiceImpl implements TestService {
 		}
 		List<Answer> answersAux = ScoreOperation.asignRealScore(answers, test.getTestType());
 		test.setDiagnostic(ScoreOperation.getDiagnostic(answersAux, test.getTestType()));
+		test.setColor(ScoreOperation.getColor(test.getDiagnostic()));
 		answerRepository.saveAll(answersAux);
 		testRepository.save(test);
 

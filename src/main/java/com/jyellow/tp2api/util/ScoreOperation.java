@@ -162,4 +162,43 @@ public class ScoreOperation {
 		else
 			return false;
 	}
+	
+	public static String getColor(String diagnostic) {
+		String color = "white";
+		switch (diagnostic) {
+		case "Necesita asignación de prueba":
+			color = "red";
+			break;
+		case "Ansiedad grave":
+			color = "red";
+			break;
+		case "Depresión grave":
+			color = "red";
+			break;
+		case "Ansiedad severa":
+			color = "orange";
+			break;
+		case "Depresión severa":
+			color = "orange";
+			break;
+		case "Ansiedad leve":
+			color = "yellow";
+			break;
+		case "Depresión leve":
+			color = "yellow";
+			break;
+		case "No hay ansiedad presente":
+			color = "green";
+			break;
+		case "No hay depresión presente":
+			color = "green";
+			break;
+		case "No necesita asignación de prueba":
+			color = "green";
+			break;
+		default:
+			break;
+		}
+		return color;
+	}
 }
