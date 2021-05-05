@@ -21,5 +21,6 @@ public class TestDTO {
 	private String color;
 	private String startHour;
 	private String endHour;
+	private String score;
 	List<AnswerDTO> answersDTO;
 }
