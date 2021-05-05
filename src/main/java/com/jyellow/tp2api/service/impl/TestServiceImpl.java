@@ -77,6 +77,36 @@ public class TestServiceImpl implements TestService {
 		}
 		return testsDTO;
 	}
+	
+	@Override
+	@Transactional
+	public List<TestDTO> listByPatientDniAndTestType(String patientDni, String testType) {
+		List<Test> tests = testRepository.findByPatientUserLoginDniAndTestType(patientDni, testType);
+		Collections.reverse(tests);
+		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
+		TestDTO testDTO = new TestDTO();
+		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
+		AnswerDTO answerDTO = new AnswerDTO();
+		QuestionDTO questionDTO = new QuestionDTO();
+		for (Test test : tests) {
+			testDTO = new TestDTO();
+			testDTO = modelMapper.map(test, TestDTO.class);
+			answersDTO = new ArrayList<AnswerDTO>();
+			answerDTO = new AnswerDTO();
+			questionDTO = new QuestionDTO();
+			for (Answer answer : test.getAnswers()) {
+				answerDTO = new AnswerDTO();
+				questionDTO = new QuestionDTO();
+				answerDTO = modelMapper.map(answer, AnswerDTO.class);
+				questionDTO = modelMapper.map(answer.getQuestion(), QuestionDTO.class);
+				answerDTO.setQuestionDTO(questionDTO);
+				answersDTO.add(answerDTO);
+			}
+			testDTO.setAnswersDTO(answersDTO);
+			testsDTO.add(testDTO);
+		}
+		return testsDTO;
+	}
 
 	@Transactional
 	@Override
@@ -97,21 +127,6 @@ public class TestServiceImpl implements TestService {
 			}
 		}
 		return testsDTO;
-	}
-
-	@Transactional
-	@Override
-	public void createScoresDafault() {
-		List<Test> tests = testRepository.findAll();
-		for (Test test : tests) {
-			if (test.isFinished()) {
-				DataScoreDTO dataScoreDTO = ScoreOperation.getDiagnostic(test.getAnswers(), test.getTestType());
-				test.setScore(dataScoreDTO.getScore());
-			} else {
-				test.setScore(0);
-			}
-		}
-		testRepository.saveAll(tests);
 	}
 
 	@Transactional

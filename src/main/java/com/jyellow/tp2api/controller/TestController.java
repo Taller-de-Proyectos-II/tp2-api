@@ -48,6 +48,27 @@ public class TestController {
 		return ResponseEntity.ok(responseDTO);
 	}
 
+	@GetMapping(path = "/listByPatientDniAndTestType/", produces = "application/json")
+	public ResponseEntity<?> listByPatientDniAndTestType(@RequestParam String patientDni,
+			@RequestParam String testType) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<TestDTO> testsDTO = testService.listByPatientDniAndTestType(patientDni, testType);
+			if (testsDTO == null || testsDTO.size() == 0) {
+				responseDTO.setMessage("No se encontraron Pruebas");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Pruebas");
+				responseDTO.setStatus(1);
+				responseDTO.setTestsDTO(testsDTO);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
 	@GetMapping(path = "/listFinishedByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listFinishedByPatientDni(@RequestParam String patientDni) {
 		ResponseDTO responseDTO = new ResponseDTO();

@@ -10,5 +10,6 @@ import com.jyellow.tp2api.model.Test;
 @Repository
 public interface TestRepository extends JpaRepository<Test, Integer> {
 	List<Test> findByPatientUserLoginDni(String patientDni);
+	List<Test> findByPatientUserLoginDniAndTestType(String patientDni, String testType);
 	List<Test> findByPatientUserLoginDniAndFinished(String patientDni, boolean finished);
 }
