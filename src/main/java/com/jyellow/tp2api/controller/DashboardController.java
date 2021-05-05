@@ -1,5 +1,7 @@
 package com.jyellow.tp2api.controller;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jyellow.tp2api.dto.DashboardDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
-import com.jyellow.tp2api.dto.TestDTO;
+import com.jyellow.tp2api.dto.TestDashboardDTO;
 import com.jyellow.tp2api.service.TestService;
 
 @CrossOrigin
@@ -22,96 +24,91 @@ public class DashboardController {
 
 	@Autowired
 	private TestService testService;
-	
+
 	@GetMapping(path = "/", produces = "application/json")
-	public ResponseEntity<?> listDashboard(@RequestParam String patientDni) {
+	public ResponseEntity<?> listDashboard(@RequestParam String patientDni, @RequestParam String startDate,
+			@RequestParam String endDate) throws ParseException {
 		ResponseDTO responseDTO = new ResponseDTO();
-		try {
-			List<TestDTO> testsDTO = testService.listByPatientDni(patientDni);
-			if (testsDTO == null || testsDTO.size() == 0) {
-				responseDTO.setMessage("No se encontraron Pruebas");
-				responseDTO.setStatus(0);
-			} else {
-				int[] resultManifestacion = new int[5];
-				int[] resultAnsiedad = new int[5];
-				int[] resultDepresion = new int[5];
-				for(int i=0; i<5; i++) {
-					resultManifestacion[i] = 0;
-					resultAnsiedad[i] = 0;
-					resultDepresion[i] = 0;
-				}
-				for(TestDTO testDTO: testsDTO) {
-					if(testDTO.getTestType().equals("Depresión")) {
-						if(testDTO.getEndDate() == null) {
+
+		List<TestDashboardDTO> testsDTO = testService.listByPatientDniAndDates(patientDni, startDate, endDate);
+		if (testsDTO == null || testsDTO.size() == 0) {
+			responseDTO.setMessage("No se encontraron Pruebas");
+			responseDTO.setStatus(0);
+		} else {
+			// int[] resultManifestacion = new int[4];
+			int[] resultAnsiedad = new int[4];
+			int[] resultDepresion = new int[4];
+			// List<TestDashboardDTO> testDashboardManifestacion = new
+			// ArrayList<TestDashboardDTO>();
+			List<TestDashboardDTO> testDashboardAnsiedad = new ArrayList<TestDashboardDTO>();
+			List<TestDashboardDTO> testDashboardDepresion = new ArrayList<TestDashboardDTO>();
+
+			for (int i = 0; i < 4; i++) {
+				// resultManifestacion[i] = 0;
+				resultAnsiedad[i] = 0;
+				resultDepresion[i] = 0;
+			}
+
+			for (TestDashboardDTO testDTO : testsDTO) {
+				if (testDTO.getTestType().equals("Depresión")) {
+					if (testDTO.getEndDate() != null) {
+						testDashboardDepresion.add(testDTO);
+						switch (testDTO.getDiagnostic()) {
+						case "No hay depresión presente":
 							resultDepresion[0]++;
-						} else {
-							switch (testDTO.getDiagnostic()) {
-							case "No hay depresión presente":
-								resultDepresion[1]++;
-								break;
-							case "Depresión leve":
-								resultDepresion[2]++;
-								break;
-							case "Depresión severa":
-								resultDepresion[3]++;
-								break;
-							case "Depresión grave":
-								resultDepresion[4]++;
-								break;
-							default:
-								break;
-							}
-						}
-					} else if (testDTO.getTestType().equals("Ansiedad")) {
-						if(testDTO.getEndDate() == null) {
-							resultAnsiedad[0]++;
-						} else {
-							switch (testDTO.getDiagnostic()) {
-							case "No hay ansiedad presente":
-								resultAnsiedad[1]++;
-								break;
-							case "Ansiedad leve":
-								resultAnsiedad[2]++;
-								break;
-							case "Ansiedad severa":
-								resultAnsiedad[3]++;
-								break;
-							case "Ansiedad grave":
-								resultAnsiedad[4]++;
-								break;
-							default:
-								break;
-							}
-						}
-					} else {
-						if(testDTO.getEndDate() == null) {
-							resultManifestacion[0]++;
-						} else {
-							switch (testDTO.getDiagnostic()) {
-							case "No necesita asignación de prueba":
-								resultManifestacion[1]++;
-								break;
-							case "Necesita asignación de prueba":
-								resultManifestacion[2]++;
-								break;
-							default:
-								break;
-							}
+							break;
+						case "Depresión leve":
+							resultDepresion[1]++;
+							break;
+						case "Depresión severa":
+							resultDepresion[2]++;
+							break;
+						case "Depresión grave":
+							resultDepresion[3]++;
+							break;
+						default:
+							break;
 						}
 					}
-				}
-				
-				DashboardDTO dashboardDTO = new DashboardDTO();
-				dashboardDTO.setResultAnsiedad(resultAnsiedad);
-				dashboardDTO.setResultDepresion(resultDepresion);
-				dashboardDTO.setResultManifestacion(resultManifestacion);
-				responseDTO.setMessage("Dashboard");
-				responseDTO.setStatus(1);
-				responseDTO.setDashboardDTO(dashboardDTO);
+				} else if (testDTO.getTestType().equals("Ansiedad")) {
+					if (testDTO.getEndDate() != null) {
+						testDashboardAnsiedad.add(testDTO);
+						switch (testDTO.getDiagnostic()) {
+						case "No hay ansiedad presente":
+							resultAnsiedad[0]++;
+							break;
+						case "Ansiedad leve":
+							resultAnsiedad[1]++;
+							break;
+						case "Ansiedad severa":
+							resultAnsiedad[2]++;
+							break;
+						case "Ansiedad grave":
+							resultAnsiedad[3]++;
+							break;
+						default:
+							break;
+						}
+					}
+				} /*
+					 * else { if (testDTO.getEndDate() != null) {
+					 * testDashboardManifestacion.add(testDTO); switch (testDTO.getDiagnostic()) {
+					 * case "No necesita asignación de prueba": resultManifestacion[0]++; break;
+					 * case "Necesita asignación de prueba": resultManifestacion[1]++; break;
+					 * default: break; } } }
+					 */
 			}
-		} catch (Exception e) {
-			responseDTO.setMessage("Error");
-			responseDTO.setStatus(0);
+
+			DashboardDTO dashboardDTO = new DashboardDTO();
+			dashboardDTO.setResultAnsiedad(resultAnsiedad);
+			dashboardDTO.setResultDepresion(resultDepresion);
+			// dashboardDTO.setResultManifestacion(resultManifestacion);
+			dashboardDTO.setTestDashboardDepresion(testDashboardDepresion);
+			dashboardDTO.setTestDashboardAnsiedad(testDashboardAnsiedad);
+			// dashboardDTO.setTestDashboardManifestacion(testDashboardManifestacion);
+			responseDTO.setMessage("Dashboard");
+			responseDTO.setStatus(1);
+			responseDTO.setDashboardDTO(dashboardDTO);
 		}
 		return ResponseEntity.ok(responseDTO);
 	}

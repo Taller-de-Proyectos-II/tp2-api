@@ -1,6 +1,7 @@
 package com.jyellow.tp2api.service.impl;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,9 +17,11 @@ import org.springframework.stereotype.Service;
 
 import com.jyellow.tp2api.dto.AnswerCreateDTO;
 import com.jyellow.tp2api.dto.AnswerDTO;
+import com.jyellow.tp2api.dto.DataScoreDTO;
 import com.jyellow.tp2api.dto.QuestionDTO;
 import com.jyellow.tp2api.dto.TestCreateDTO;
 import com.jyellow.tp2api.dto.TestDTO;
+import com.jyellow.tp2api.dto.TestDashboardDTO;
 import com.jyellow.tp2api.dto.TestUpdateDTO;
 import com.jyellow.tp2api.model.Answer;
 import com.jyellow.tp2api.model.Patient;
@@ -77,6 +80,42 @@ public class TestServiceImpl implements TestService {
 
 	@Transactional
 	@Override
+	public List<TestDashboardDTO> listByPatientDniAndDates(String patientDni, String startDate, String endDate)
+			throws ParseException {
+		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, true);
+		List<TestDashboardDTO> testsDTO = new ArrayList<TestDashboardDTO>();
+		TestDashboardDTO testDashboardDTO = new TestDashboardDTO();
+		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		for (Test test : tests) {
+			if ((formatter.parse(startDate).before(formatter.parse(test.getStartDate()))
+					|| startDate.equals(test.getStartDate()))
+					&& (formatter.parse(endDate).after(formatter.parse(test.getEndDate()))
+							|| endDate.equals(test.getEndDate()))) {
+				testDashboardDTO = new TestDashboardDTO();
+				testDashboardDTO = modelMapper.map(test, TestDashboardDTO.class);
+				testsDTO.add(testDashboardDTO);
+			}
+		}
+		return testsDTO;
+	}
+
+	@Transactional
+	@Override
+	public void createScoresDafault() {
+		List<Test> tests = testRepository.findAll();
+		for (Test test : tests) {
+			if (test.isFinished()) {
+				DataScoreDTO dataScoreDTO = ScoreOperation.getDiagnostic(test.getAnswers(), test.getTestType());
+				test.setScore(dataScoreDTO.getScore());
+			} else {
+				test.setScore(0);
+			}
+		}
+		testRepository.saveAll(tests);
+	}
+
+	@Transactional
+	@Override
 	public List<TestDTO> listByPatientDniAndFinished(String patientDni, boolean finished) {
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, finished);
 		Collections.reverse(tests);
@@ -118,7 +157,7 @@ public class TestServiceImpl implements TestService {
 		test.setFinished(false);
 		test.setPatient(patient);
 		test.setColor("white");
-
+		test.setScore(0);
 		List<Question> questions = questionRepository
 				.findByQuestionTypeIdQuestionType(testCreateDTO.getIdQuestionType());
 		List<Answer> answers = new ArrayList<Answer>();
@@ -176,8 +215,10 @@ public class TestServiceImpl implements TestService {
 			answers.add(answer);
 		}
 		List<Answer> answersAux = ScoreOperation.asignRealScore(answers, test.getTestType());
-		test.setDiagnostic(ScoreOperation.getDiagnostic(answersAux, test.getTestType()));
-		test.setColor(ScoreOperation.getColor(test.getDiagnostic()));
+		DataScoreDTO dataScoreDTO = ScoreOperation.getDiagnostic(answersAux, test.getTestType());
+		test.setDiagnostic(dataScoreDTO.getDiagnostic());
+		test.setScore(dataScoreDTO.getScore());
+		test.setColor(dataScoreDTO.getColor());
 		answerRepository.saveAll(answersAux);
 		testRepository.save(test);
 

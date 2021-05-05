@@ -24,8 +24,10 @@ public class Report {
 	private int idReport;
 	private String date;
 	private String hour;
-	@Column(length = 600)
+	@Column(length = 1000)
 	private String description;
+	@Column(nullable = true)
+	private String type;
 	
 	@ManyToOne
 	private Patient patient;

@@ -47,7 +47,27 @@ public class ReportController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
+	@GetMapping(path = "/listByPatientDniAndType/", produces = "application/json")
+	public ResponseEntity<?> listByPatientDniAndType(@RequestParam String patientDni, @RequestParam String type) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<ReportDTO> reportsDTO = reportService.listByPatientDniAndType(patientDni, type);
+			if (reportsDTO == null || reportsDTO.size() == 0) {
+				responseDTO.setMessage("No se encontraron Informes");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Informes");
+				responseDTO.setStatus(1);
+				responseDTO.setReportsDTO(reportsDTO);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody ReportCreateDTO reportCreateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -63,7 +83,7 @@ public class ReportController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody ReportUpdateDTO reportUpdateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -79,7 +99,7 @@ public class ReportController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@DeleteMapping(path = "/", produces = "application/json")
 	public ResponseEntity<?> delete(@RequestParam int idReport) {
 		ResponseDTO responseDTO = new ResponseDTO();

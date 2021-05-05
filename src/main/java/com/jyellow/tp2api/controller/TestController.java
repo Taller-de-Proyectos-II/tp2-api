@@ -27,7 +27,7 @@ public class TestController {
 
 	@Autowired
 	private TestService testService;
-	
+
 	@GetMapping(path = "/listByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDni(@RequestParam String patientDni) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -47,7 +47,7 @@ public class TestController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@GetMapping(path = "/listFinishedByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listFinishedByPatientDni(@RequestParam String patientDni) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -87,7 +87,7 @@ public class TestController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody TestCreateDTO testCreateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -103,20 +103,22 @@ public class TestController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody TestUpdateDTO testUpdateDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
-
+		try {
 			TestDTO testDTO = testService.update(testUpdateDTO);
 			responseDTO.setMessage("Actualización exitosa");
 			responseDTO.setStatus(1);
 			responseDTO.setTestDTO(testDTO);
-
-
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@DeleteMapping(path = "/", produces = "application/json")
 	public ResponseEntity<?> delete(@RequestParam int idTest) {
 		ResponseDTO responseDTO = new ResponseDTO();

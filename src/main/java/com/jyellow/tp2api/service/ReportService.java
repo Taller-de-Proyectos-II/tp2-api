@@ -11,4 +11,5 @@ public interface ReportService {
 	ReportDTO update(ReportUpdateDTO reportUpdateDTO);
 	ReportDTO delete(int idReport);
 	List<ReportDTO> listByPatientDni(String patientDni);
+	List<ReportDTO> listByPatientDniAndType(String patientDni, String type);
 }

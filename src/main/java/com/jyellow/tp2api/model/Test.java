@@ -2,6 +2,7 @@ package com.jyellow.tp2api.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,6 +34,9 @@ public class Test {
 	private String diagnostic;
 	private String testType;
 	private String color;
+
+	@Column(nullable = true)
+	private int score;
 
 	@OneToMany(mappedBy = "test")
 	private List<Answer> answers;

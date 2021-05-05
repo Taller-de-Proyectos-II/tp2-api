@@ -5,9 +5,10 @@ import java.util.List;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 
+import com.jyellow.tp2api.dto.DataScoreDTO;
 import com.jyellow.tp2api.model.AlertAnswer;
 import com.jyellow.tp2api.model.Answer;
 
@@ -103,31 +104,43 @@ public class ScoreOperation {
 		return answers;
 	}
 
-	public static String getDiagnostic(List<Answer> answers, String questionTypeName) {
+	public static DataScoreDTO getDiagnostic(List<Answer> answers, String questionTypeName) {
 		int score = 0;
+		String result = "";
 		String chain = "";
+		String color = "";
 		for (Answer answer : answers) {
 			score += answer.getRealScore();
 			chain = chain + "," + answer.getRealScore();
 		}
 		if (questionTypeName.equals("Ansiedad")) {
-			if (score >= 75)
-				return "Ansiedad grave";
-			else if (score <= 74 && score >= 60)
-				return "Ansiedad severa";
-			else if (score <= 59 && score >= 45)
-				return "Ansiedad leve";
-			else
-				return "No hay ansiedad presente";
+			if (score >= 75) {
+				result = "Ansiedad grave";
+				color = "red";
+			} else if (score <= 74 && score >= 60) {
+				result = "Ansiedad severa";
+				color = "orange";
+			} else if (score <= 59 && score >= 45) {
+				result = "Ansiedad leve";
+				color = "yellow";
+			} else {
+				result = "No hay ansiedad presente";
+				color = "green";
+			}
 		} else if (questionTypeName.equals("Depresión")) {
-			if (score >= 53)
-				return "Depresión grave";
-			else if (score <= 52 && score >= 42)
-				return "Depresión severa";
-			else if (score <= 41 && score >= 28)
-				return "Depresión leve";
-			else
-				return "No hay depresión presente";
+			if (score >= 53) {
+				result = "Depresión grave";
+				color = "red";
+			} else if (score <= 52 && score >= 42) {
+				result = "Depresión severa";
+				color = "orange";
+			} else if (score <= 41 && score >= 28) {
+				result = "Depresión leve";
+				color = "yellow";
+			} else {
+				result = "No hay depresión presente";
+				color = "green";
+			}
 		} else {
 			final String uri = "https://app-tp2-ia.herokuapp.com/manifestations";
 			chain = chain.substring(1, chain.length());
@@ -136,10 +149,16 @@ public class ScoreOperation {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<String> result = new HttpEntity<String>(reqBody, headers);
-			String resultString = restTemplate.postForObject(uri, result, String.class);
-			return resultString;
+			HttpEntity<String> resultString = new HttpEntity<String>(reqBody, headers);
+			result = restTemplate.postForObject(uri, resultString, String.class);
+			if (result.equals("No necesita asignación de prueba")) {
+				color = "green";
+			} else {
+				color = "red";
+			}
 		}
+		return new DataScoreDTO(result, score, color);
+
 	}
 
 	public static boolean getDiagnosticAlert(List<AlertAnswer> alertAnswers) {
@@ -156,49 +175,11 @@ public class ScoreOperation {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> result = new HttpEntity<String>(reqBody, headers);
 		String resultString = restTemplate.postForObject(uri, result, String.class);
-		
+
 		if (resultString.equals("Sí"))
 			return true;
 		else
 			return false;
 	}
-	
-	public static String getColor(String diagnostic) {
-		String color = "white";
-		switch (diagnostic) {
-		case "Necesita asignación de prueba":
-			color = "red";
-			break;
-		case "Ansiedad grave":
-			color = "red";
-			break;
-		case "Depresión grave":
-			color = "red";
-			break;
-		case "Ansiedad severa":
-			color = "orange";
-			break;
-		case "Depresión severa":
-			color = "orange";
-			break;
-		case "Ansiedad leve":
-			color = "yellow";
-			break;
-		case "Depresión leve":
-			color = "yellow";
-			break;
-		case "No hay ansiedad presente":
-			color = "green";
-			break;
-		case "No hay depresión presente":
-			color = "green";
-			break;
-		case "No necesita asignación de prueba":
-			color = "green";
-			break;
-		default:
-			break;
-		}
-		return color;
-	}
+
 }

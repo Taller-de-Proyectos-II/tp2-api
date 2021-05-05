@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportCreateDTO {
-	private String patientDni;
-	private String psychologistDni;
-	private String description;
-	private String type;
+public class DataScoreDTO {
+	private String diagnostic;
+	private int score;
+	private String color;
 }

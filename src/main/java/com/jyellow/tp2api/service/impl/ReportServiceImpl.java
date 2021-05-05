@@ -48,6 +48,7 @@ public class ReportServiceImpl implements ReportService {
 		report.setDate(dateFormat.format(date));
 		report.setHour(dateFormatHour.format(date));
 		report.setDescription(reportCreateDTO.getDescription());
+		report.setType(reportCreateDTO.getType());
 		report.setPatient(patient);
 		report.setPsychologist(psychologist);
 		reportRepository.save(report);
@@ -75,6 +76,14 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public List<ReportDTO> listByPatientDni(String patientDni) {
 		List<Report> reports = reportRepository.findByPatientUserLoginDni(patientDni);
+		Collections.reverse(reports);
+		return reports.stream().map(report -> modelMapper.map(report, ReportDTO.class)).collect(Collectors.toList());
+	}
+	
+	@Transactional
+	@Override
+	public List<ReportDTO> listByPatientDniAndType(String patientDni, String type) {
+		List<Report> reports = reportRepository.findByPatientUserLoginDniAndType(patientDni, type);
 		Collections.reverse(reports);
 		return reports.stream().map(report -> modelMapper.map(report, ReportDTO.class)).collect(Collectors.toList());
 	}
