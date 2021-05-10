@@ -142,4 +142,14 @@ public class SessionServiceImpl implements SessionService {
 		return modelMapper.map(session, SessionDTO.class);
 	}
 
+	@Transactional
+	@Override
+	public List<SessionDTO> listByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(
+			String psychologistDni, boolean acepted, boolean finished, String patientDni) {
+		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni,
+				acepted, finished, patientDni);
+		return sessions.stream().map(session -> modelMapper.map(session, SessionDTO.class))
+				.collect(Collectors.toList());
+	}
+
 }

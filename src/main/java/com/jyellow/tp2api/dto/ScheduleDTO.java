@@ -13,4 +13,5 @@ public class ScheduleDTO {
 	private int idSchedule;
 	private int hour;
 	private int day;
+	private String patientDni;
 }

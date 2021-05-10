@@ -13,4 +13,5 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
 	List<Session> findByPsychologistUserLoginDniAndAceptedAndFinished(String psychologistDni, boolean acepted, boolean finished);
 	List<Session> findByPatientUserLoginDni(String patientDni);
 	List<Session> findByPatientUserLoginDniAndAceptedAndFinished(String patientDni, boolean acepted, boolean finished);
+	List<Session> findByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(String psychologistDni, boolean acepted, boolean finished, String patientDni);
 }

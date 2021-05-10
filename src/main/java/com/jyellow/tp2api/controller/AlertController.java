@@ -32,10 +32,10 @@ public class AlertController {
 		try {
 			List<AlertDTO> alertsDTO = alertService.listByPatientDni(patientDni);
 			if (alertsDTO == null || alertsDTO.size() == 0) {
-				responseDTO.setMessage("No se encontraron Pruebas");
+				responseDTO.setMessage("No se encontraron Alertas");
 				responseDTO.setStatus(0);
 			} else {
-				responseDTO.setMessage("Pruebas");
+				responseDTO.setMessage("Alertas");
 				responseDTO.setStatus(1);
 				responseDTO.setAlertsDTO(alertsDTO);
 			}

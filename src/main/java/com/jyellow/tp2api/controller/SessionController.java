@@ -268,6 +268,28 @@ public class SessionController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
+	
+	@GetMapping(path = "/listFinishedByPsychologistDniAndPsychologistDni/", produces = "application/json")
+	public ResponseEntity<?> listFinishedByPsychologistDniAndPsychologistDni(@RequestParam String psychologistDni, @RequestParam String patientDni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<SessionDTO> sessionsDTO = sessionService
+					.listByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni, true, true, patientDni);
+			if (sessionsDTO == null || sessionsDTO.size() == 0) {
+				responseDTO.setMessage("No se encontraron Sesiones");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Sessiones");
+				responseDTO.setStatus(1);
+				responseDTO.setSessionsDTO(sessionsDTO);
+			}
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
 
 	@GetMapping(path = "/listFinishedByPsychologistDni/", produces = "application/json")
 	public ResponseEntity<?> listFinishedByPsychologistDni(@RequestParam String psychologistDni) {

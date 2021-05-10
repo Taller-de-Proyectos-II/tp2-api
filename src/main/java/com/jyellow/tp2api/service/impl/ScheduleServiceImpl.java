@@ -102,8 +102,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 			throws ParseException {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-		List<Schedule> schedules = new ArrayList<Schedule>();
+		List<ScheduleDTO> schedulesDTO = new ArrayList<ScheduleDTO>();
 		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDni(psychologistDni);
+		ScheduleDTO scheduleDTO = new ScheduleDTO();
 		for (Session session : sessions) {
 
 			Date date = formatter.parse(session.getDate());
@@ -118,11 +119,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 				weekSearch++;
 
 			if (weekSession == weekSearch) {
-				schedules.add(session.getSchedule());
+				scheduleDTO = new ScheduleDTO();
+				scheduleDTO = modelMapper.map(session.getSchedule(), ScheduleDTO.class);
+				scheduleDTO.setPatientDni(session.getPatient().getUserLogin().getDni());
+				schedulesDTO.add(scheduleDTO);
 			}
 		}
-		return schedules.stream().map(schedule -> modelMapper.map(schedule, ScheduleDTO.class))
-				.collect(Collectors.toList());
+		return schedulesDTO;
 	}
 
 	@Transactional
