@@ -10,6 +10,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jyellow.tp2api.dto.ChangePasswordDTO;
 import com.jyellow.tp2api.dto.PatientDTO;
 import com.jyellow.tp2api.dto.UserLoginDTO;
 import com.jyellow.tp2api.model.Image;
@@ -19,6 +20,7 @@ import com.jyellow.tp2api.model.UserLogin;
 import com.jyellow.tp2api.repository.GuardianRepository;
 import com.jyellow.tp2api.repository.PatientRepository;
 import com.jyellow.tp2api.repository.PsychologistRepository;
+import com.jyellow.tp2api.repository.UserLoginRepository;
 import com.jyellow.tp2api.service.PatientService;
 
 @Service
@@ -26,6 +28,9 @@ public class PatientServiceImpl implements PatientService {
 
 	@Autowired
 	PatientRepository patientRepository;
+
+	@Autowired
+	UserLoginRepository userLoginRepository;
 
 	@Autowired
 	GuardianRepository guardianRepository;
@@ -90,10 +95,26 @@ public class PatientServiceImpl implements PatientService {
 
 	@Transactional
 	@Override
+	public int updatePassword(ChangePasswordDTO changePasswordDTO) {
+		UserLogin userLogin = userLoginRepository.findByDni(changePasswordDTO.getDni());
+		if (userLogin == null) {
+			return -1;
+		}
+		if (!userLogin.getPassword().equals(changePasswordDTO.getPassword())) {
+			return -2;
+		}
+		userLogin.setPassword(changePasswordDTO.getNewPassword());
+		userLoginRepository.save(userLogin);
+		return 1;
+	}
+
+	@Transactional
+	@Override
 	public boolean assignToPsychologist(String patientDni, String psychologistDni) {
 		Patient patient = patientRepository.findByUserLoginDni(patientDni);
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(psychologistDni);
-		Patient patientExist = patientRepository.findByUserLoginDniAndPsychologistUserLoginDni(patientDni, psychologistDni);
+		Patient patientExist = patientRepository.findByUserLoginDniAndPsychologistUserLoginDni(patientDni,
+				psychologistDni);
 
 		// Comprobar si el paciente ya está asignado
 		if (patientExist != null)

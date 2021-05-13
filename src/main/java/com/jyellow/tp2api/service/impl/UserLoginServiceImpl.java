@@ -14,16 +14,16 @@ import com.jyellow.tp2api.service.UserLoginService;
 
 @Service
 public class UserLoginServiceImpl implements UserLoginService {
-
+	
 	@Autowired
 	UserLoginRepository userLoginRepository;
-
+	
 	@Autowired
 	PatientRepository patientRepository;
-
+	
 	@Autowired
 	PsychologistRepository psychologistRepository;
-
+	
 	@Override
 	@Transactional
 	public int loginSuccessful(String dni, String password) {
@@ -37,7 +37,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 				return 1;
 		}
 	}
-
+	
 	@Override
 	@Transactional
 	public boolean existEmailPsychologist(String email) {
@@ -48,7 +48,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 			return true;
 		}
 	}
-
+	
 	@Override
 	@Transactional
 	public boolean existEmailPatient(String email) {
@@ -59,7 +59,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 			return true;
 		}
 	}
-
+	
 	@Transactional
 	@Override
 	public void changePasswordPatient(String email, String password) {
@@ -67,7 +67,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 		patient.getUserLogin().setPassword(password);
 		patientRepository.save(patient);
 	}
-
+	
 	@Transactional
 	@Override
 	public void changePasswordPsychologist(String email, String password) {
@@ -75,5 +75,5 @@ public class UserLoginServiceImpl implements UserLoginService {
 		psychologist.getUserLogin().setPassword(password);
 		psychologistRepository.save(psychologist);
 	}
-
+	
 }

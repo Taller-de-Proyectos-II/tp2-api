@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jyellow.tp2api.dto.ChangePasswordDTO;
 import com.jyellow.tp2api.dto.PsychologistDTO;
 import com.jyellow.tp2api.dto.UserLoginDTO;
 import com.jyellow.tp2api.model.Image;
@@ -66,19 +67,22 @@ public class PsychologistServiceImpl implements PsychologistService {
 
 	@Transactional
 	@Override
-	public int update(PsychologistDTO psychologistDTO, UserLoginDTO userLoginDTO) {
+	public int update(PsychologistDTO psychologistDTO) {
 
 		// Comprobar si el email está registrado con otra cuenta
 		Psychologist psychologistExist = psychologistRepository.findByEmail(psychologistDTO.getEmail());
-		if (psychologistExist != null && !psychologistExist.getUserLogin().getDni().equals(userLoginDTO.getDni()))
+		if (psychologistExist != null
+				&& !psychologistExist.getUserLogin().getDni().equals(psychologistDTO.getUserLoginDTO().getDni()))
 			return -1;
 
 		// Comprobar si el cpsp está registrado con otra cuenta
 		psychologistExist = psychologistRepository.findByCpsp(psychologistDTO.getCpsp());
-		if (psychologistExist != null && !psychologistExist.getUserLogin().getDni().equals(userLoginDTO.getDni()))
+		if (psychologistExist != null
+				&& !psychologistExist.getUserLogin().getDni().equals(psychologistDTO.getUserLoginDTO().getDni()))
 			return -2;
 
-		Psychologist psychologist = psychologistRepository.findByUserLoginDni(userLoginDTO.getDni());
+		Psychologist psychologist = psychologistRepository
+				.findByUserLoginDni(psychologistDTO.getUserLoginDTO().getDni());
 		psychologist.setBirthday(psychologistDTO.getBirthday());
 		psychologist.setCpsp(psychologistDTO.getCpsp());
 		psychologist.setDescription(psychologistDTO.getDescription());
@@ -86,9 +90,23 @@ public class PsychologistServiceImpl implements PsychologistService {
 		psychologist.setLastNames(psychologistDTO.getLastNames());
 		psychologist.setNames(psychologistDTO.getNames());
 		psychologist.setPhone(psychologistDTO.getPhone());
-		psychologist.getUserLogin().setPassword(userLoginDTO.getPassword());
 		psychologistRepository.save(psychologist);
 
+		return 1;
+	}
+
+	@Transactional
+	@Override
+	public int updatePassword(ChangePasswordDTO changePasswordDTO) {
+		UserLogin userLogin = userLoginRepository.findByDni(changePasswordDTO.getDni());
+		if (userLogin == null) {
+			return -1;
+		}
+		if (!userLogin.getPassword().equals(changePasswordDTO.getPassword())) {
+			return -2;
+		}
+		userLogin.setPassword(changePasswordDTO.getNewPassword());
+		userLoginRepository.save(userLogin);
 		return 1;
 	}
 
@@ -169,7 +187,8 @@ public class PsychologistServiceImpl implements PsychologistService {
 		else if (names == null)
 			psychologists = psychologistRepository.findByLastNamesContainingIgnoreCase(lastNames);
 		else
-			psychologists = psychologistRepository.findByNamesContainingIgnoreCaseAndLastNamesContainingIgnoreCase(names, lastNames);
+			psychologists = psychologistRepository
+					.findByNamesContainingIgnoreCaseAndLastNamesContainingIgnoreCase(names, lastNames);
 		List<PsychologistDTO> psychologistsDTO = new ArrayList<PsychologistDTO>();
 		PsychologistDTO psychologistDTO = new PsychologistDTO();
 		UserLoginDTO userLoginDTO = new UserLoginDTO();

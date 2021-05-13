@@ -16,4 +16,6 @@ public interface TestService {
 	TestDTO update(TestUpdateDTO testUpdateDTO);
 	List<TestDashboardDTO> listByPatientDniAndDates(String patientDni, String startDate, String endDate) throws ParseException;
 	List<TestDTO> listByPatientDniAndTestType(String patientDni, String testType);
+	List<TestDTO> listByPatientDniAndDatesManifestation(String patientDni, String startDate, String endDate)
+			throws ParseException;
 }

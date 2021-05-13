@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jyellow.tp2api.dto.ChangePasswordDTO;
 import com.jyellow.tp2api.dto.ConferenceDTO;
 import com.jyellow.tp2api.dto.CourseDTO;
 import com.jyellow.tp2api.dto.ExperienceDTO;
@@ -81,7 +82,7 @@ public class PsychologistController {
 	public ResponseEntity<?> update(@RequestBody PsychologistDTO psychologistDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			int result = psychologistService.update(psychologistDTO, psychologistDTO.getUserLoginDTO());
+			int result = psychologistService.update(psychologistDTO);
 			if (result == -1) {
 				responseDTO.setMessage("Email ya registrado");
 				responseDTO.setStatus(0);
@@ -93,6 +94,28 @@ public class PsychologistController {
 				responseDTO.setStatus(1);
 			}
 
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@PutMapping(path = "/updatePassword/", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> updatePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			int result = psychologistService.updatePassword(changePasswordDTO);
+			if (result == -1) {
+				responseDTO.setMessage("El dni no está registrado");
+				responseDTO.setStatus(0);
+			} else if (result == -2) {
+				responseDTO.setMessage("La contraseña no coincide");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Actualización exitosa");
+				responseDTO.setStatus(1);
+			}
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);

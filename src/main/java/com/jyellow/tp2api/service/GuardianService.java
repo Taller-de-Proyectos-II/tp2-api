@@ -15,4 +15,5 @@ public interface GuardianService {
 	GuardianDTO listByDniAndPatientDni(String dni, String patientDni);
 	void uploadImage(MultipartFile multipartImage, String dni) throws Exception;
 	ByteArrayResource getImage(String dni);
+	int delete(String dni, String patientDni);
 }

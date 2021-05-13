@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jyellow.tp2api.dto.ChangePasswordDTO;
 import com.jyellow.tp2api.dto.PatientDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.service.PatientService;
@@ -68,6 +69,28 @@ public class PatientController {
 			responseDTO.setStatus(0);
 		}
 
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@PutMapping(path = "/updatePassword/", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> updatePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			int result = patientService.updatePassword(changePasswordDTO);
+			if (result == -1) {
+				responseDTO.setMessage("El dni no está registrado");
+				responseDTO.setStatus(0);
+			} else if (result == -2) {
+				responseDTO.setMessage("La contraseña no coincide");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Actualización exitosa");
+				responseDTO.setStatus(1);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
 		return ResponseEntity.ok(responseDTO);
 	}
 
@@ -149,9 +172,10 @@ public class PatientController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@PostMapping(path = "/image/")
-	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni) throws Exception {
+	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni)
+			throws Exception {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			this.patientService.uploadImage(multipartImage, dni);

@@ -73,7 +73,20 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 		List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
 		List<Question> questions = questionRepository
 				.findByQuestionTypeIdQuestionType(questionType.getIdQuestionType());
-		System.out.println(questions.size());
+		for (Question question : questions) {
+			questionsDTO.add(modelMapper.map(question, QuestionDTO.class));
+		}
+		questionTypeDTO.setQuestionsDTO(questionsDTO);
+		return questionTypeDTO;
+	}
+	
+	@Override
+	public QuestionTypeDTO listByName(String questionTypeName) {
+		QuestionType questionType = questionTypeRepository.findByName(questionTypeName);
+		QuestionTypeDTO questionTypeDTO = modelMapper.map(questionType, QuestionTypeDTO.class);
+		List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
+		List<Question> questions = questionRepository
+				.findByQuestionTypeIdQuestionType(questionType.getIdQuestionType());
 		for (Question question : questions) {
 			questionsDTO.add(modelMapper.map(question, QuestionDTO.class));
 		}

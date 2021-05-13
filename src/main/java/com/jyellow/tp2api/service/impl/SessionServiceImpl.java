@@ -80,7 +80,11 @@ public class SessionServiceImpl implements SessionService {
 	public String create(SessionCreateDTO sessionCreateDTO) throws ParseException {
 		Session session = new Session();
 		Patient patient = patientRepository.findByUserLoginDni(sessionCreateDTO.getPatientDni());
+		if (patient == null)
+			return "El paciente no está registrado";
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(sessionCreateDTO.getPsychologistDni());
+		if (psychologist == null)
+			return "El psicólogo no está registrado";
 		List<Session> sessions = sessionRepository
 				.findByPsychologistUserLoginDni(sessionCreateDTO.getPsychologistDni());
 		session.setAcepted(false);
@@ -146,8 +150,9 @@ public class SessionServiceImpl implements SessionService {
 	@Override
 	public List<SessionDTO> listByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(
 			String psychologistDni, boolean acepted, boolean finished, String patientDni) {
-		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni,
-				acepted, finished, patientDni);
+		List<Session> sessions = sessionRepository
+				.findByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni, acepted,
+						finished, patientDni);
 		return sessions.stream().map(session -> modelMapper.map(session, SessionDTO.class))
 				.collect(Collectors.toList());
 	}

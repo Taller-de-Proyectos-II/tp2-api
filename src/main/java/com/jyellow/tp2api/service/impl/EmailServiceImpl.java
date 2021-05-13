@@ -36,7 +36,7 @@ public class EmailServiceImpl implements EmailService {
 			sender.send(message);
 			send = true;
 		} catch (Exception e) {
-			System.out.println("Error al enviar email");
+			System.out.println(e);
 		}
 		return send;
 	}
@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
 			sender.send(message);
 			send = true;
 		} catch (Exception e) {
-			System.out.println("Error al enviar email");
+			System.out.println(e);
 		}
 		return send;
 	}	

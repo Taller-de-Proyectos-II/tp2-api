@@ -12,9 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jyellow.tp2api.dto.AlertDTO;
 import com.jyellow.tp2api.dto.DashboardDTO;
+import com.jyellow.tp2api.dto.OptionDashboardDTO;
+import com.jyellow.tp2api.dto.QuestionDTO;
+import com.jyellow.tp2api.dto.QuestionTypeDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
+import com.jyellow.tp2api.dto.SymptomDTO;
+import com.jyellow.tp2api.dto.TestDTO;
 import com.jyellow.tp2api.dto.TestDashboardDTO;
+import com.jyellow.tp2api.service.AlertService;
+import com.jyellow.tp2api.service.QuestionTypeService;
+import com.jyellow.tp2api.service.SymptomService;
 import com.jyellow.tp2api.service.TestService;
 
 @CrossOrigin
@@ -24,6 +33,15 @@ public class DashboardController {
 
 	@Autowired
 	private TestService testService;
+
+	@Autowired
+	private QuestionTypeService questionTypeService;
+
+	@Autowired
+	private SymptomService symptomService;
+
+	@Autowired
+	private AlertService alertService;
 
 	@GetMapping(path = "/", produces = "application/json")
 	public ResponseEntity<?> listDashboard(@RequestParam String patientDni, @RequestParam String startDate,
@@ -35,16 +53,12 @@ public class DashboardController {
 			responseDTO.setMessage("No se encontraron Pruebas");
 			responseDTO.setStatus(0);
 		} else {
-			// int[] resultManifestacion = new int[4];
 			int[] resultAnsiedad = new int[4];
 			int[] resultDepresion = new int[4];
-			// List<TestDashboardDTO> testDashboardManifestacion = new
-			// ArrayList<TestDashboardDTO>();
 			List<TestDashboardDTO> testDashboardAnsiedad = new ArrayList<TestDashboardDTO>();
 			List<TestDashboardDTO> testDashboardDepresion = new ArrayList<TestDashboardDTO>();
 
 			for (int i = 0; i < 4; i++) {
-				// resultManifestacion[i] = 0;
 				resultAnsiedad[i] = 0;
 				resultDepresion[i] = 0;
 			}
@@ -90,13 +104,7 @@ public class DashboardController {
 							break;
 						}
 					}
-				} /*
-					 * else { if (testDTO.getEndDate() != null) {
-					 * testDashboardManifestacion.add(testDTO); switch (testDTO.getDiagnostic()) {
-					 * case "No necesita asignación de prueba": resultManifestacion[0]++; break;
-					 * case "Necesita asignación de prueba": resultManifestacion[1]++; break;
-					 * default: break; } } }
-					 */
+				}
 			}
 
 			DashboardDTO dashboardDTO = new DashboardDTO();
@@ -106,10 +114,90 @@ public class DashboardController {
 			dashboardDTO.setTestDashboardDepresion(testDashboardDepresion);
 			dashboardDTO.setTestDashboardAnsiedad(testDashboardAnsiedad);
 			// dashboardDTO.setTestDashboardManifestacion(testDashboardManifestacion);
-			responseDTO.setMessage("Dashboard");
+			responseDTO.setMessage("Dashboard Pruebas");
 			responseDTO.setStatus(1);
 			responseDTO.setDashboardDTO(dashboardDTO);
 		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(path = "/listManifestations/", produces = "application/json")
+	public ResponseEntity<?> listManifestations(@RequestParam String patientDni, @RequestParam String startDate,
+			@RequestParam String endDate) throws ParseException {
+
+		ResponseDTO responseDTO = new ResponseDTO();
+		OptionDashboardDTO optionDashboardDTO = new OptionDashboardDTO();
+		int[] result = new int[4];
+		String[] resultString = new String[4];
+
+		for (int i = 0; i < 4; i++) {
+			result[i] = 0;
+			resultString[i] = "";
+		}
+
+		QuestionTypeDTO questionTypeDTO = questionTypeService.listByName("Manifestaciones");
+		List<QuestionDTO> questionsDTO = questionTypeDTO.getQuestionsDTO();
+		resultString[0] = questionsDTO.get(0).getDescription();
+		resultString[1] = questionsDTO.get(1).getDescription();
+		resultString[2] = questionsDTO.get(2).getDescription();
+		resultString[3] = questionsDTO.get(3).getDescription();
+
+		List<TestDTO> testsDTO = testService.listByPatientDniAndDatesManifestation(patientDni, startDate, endDate);
+		for (TestDTO testDTO : testsDTO) {
+			if (testDTO.getTestType().equals("Manifestaciones")) {
+				result[0] += testDTO.getAnswersDTO().get(0).getScore();
+				result[1] += testDTO.getAnswersDTO().get(1).getScore();
+				result[2] += testDTO.getAnswersDTO().get(2).getScore();
+				result[3] += testDTO.getAnswersDTO().get(3).getScore();
+			}
+		}
+
+		optionDashboardDTO.setResult(result);
+		optionDashboardDTO.setResultString(resultString);
+		responseDTO.setOptionDashboardDTO(optionDashboardDTO);
+		responseDTO.setMessage("Dashboard Manifestaciones");
+		responseDTO.setStatus(1);
+		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping(path = "/listAlerts/", produces = "application/json")
+	public ResponseEntity<?> listAlerts(@RequestParam String patientDni, @RequestParam String startDate,
+			@RequestParam String endDate) throws ParseException {
+
+		ResponseDTO responseDTO = new ResponseDTO();
+		OptionDashboardDTO optionDashboardDTO = new OptionDashboardDTO();
+		int[] result = new int[6];
+		String[] resultString = new String[6];
+
+		for (int i = 0; i < 6; i++) {
+			result[i] = 0;
+			resultString[i] = "";
+		}
+
+		List<SymptomDTO> symptomsDTO = symptomService.listAll();
+		resultString[0] = symptomsDTO.get(0).getDescription();
+		resultString[1] = symptomsDTO.get(1).getDescription();
+		resultString[2] = symptomsDTO.get(2).getDescription();
+		resultString[3] = symptomsDTO.get(3).getDescription();
+		resultString[4] = symptomsDTO.get(4).getDescription();
+		resultString[5] = symptomsDTO.get(5).getDescription();
+
+		List<AlertDTO> alertsDTO = alertService.listByPatientDniAndDates(patientDni, startDate, endDate);
+
+		for (AlertDTO alertDTO : alertsDTO) {
+			result[0] += alertDTO.getAlertAnswersDTO().get(0).getScore();
+			result[1] += alertDTO.getAlertAnswersDTO().get(1).getScore();
+			result[2] += alertDTO.getAlertAnswersDTO().get(2).getScore();
+			result[3] += alertDTO.getAlertAnswersDTO().get(3).getScore();
+			result[4] += alertDTO.getAlertAnswersDTO().get(4).getScore();
+			result[5] += alertDTO.getAlertAnswersDTO().get(5).getScore();
+		}
+
+		optionDashboardDTO.setResult(result);
+		optionDashboardDTO.setResultString(resultString);
+		responseDTO.setOptionDashboardDTO(optionDashboardDTO);
+		responseDTO.setStatus(1);
+		responseDTO.setMessage("Dashboard Alertas");
 		return ResponseEntity.ok(responseDTO);
 	}
 }

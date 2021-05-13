@@ -7,6 +7,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,7 +38,7 @@ public class GuardianController {
 				responseDTO.setMessage("Email ya registrado");
 				responseDTO.setStatus(0);
 			} else if (result == -2) {
-				responseDTO.setMessage("DNI ya registrado");
+				responseDTO.setMessage("Apoderado ya registrado para el paciente");
 				responseDTO.setStatus(0);
 			} else {
 				responseDTO.setMessage("Registro exitoso");
@@ -71,14 +72,39 @@ public class GuardianController {
 		return ResponseEntity.ok(responseDTO);
 	}
 
+	@DeleteMapping(path = "/", produces = "application/json")
+	public ResponseEntity<?> delete(@RequestParam String dni, @RequestParam String patientDni) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			int result = guardianService.delete(dni, patientDni);
+			if (result == -1) {
+				responseDTO.setMessage("No se encontró apoderado");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Eliminación exitosa");
+				responseDTO.setStatus(1);
+			}
+
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
 	@GetMapping(path = "/listByDniAndPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByDniAndPatientDni(@RequestParam String dni, @RequestParam String patientDni) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			GuardianDTO guardianDTO = guardianService.listByDniAndPatientDni(dni, patientDni);
-			responseDTO.setMessage("Apoderado");
-			responseDTO.setStatus(1);
-			responseDTO.setGuardianDTO(guardianDTO);
+			if (guardianDTO == null) {
+				responseDTO.setMessage("No se encontró apoderado");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Apoderado");
+				responseDTO.setStatus(1);
+				responseDTO.setGuardianDTO(guardianDTO);
+			}
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);
@@ -91,9 +117,14 @@ public class GuardianController {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<GuardianDTO> guardiansDTO = guardianService.listByPatientDni(dni);
-			responseDTO.setMessage("Apoderados");
-			responseDTO.setStatus(1);
-			responseDTO.setGuardiansDTO(guardiansDTO);
+			if (guardiansDTO == null || guardiansDTO.size() == 0) {
+				responseDTO.setMessage("No se encontraron apoderados");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Apoderados");
+				responseDTO.setStatus(1);
+				responseDTO.setGuardiansDTO(guardiansDTO);
+			}
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);

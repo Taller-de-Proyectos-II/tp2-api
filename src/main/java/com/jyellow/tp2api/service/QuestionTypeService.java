@@ -8,4 +8,5 @@ public interface QuestionTypeService {
 	void createDefault();
 	List<QuestionTypeDTO> listAll();
 	QuestionTypeDTO listById(int idQuestionType);
+	QuestionTypeDTO listByName(String questionTypeName);
 }

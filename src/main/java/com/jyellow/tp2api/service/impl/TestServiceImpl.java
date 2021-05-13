@@ -77,7 +77,7 @@ public class TestServiceImpl implements TestService {
 		}
 		return testsDTO;
 	}
-	
+
 	@Override
 	@Transactional
 	public List<TestDTO> listByPatientDniAndTestType(String patientDni, String testType) {
@@ -124,6 +124,37 @@ public class TestServiceImpl implements TestService {
 				testDashboardDTO = new TestDashboardDTO();
 				testDashboardDTO = modelMapper.map(test, TestDashboardDTO.class);
 				testsDTO.add(testDashboardDTO);
+			}
+		}
+		return testsDTO;
+	}
+
+	@Transactional
+	@Override
+	public List<TestDTO> listByPatientDniAndDatesManifestation(String patientDni, String startDate, String endDate)
+			throws ParseException {
+		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, true);
+		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
+		TestDTO testDTO = new TestDTO();
+		List<AnswerDTO> answersDTO = new ArrayList<AnswerDTO>();
+		AnswerDTO answerDTO = new AnswerDTO();
+		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		for (Test test : tests) {
+			if ((formatter.parse(startDate).before(formatter.parse(test.getStartDate()))
+					|| startDate.equals(test.getStartDate()))
+					&& (formatter.parse(endDate).after(formatter.parse(test.getEndDate()))
+							|| endDate.equals(test.getEndDate()))) {
+				testDTO = new TestDTO();
+				testDTO = modelMapper.map(test, TestDTO.class);
+				answersDTO = new ArrayList<AnswerDTO>();
+				answerDTO = new AnswerDTO();
+				for (Answer answer : test.getAnswers()) {
+					answerDTO = new AnswerDTO();
+					answerDTO = modelMapper.map(answer, AnswerDTO.class);
+					answersDTO.add(answerDTO);
+				}
+				testDTO.setAnswersDTO(answersDTO);
+				testsDTO.add(testDTO);
 			}
 		}
 		return testsDTO;

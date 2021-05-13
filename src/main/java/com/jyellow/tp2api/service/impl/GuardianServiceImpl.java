@@ -34,7 +34,11 @@ public class GuardianServiceImpl implements GuardianService {
 	@Override
 	public int create(GuardianDTO guardianDTO) {
 		Patient patient = patientRepository.findByUserLoginDni(guardianDTO.getPatientDni());
-		Guardian guardian = new Guardian();
+		Guardian guardian = guardianRepository.findByDniAndPatientUserLoginDni(guardianDTO.getDni(),
+				guardianDTO.getPatientDni());
+		if (!(guardian == null))
+			return -2;
+		guardian = new Guardian();
 		guardian.setBirthday(guardianDTO.getBirthday());
 		guardian.setEmail(guardianDTO.getEmail());
 		guardian.setLastNames(guardianDTO.getLastNames());
@@ -57,6 +61,16 @@ public class GuardianServiceImpl implements GuardianService {
 		guardian.setNames(guardianDTO.getNames());
 		guardian.setPhone(guardianDTO.getPhone());
 		guardianRepository.save(guardian);
+		return 1;
+	}
+
+	@Transactional
+	@Override
+	public int delete(String dni, String patientDni) {
+		Guardian guardian = guardianRepository.findByDniAndPatientUserLoginDni(dni, patientDni);
+		if (guardian == null)
+			return -1;
+		guardianRepository.delete(guardian);
 		return 1;
 	}
 
