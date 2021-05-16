@@ -13,7 +13,7 @@ public interface GuardianService {
 	int update(GuardianDTO guardianDTO);
 	List<GuardianDTO> listByPatientDni(String patientDni);
 	GuardianDTO listByDniAndPatientDni(String dni, String patientDni);
-	void uploadImage(MultipartFile multipartImage, String dni) throws Exception;
-	ByteArrayResource getImage(String dni);
+	void uploadImage(MultipartFile multipartImage, String dni, String patientDni) throws Exception;
 	int delete(String dni, String patientDni);
+	ByteArrayResource getImage(String dni, String patientDni);
 }

@@ -133,11 +133,11 @@ public class GuardianController {
 	}
 
 	@PostMapping(path = "/image/")
-	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni)
+	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni, @RequestParam String patientDni)
 			throws Exception {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			this.guardianService.uploadImage(multipartImage, dni);
+			this.guardianService.uploadImage(multipartImage, dni, patientDni);
 			responseDTO.setMessage("Imagen actualizada");
 			responseDTO.setStatus(1);
 		} catch (Exception e) {
@@ -148,8 +148,8 @@ public class GuardianController {
 	}
 
 	@GetMapping(value = "/image/", produces = MediaType.IMAGE_JPEG_VALUE)
-	public ByteArrayResource getImage(@RequestParam String dni) {
-		ByteArrayResource image = guardianService.getImage(dni);
+	public ByteArrayResource getImage(@RequestParam String dni, @RequestParam String patientDni) {
+		ByteArrayResource image = guardianService.getImage(dni, patientDni);
 		return image;
 	}
 }

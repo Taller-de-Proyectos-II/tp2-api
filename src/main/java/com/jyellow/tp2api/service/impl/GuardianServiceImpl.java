@@ -112,7 +112,7 @@ public class GuardianServiceImpl implements GuardianService {
 
 	@Transactional
 	@Override
-	public void uploadImage(MultipartFile multipartImage, String dni) throws Exception {
+	public void uploadImage(MultipartFile multipartImage, String dni, String patientDni) throws Exception {
 		Image image = new Image();
 		try {
 			image.setName(multipartImage.getName());
@@ -122,15 +122,15 @@ public class GuardianServiceImpl implements GuardianService {
 		}
 		image.setContent(multipartImage.getBytes());
 
-		Guardian guardian = guardianRepository.findByDni(dni);
+		Guardian guardian = guardianRepository.findByDniAndPatientUserLoginDni(dni, patientDni);
 		guardian.setImage(image);
 		guardianRepository.save(guardian);
 	}
 
 	@Transactional
 	@Override
-	public ByteArrayResource getImage(String dni) {
-		byte[] image = guardianRepository.findByDni(dni).getImage().getContent();
+	public ByteArrayResource getImage(String dni, String patientDni) {
+		byte[] image = guardianRepository.findByDniAndPatientUserLoginDni(dni, patientDni).getImage().getContent();
 		return new ByteArrayResource(image);
 	}
 }
