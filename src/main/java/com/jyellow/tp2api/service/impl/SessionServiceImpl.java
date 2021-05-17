@@ -2,10 +2,10 @@ package com.jyellow.tp2api.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -13,9 +13,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jyellow.tp2api.dto.PatientDTO;
 import com.jyellow.tp2api.dto.SessionCreateDTO;
 import com.jyellow.tp2api.dto.SessionDTO;
 import com.jyellow.tp2api.dto.SessionUpdateDTO;
+import com.jyellow.tp2api.dto.UserLoginDTO;
 import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.Schedule;
@@ -43,8 +45,23 @@ public class SessionServiceImpl implements SessionService {
 	@Override
 	public List<SessionDTO> listByPsychologistUserLoginDni(String psychologistDni) {
 		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDni(psychologistDni);
-		return sessions.stream().map(session -> modelMapper.map(session, SessionDTO.class))
-				.collect(Collectors.toList());
+		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
+		SessionDTO sessionDTO = new SessionDTO();
+		PatientDTO patientDTO = new PatientDTO();
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
+		for (Session session : sessions) {
+			sessionDTO = new SessionDTO();
+			patientDTO = new PatientDTO();
+			userLoginDTO = new UserLoginDTO();
+			userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+			patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+			patientDTO.setUserLoginDTO(userLoginDTO);
+			sessionDTO = modelMapper.map(session, SessionDTO.class);
+			sessionDTO.setPatient(patientDTO);
+			sessionsDTO.add(sessionDTO);
+		}
+
+		return sessionsDTO;
 	}
 
 	@Transactional
@@ -53,16 +70,46 @@ public class SessionServiceImpl implements SessionService {
 			boolean finished) {
 		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDniAndAceptedAndFinished(psychologistDni,
 				acepted, finished);
-		return sessions.stream().map(session -> modelMapper.map(session, SessionDTO.class))
-				.collect(Collectors.toList());
+		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
+		SessionDTO sessionDTO = new SessionDTO();
+		PatientDTO patientDTO = new PatientDTO();
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
+		for (Session session : sessions) {
+			sessionDTO = new SessionDTO();
+			patientDTO = new PatientDTO();
+			userLoginDTO = new UserLoginDTO();
+			userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+			patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+			patientDTO.setUserLoginDTO(userLoginDTO);
+			sessionDTO = modelMapper.map(session, SessionDTO.class);
+			sessionDTO.setPatient(patientDTO);
+			sessionsDTO.add(sessionDTO);
+		}
+
+		return sessionsDTO;
 	}
 
 	@Transactional
 	@Override
 	public List<SessionDTO> listByPatientUserLoginDni(String patientDni) {
 		List<Session> sessions = sessionRepository.findByPatientUserLoginDni(patientDni);
-		return sessions.stream().map(session -> modelMapper.map(session, SessionDTO.class))
-				.collect(Collectors.toList());
+		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
+		SessionDTO sessionDTO = new SessionDTO();
+		PatientDTO patientDTO = new PatientDTO();
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
+		for (Session session : sessions) {
+			sessionDTO = new SessionDTO();
+			patientDTO = new PatientDTO();
+			userLoginDTO = new UserLoginDTO();
+			userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+			patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+			patientDTO.setUserLoginDTO(userLoginDTO);
+			sessionDTO = modelMapper.map(session, SessionDTO.class);
+			sessionDTO.setPatient(patientDTO);
+			sessionsDTO.add(sessionDTO);
+		}
+
+		return sessionsDTO;
 	}
 
 	@Transactional
@@ -71,8 +118,23 @@ public class SessionServiceImpl implements SessionService {
 			boolean finished) {
 		List<Session> sessions = sessionRepository.findByPatientUserLoginDniAndAceptedAndFinished(patientDni, acepted,
 				finished);
-		return sessions.stream().map(session -> modelMapper.map(session, SessionDTO.class))
-				.collect(Collectors.toList());
+		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
+		SessionDTO sessionDTO = new SessionDTO();
+		PatientDTO patientDTO = new PatientDTO();
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
+		for (Session session : sessions) {
+			sessionDTO = new SessionDTO();
+			patientDTO = new PatientDTO();
+			userLoginDTO = new UserLoginDTO();
+			userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+			patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+			patientDTO.setUserLoginDTO(userLoginDTO);
+			sessionDTO = modelMapper.map(session, SessionDTO.class);
+			sessionDTO.setPatient(patientDTO);
+			sessionsDTO.add(sessionDTO);
+		}
+
+		return sessionsDTO;
 	}
 
 	@Transactional
@@ -127,7 +189,13 @@ public class SessionServiceImpl implements SessionService {
 		session.setAcepted(true);
 		session.setMeetingLink(sessionUpdateDTO.getMeetingLink());
 		sessionRepository.save(session);
-		return modelMapper.map(session, SessionDTO.class);
+
+		UserLoginDTO userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+		PatientDTO patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+		patientDTO.setUserLoginDTO(userLoginDTO);
+		SessionDTO sessionDTO = modelMapper.map(session, SessionDTO.class);
+		sessionDTO.setPatient(patientDTO);
+		return sessionDTO;
 	}
 
 	@Transactional
@@ -136,14 +204,26 @@ public class SessionServiceImpl implements SessionService {
 		Session session = sessionRepository.findById(idSession).get();
 		session.setFinished(true);
 		sessionRepository.save(session);
-		return modelMapper.map(session, SessionDTO.class);
+
+		UserLoginDTO userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+		PatientDTO patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+		patientDTO.setUserLoginDTO(userLoginDTO);
+		SessionDTO sessionDTO = modelMapper.map(session, SessionDTO.class);
+		sessionDTO.setPatient(patientDTO);
+		return sessionDTO;
 	}
 
 	@Transactional
 	@Override
 	public SessionDTO listById(int idSession) {
 		Session session = sessionRepository.findById(idSession).get();
-		return modelMapper.map(session, SessionDTO.class);
+
+		UserLoginDTO userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+		PatientDTO patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+		patientDTO.setUserLoginDTO(userLoginDTO);
+		SessionDTO sessionDTO = modelMapper.map(session, SessionDTO.class);
+		sessionDTO.setPatient(patientDTO);
+		return sessionDTO;
 	}
 
 	@Transactional
@@ -153,8 +233,23 @@ public class SessionServiceImpl implements SessionService {
 		List<Session> sessions = sessionRepository
 				.findByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni, acepted,
 						finished, patientDni);
-		return sessions.stream().map(session -> modelMapper.map(session, SessionDTO.class))
-				.collect(Collectors.toList());
+		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
+		SessionDTO sessionDTO = new SessionDTO();
+		PatientDTO patientDTO = new PatientDTO();
+		UserLoginDTO userLoginDTO = new UserLoginDTO();
+		for (Session session : sessions) {
+			sessionDTO = new SessionDTO();
+			patientDTO = new PatientDTO();
+			userLoginDTO = new UserLoginDTO();
+			userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
+			patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
+			patientDTO.setUserLoginDTO(userLoginDTO);
+			sessionDTO = modelMapper.map(session, SessionDTO.class);
+			sessionDTO.setPatient(patientDTO);
+			sessionsDTO.add(sessionDTO);
+		}
+
+		return sessionsDTO;
 	}
 
 }
