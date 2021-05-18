@@ -174,8 +174,9 @@ public class SessionServiceImpl implements SessionService {
 			return "Horario fuera del rango de atención del psicólogo";
 		for (Session sessionAux : sessions) {
 			if (sessionAux.getSchedule().getDay() == day && sessionAux.getSchedule().getHour() == hour
-					&& sessionCreateDTO.getDate().equals(session.getDate()))
+					&& sessionCreateDTO.getDate().equals(sessionAux.getDate())) {
 				return "Horario ya reservado";
+			}
 		}
 		session.setSchedule(schedule);
 		sessionRepository.save(session);
