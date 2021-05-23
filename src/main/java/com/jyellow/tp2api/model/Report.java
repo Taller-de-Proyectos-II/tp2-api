@@ -24,7 +24,7 @@ public class Report {
 	private int idReport;
 	private String date;
 	private String hour;
-	@Column(length = 1000)
+	@Column(length = 2004)
 	private String description;
 	@Column(nullable = true)
 	private String type;

@@ -1,6 +1,9 @@
 package com.jyellow.tp2api.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,8 @@ import com.jyellow.tp2api.dto.ReportDTO;
 import com.jyellow.tp2api.dto.ReportUpdateDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.service.ReportService;
+import com.jyellow.tp2api.util.ReportPDFExporter;
+import com.lowagie.text.DocumentException;
 
 @CrossOrigin
 @RestController
@@ -27,6 +32,9 @@ public class ReportController {
 
 	@Autowired
 	private ReportService reportService;
+	
+	@Autowired
+	private ReportPDFExporter reportExporterService;
 
 	@GetMapping(path = "/listByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDni(@RequestParam String patientDni) {
@@ -114,5 +122,17 @@ public class ReportController {
 			responseDTO.setStatus(0);
 		}
 		return ResponseEntity.ok(responseDTO);
+	}
+
+	@GetMapping("/export/")
+	public void export(@RequestParam int idReport, HttpServletResponse response)
+			throws DocumentException, IOException {
+		response.setContentType("application/pdf");
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=report.pdf";
+		response.setHeader(headerKey, headerValue);
+
+		reportExporterService.export(response, idReport);
+
 	}
 }
