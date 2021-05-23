@@ -11,4 +11,5 @@ import com.jyellow.tp2api.model.Alert;
 public interface AlertRepository extends JpaRepository<Alert, Integer> {
 	List<Alert> findByPatientUserLoginDni(String patientDni);
 	List<Alert> findByPatientUserLoginDniAndImportant(String patientDni, boolean important);
+	List<Alert> findByPatientPsychologistUserLoginDni(String psychologistDni);
 }

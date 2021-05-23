@@ -12,4 +12,7 @@ public interface TestRepository extends JpaRepository<Test, Integer> {
 	List<Test> findByPatientUserLoginDni(String patientDni);
 	List<Test> findByPatientUserLoginDniAndTestType(String patientDni, String testType);
 	List<Test> findByPatientUserLoginDniAndFinished(String patientDni, boolean finished);
+	
+	List<Test> findByPatientPsychologistUserLoginDniAndTestType(String psychologistDni, String testType);
+	List<Test> findByPatientPsychologistUserLoginDniAndFinished(String psychologistDni, boolean finished);
 }

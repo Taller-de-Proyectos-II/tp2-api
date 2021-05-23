@@ -13,4 +13,6 @@ public interface AlertService {
 	AlertDTO create(AlertCreateDTO testCreateDTO);
 	AlertDTO update(AlertUpdateDTO alertUpdateDTO);
 	List<AlertDTO> listByPatientDniAndDates(String patientDni, String startDate, String endDate) throws ParseException;
+	List<AlertDTO> listByPsychologistDniAndDates(String psychologist, String startDate, String endDate)
+			throws ParseException;
 }

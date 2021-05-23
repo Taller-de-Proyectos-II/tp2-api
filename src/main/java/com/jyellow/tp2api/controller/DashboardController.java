@@ -143,20 +143,26 @@ public class DashboardController {
 		resultString[3] = questionsDTO.get(3).getDescription();
 
 		List<TestDTO> testsDTO = testService.listByPatientDniAndDatesManifestation(patientDni, startDate, endDate);
-		for (TestDTO testDTO : testsDTO) {
-			if (testDTO.getTestType().equals("Manifestaciones")) {
-				result[0] += testDTO.getAnswersDTO().get(0).getScore();
-				result[1] += testDTO.getAnswersDTO().get(1).getScore();
-				result[2] += testDTO.getAnswersDTO().get(2).getScore();
-				result[3] += testDTO.getAnswersDTO().get(3).getScore();
-			}
-		}
 
-		optionDashboardDTO.setResult(result);
-		optionDashboardDTO.setResultString(resultString);
-		responseDTO.setOptionDashboardDTO(optionDashboardDTO);
-		responseDTO.setMessage("Dashboard Manifestaciones");
-		responseDTO.setStatus(1);
+		if (testsDTO == null || testsDTO.size() == 0) {
+			responseDTO.setMessage("No se encontraron Maniefstaciones");
+			responseDTO.setStatus(0);
+		} else {
+			for (TestDTO testDTO : testsDTO) {
+				if (testDTO.getTestType().equals("Manifestaciones")) {
+					result[0] += testDTO.getAnswersDTO().get(0).getScore();
+					result[1] += testDTO.getAnswersDTO().get(1).getScore();
+					result[2] += testDTO.getAnswersDTO().get(2).getScore();
+					result[3] += testDTO.getAnswersDTO().get(3).getScore();
+				}
+			}
+
+			optionDashboardDTO.setResult(result);
+			optionDashboardDTO.setResultString(resultString);
+			responseDTO.setOptionDashboardDTO(optionDashboardDTO);
+			responseDTO.setMessage("Dashboard Manifestaciones");
+			responseDTO.setStatus(1);
+		}
 		return ResponseEntity.ok(responseDTO);
 	}
 
@@ -183,21 +189,141 @@ public class DashboardController {
 		resultString[5] = symptomsDTO.get(5).getDescription();
 
 		List<AlertDTO> alertsDTO = alertService.listByPatientDniAndDates(patientDni, startDate, endDate);
+		if (alertsDTO == null || alertsDTO.size() == 0) {
+			responseDTO.setMessage("No se encontraron Alertas");
+			responseDTO.setStatus(0);
+		} else {
 
-		for (AlertDTO alertDTO : alertsDTO) {
-			result[0] += alertDTO.getAlertAnswersDTO().get(0).getScore();
-			result[1] += alertDTO.getAlertAnswersDTO().get(1).getScore();
-			result[2] += alertDTO.getAlertAnswersDTO().get(2).getScore();
-			result[3] += alertDTO.getAlertAnswersDTO().get(3).getScore();
-			result[4] += alertDTO.getAlertAnswersDTO().get(4).getScore();
-			result[5] += alertDTO.getAlertAnswersDTO().get(5).getScore();
+			for (AlertDTO alertDTO : alertsDTO) {
+				result[0] += alertDTO.getAlertAnswersDTO().get(0).getScore();
+				result[1] += alertDTO.getAlertAnswersDTO().get(1).getScore();
+				result[2] += alertDTO.getAlertAnswersDTO().get(2).getScore();
+				result[3] += alertDTO.getAlertAnswersDTO().get(3).getScore();
+				result[4] += alertDTO.getAlertAnswersDTO().get(4).getScore();
+				result[5] += alertDTO.getAlertAnswersDTO().get(5).getScore();
+			}
+
+			optionDashboardDTO.setResult(result);
+			optionDashboardDTO.setResultString(resultString);
+			responseDTO.setOptionDashboardDTO(optionDashboardDTO);
+			responseDTO.setStatus(1);
+			responseDTO.setMessage("Dashboard Alertas");
 		}
-
-		optionDashboardDTO.setResult(result);
-		optionDashboardDTO.setResultString(resultString);
-		responseDTO.setOptionDashboardDTO(optionDashboardDTO);
-		responseDTO.setStatus(1);
-		responseDTO.setMessage("Dashboard Alertas");
 		return ResponseEntity.ok(responseDTO);
 	}
+
+	@GetMapping(path = "/listDashboardAllPatients/", produces = "application/json")
+	public ResponseEntity<?> listDashboardAllPatients(@RequestParam String psychologistDni,
+			@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
+		ResponseDTO responseDTO = new ResponseDTO();
+
+		int[] resultAlert = new int[2];
+		int[] resultAnsiedad = new int[4];
+		int[] resultDepresion = new int[4];
+		int[] resultManifestacion = new int[2];
+
+		// Lista de Pruebas
+		List<TestDashboardDTO> testsDTO = testService.listByPsychologistDniAndDates(psychologistDni, startDate,
+				endDate);
+		if (testsDTO == null || testsDTO.size() == 0) {
+			responseDTO.setMessage("No se encontraron Pruebas");
+			responseDTO.setStatus(0);
+		} else {
+
+			for (int i = 0; i < 4; i++) {
+				resultAnsiedad[i] = 0;
+				resultDepresion[i] = 0;
+			}
+			for (int i = 0; i < 2; i++) {
+				resultManifestacion[i] = 0;
+			}
+
+			for (TestDashboardDTO testDTO : testsDTO) {
+				if (testDTO.getEndDate() != null) {
+					if (testDTO.getTestType().equals("Depresión")) {
+						switch (testDTO.getDiagnostic()) {
+						case "No hay depresión presente":
+							resultDepresion[0]++;
+							break;
+						case "Depresión leve":
+							resultDepresion[1]++;
+							break;
+						case "Depresión severa":
+							resultDepresion[2]++;
+							break;
+						case "Depresión grave":
+							resultDepresion[3]++;
+							break;
+						default:
+							break;
+
+						}
+					} else if (testDTO.getTestType().equals("Ansiedad")) {
+						switch (testDTO.getDiagnostic()) {
+						case "No hay ansiedad presente":
+							resultAnsiedad[0]++;
+							break;
+						case "Ansiedad leve":
+							resultAnsiedad[1]++;
+							break;
+						case "Ansiedad severa":
+							resultAnsiedad[2]++;
+							break;
+						case "Ansiedad grave":
+							resultAnsiedad[3]++;
+							break;
+						default:
+							break;
+
+						}
+					} else {
+						switch (testDTO.getDiagnostic()) {
+						case "No necesita asignación de prueba":
+							resultManifestacion[0]++;
+							break;
+						case "Necesita asignación de prueba":
+							resultManifestacion[1]++;
+							break;
+						default:
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		// Lista de Alertas
+		List<AlertDTO> alertsDTO = alertService.listByPsychologistDniAndDates(psychologistDni, startDate, endDate);
+
+		if (alertsDTO == null || alertsDTO.size() == 0) {
+			if (responseDTO.getMessage() == null || responseDTO.getMessage().isEmpty()) {
+				responseDTO.setMessage("No se encontraron Alertas");
+			} else {
+				responseDTO.setMessage("ni Alertas");
+			}
+			responseDTO.setStatus(0);
+		} else {
+			resultAlert[0] = 0;
+			resultAlert[1] = 0;
+
+			for (AlertDTO alertDTO : alertsDTO) {
+				if (alertDTO.isImportant()) {
+					resultAlert[0]++;
+				} else {
+					resultAlert[1]++;
+				}
+			}
+		}
+
+		DashboardDTO dashboardDTO = new DashboardDTO();
+		dashboardDTO.setResultAnsiedad(resultAnsiedad);
+		dashboardDTO.setResultDepresion(resultDepresion);
+		dashboardDTO.setResultManifestacion(resultManifestacion);
+		dashboardDTO.setResultAlert(resultAlert);
+		responseDTO.setMessage("Dashboard General");
+		responseDTO.setStatus(1);
+		responseDTO.setDashboardDTO(dashboardDTO);
+		return ResponseEntity.ok(responseDTO);
+	}
+
 }

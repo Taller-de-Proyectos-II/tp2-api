@@ -204,4 +204,34 @@ public class AlertServiceImpl implements AlertService {
 
 		return alertDTO;
 	}
+	
+	@Transactional
+	@Override
+	public List<AlertDTO> listByPsychologistDniAndDates(String psychologistDni, String startDate, String endDate) throws ParseException {
+		List<Alert> alerts = alertRepository.findByPatientPsychologistUserLoginDni(psychologistDni);
+		List<AlertDTO> alertsDTO = new ArrayList<AlertDTO>();
+		AlertDTO alertDTO = new AlertDTO();
+		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		AlertAnswerDTO alertAnswerDTO = new AlertAnswerDTO();
+		List<AlertAnswerDTO> alertAnswersDTO = new ArrayList<AlertAnswerDTO>();
+		for (Alert alert : alerts) {
+			if ((formatter.parse(startDate).before(formatter.parse(alert.getDate()))
+					|| startDate.equals(alert.getDate()))
+					&& (formatter.parse(endDate).after(formatter.parse(alert.getDate()))
+							|| endDate.equals(alert.getDate()))) {
+				alertDTO = new AlertDTO();
+				alertDTO = modelMapper.map(alert, AlertDTO.class);
+				alertAnswersDTO = new ArrayList<AlertAnswerDTO>();
+				alertAnswerDTO = new AlertAnswerDTO();
+				for (AlertAnswer alertAnswer : alert.getAlertAnswers()) {
+					alertAnswerDTO = new AlertAnswerDTO();
+					alertAnswerDTO = modelMapper.map(alertAnswer, AlertAnswerDTO.class);
+					alertAnswersDTO.add(alertAnswerDTO);
+				}
+				alertDTO.setAlertAnswersDTO(alertAnswersDTO);
+				alertsDTO.add(alertDTO);
+			}
+		}
+		return alertsDTO;
+	}
 }

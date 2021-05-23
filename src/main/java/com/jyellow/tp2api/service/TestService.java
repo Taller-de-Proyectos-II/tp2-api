@@ -18,4 +18,6 @@ public interface TestService {
 	List<TestDTO> listByPatientDniAndTestType(String patientDni, String testType);
 	List<TestDTO> listByPatientDniAndDatesManifestation(String patientDni, String startDate, String endDate)
 			throws ParseException;
+	List<TestDashboardDTO> listByPsychologistDniAndDates(String psychologistDni, String startDate, String endDate)
+			throws ParseException;
 }

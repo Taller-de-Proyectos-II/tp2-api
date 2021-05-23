@@ -284,4 +284,25 @@ public class TestServiceImpl implements TestService {
 
 		return testDTO;
 	}
+	
+	@Transactional
+	@Override
+	public List<TestDashboardDTO> listByPsychologistDniAndDates(String psychologistDni, String startDate, String endDate)
+			throws ParseException {
+		List<Test> tests = testRepository.findByPatientPsychologistUserLoginDniAndFinished(psychologistDni, true);
+		List<TestDashboardDTO> testsDTO = new ArrayList<TestDashboardDTO>();
+		TestDashboardDTO testDashboardDTO = new TestDashboardDTO();
+		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		for (Test test : tests) {
+			if ((formatter.parse(startDate).before(formatter.parse(test.getStartDate()))
+					|| startDate.equals(test.getStartDate()))
+					&& (formatter.parse(endDate).after(formatter.parse(test.getEndDate()))
+							|| endDate.equals(test.getEndDate()))) {
+				testDashboardDTO = new TestDashboardDTO();
+				testDashboardDTO = modelMapper.map(test, TestDashboardDTO.class);
+				testsDTO.add(testDashboardDTO);
+			}
+		}
+		return testsDTO;
+	}
 }

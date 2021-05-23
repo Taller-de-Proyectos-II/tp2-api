@@ -12,10 +12,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DashboardDTO {
-	// private int[] resultManifestacion;
+	private int[] resultManifestacion;
 	private int[] resultAnsiedad;
 	private int[] resultDepresion;
-	// private List<TestDashboardDTO> testDashboardManifestacion;
+	private int[] resultAlert;
+	private List<TestDashboardDTO> testDashboardManifestacion;
 	private List<TestDashboardDTO> testDashboardAnsiedad;
 	private List<TestDashboardDTO> testDashboardDepresion;
 }
