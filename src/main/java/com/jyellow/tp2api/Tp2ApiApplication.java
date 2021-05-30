@@ -39,6 +39,10 @@ public class Tp2ApiApplication {
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/login/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/patient/image/").permitAll()
+				.antMatchers(HttpMethod.POST, "/patient/image/").permitAll()
+				.antMatchers(HttpMethod.GET, "/guardian/image/").permitAll()
+				.antMatchers(HttpMethod.POST, "/guardian/image/").permitAll()
 				.anyRequest().authenticated();
 			http.cors();
 		}
