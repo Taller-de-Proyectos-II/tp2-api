@@ -16,6 +16,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ResponseDTO {
 	private int status;
+	private String token;
 	private String message;
 	private GuardianDTO guardianDTO;
 	private PsychologistDTO psychologistDTO;

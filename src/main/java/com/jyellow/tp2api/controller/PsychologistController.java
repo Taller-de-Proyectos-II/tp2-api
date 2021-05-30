@@ -52,32 +52,6 @@ public class PsychologistController {
 	@Autowired
 	WorkExperienceService workExperienceService;
 
-	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<?> create(@RequestBody PsychologistDTO psychologistDTO) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		try {
-			int result = psychologistService.create(psychologistDTO, psychologistDTO.getUserLoginDTO());
-			if (result == -1) {
-				responseDTO.setMessage("Email ya registrado");
-				responseDTO.setStatus(0);
-			} else if (result == -2) {
-				responseDTO.setMessage("DNI ya registrado");
-				responseDTO.setStatus(0);
-			} else if (result == -3) {
-				responseDTO.setMessage("CPSP ya registrado");
-				responseDTO.setStatus(0);
-			} else {
-				responseDTO.setMessage("Registro exitoso");
-				responseDTO.setStatus(1);
-			}
-
-		} catch (Exception e) {
-			responseDTO.setMessage("Error");
-			responseDTO.setStatus(0);
-		}
-		return ResponseEntity.ok(responseDTO);
-	}
-
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody PsychologistDTO psychologistDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
