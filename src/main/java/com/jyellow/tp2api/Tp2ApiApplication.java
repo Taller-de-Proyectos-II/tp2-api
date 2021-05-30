@@ -38,9 +38,9 @@ public class Tp2ApiApplication {
 			http.csrf().disable()
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
-				.antMatchers(HttpMethod.OPTIONS, "/login/").permitAll()
-				.antMatchers(HttpMethod.OPTIONS, "/swagger-ui/#").permitAll()
+				.antMatchers(HttpMethod.POST, "/login/").permitAll()
 				.anyRequest().authenticated();
+			http.cors();
 		}
 	}
 
