@@ -26,9 +26,10 @@ public class DateController {
 			SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
 			Date dateAux = format.parse(date);
 			now.setTime(dateAux);
+			now.add(Calendar.DAY_OF_MONTH, -1);
 
 			String[] days = new String[7];
-			int delta = -now.get(GregorianCalendar.DAY_OF_WEEK) + 1;
+			int delta = -now.get(GregorianCalendar.DAY_OF_WEEK) + 2;
 			now.add(Calendar.DAY_OF_MONTH, delta);
 			for (int i = 0; i < 7; i++) {
 				days[i] = format.format(now.getTime());
