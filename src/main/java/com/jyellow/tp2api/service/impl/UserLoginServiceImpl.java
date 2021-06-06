@@ -3,11 +3,15 @@ package com.jyellow.tp2api.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.jyellow.tp2api.config.PropertyServiceForJasyptStarter;
+import com.jyellow.tp2api.dto.QuestionTypeDTO;
+import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.UserLogin;
@@ -38,10 +42,11 @@ public class UserLoginServiceImpl implements UserLoginService {
 	public int loginSuccessful(String dni, String password) {
 		log.info("UserLoginServiceImpl: method loginSuccessful");
 		UserLogin userLogin = userLoginRepository.findByDni(dni);
+		log.info("UserLoginServiceImpl: method loginSuccessful");
 		if (userLogin == null)
 			return -1;
 		else {
-			if (!userLogin.getPassword().equals(encoder.encode(password)))
+			if (!encoder.matches(password, userLogin.getPassword()))
 				return -2;
 			else
 				return 1;
@@ -106,9 +111,8 @@ public class UserLoginServiceImpl implements UserLoginService {
 	public void convertPasswords() {
 		List<UserLogin> users = userLoginRepository.findAll();
 		for(UserLogin user: users) {
-			user.setPassword(encoder.encode(user.getPassword()));
+			user.setPassword(encoder.encode("1234"));
 			userLoginRepository.save(user);
 		}
 	}
-	
 }

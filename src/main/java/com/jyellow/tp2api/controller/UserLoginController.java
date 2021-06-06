@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -207,4 +208,20 @@ public class UserLoginController {
 		return "Bearer " + token;
 	}
 
+	/*
+	@PostMapping(path = "/convertDefault/", produces = "application/json")
+	public ResponseEntity<?> convertDefault() {
+		log.info("UserLoginController: method convertDefault");
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			userLoginService.convertPasswords();
+			responseDTO.setStatus(1);
+			responseDTO.setMessage("Conversión exitosa");
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+	*/
 }
