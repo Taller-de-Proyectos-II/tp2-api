@@ -3,7 +3,7 @@ package com.jyellow.tp2api.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 	@Autowired
 	PropertyServiceForJasyptStarter encryptorService;
 	@Autowired
-	BCryptPasswordEncoder encoder;
+	PasswordEncoder encoder;
 	
 	@Override
 	@Transactional

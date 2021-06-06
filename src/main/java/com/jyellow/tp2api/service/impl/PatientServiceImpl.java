@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +39,7 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	PsychologistRepository psychologistRepository;
 	@Autowired
-	BCryptPasswordEncoder encoder;
+	PasswordEncoder encoder;
 
 	@Override
 	public Patient validatePatientByDni(String dni) {

@@ -7,17 +7,26 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.jyellow.tp2api.config.JWTAuthorizationFilter;
 
 @SpringBootApplication
 public class Tp2ApiApplication {
+	
+	@Bean
+	PasswordEncoder passwordEncoder() 
+	{
+	    return new BCryptPasswordEncoder();
+	}
 
     @PostConstruct
     public void init(){
@@ -48,6 +57,4 @@ public class Tp2ApiApplication {
 			http.cors();
 		}
 	}
-
-
 }
