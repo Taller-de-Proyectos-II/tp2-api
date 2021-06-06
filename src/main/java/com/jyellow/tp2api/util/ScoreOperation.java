@@ -142,7 +142,7 @@ public class ScoreOperation {
 				color = "green";
 			}
 		} else {
-			final String uri = "http://ec2-54-221-183-159.compute-1.amazonaws.com:8081/manifestations";
+			final String uri = "https://app-tp2-ia.herokuapp.com/manifestations";
 			chain = chain.substring(1, chain.length());
 			RestTemplate restTemplate = new RestTemplate();
 			String reqBody = "{ \"manifestations\": [" + chain + "] }";
@@ -166,7 +166,7 @@ public class ScoreOperation {
 		for (AlertAnswer alertAnswer : alertAnswers)
 			chain = chain + "," + alertAnswer.getScore();
 
-		final String uri = "http://ec2-54-221-183-159.compute-1.amazonaws.com:8081/alerts";
+		final String uri = "https://app-tp2-ia.herokuapp.com/alerts";
 		chain = chain.substring(1, chain.length());
 		RestTemplate restTemplate = new RestTemplate();
 		String reqBody = "{ \"alerts\": [" + chain + "] }";
