@@ -21,9 +21,12 @@ import com.jyellow.tp2api.dto.PatientDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.service.PatientService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/patient")
+@Log4j2
 public class PatientController {
 
 	@Autowired
@@ -31,6 +34,7 @@ public class PatientController {
 
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody PatientDTO patientDTO) {
+		log.info("PatientController: method update");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int result = patientService.update(patientDTO);
@@ -51,6 +55,7 @@ public class PatientController {
 
 	@PutMapping(path = "/updatePassword/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> updatePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+		log.info("PatientController: method updatePassword");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int result = patientService.updatePassword(changePasswordDTO);
@@ -73,6 +78,7 @@ public class PatientController {
 
 	@GetMapping(path = "/listByDni/", produces = "application/json")
 	public ResponseEntity<?> listByDni(@RequestParam String dni) {
+		log.info("PatientController: method listByDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			PatientDTO patientDTO = patientService.listByDni(dni);
@@ -93,6 +99,7 @@ public class PatientController {
 
 	@GetMapping(path = "/listByPsychologistDni/", produces = "application/json")
 	public ResponseEntity<?> listByPsychologistDni(@RequestParam String psychologistDni) {
+		log.info("PatientController: method listByPsychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<PatientDTO> patientsDTO = patientService.listByPsychologistDni(psychologistDni);
@@ -114,6 +121,7 @@ public class PatientController {
 	@GetMapping(path = "/assignToPsychologist/", produces = "application/json")
 	public ResponseEntity<?> assignToPsychologist(@RequestParam String patientDni,
 			@RequestParam String psychologistDni) {
+		log.info("PatientController: method psychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			boolean result = patientService.assignToPsychologist(patientDni, psychologistDni);
@@ -133,6 +141,7 @@ public class PatientController {
 
 	@GetMapping(path = "/removePsychologist/", produces = "application/json")
 	public ResponseEntity<?> removePsychologist(@RequestParam String patientDni) {
+		log.info("PatientController: method removePsychologist");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			boolean result = patientService.removePsychologist(patientDni);
@@ -153,6 +162,7 @@ public class PatientController {
 	@PostMapping(path = "/image/")
 	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni)
 			throws Exception {
+		log.info("PatientController: method uploadImage");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			this.patientService.uploadImage(multipartImage, dni);
@@ -167,6 +177,7 @@ public class PatientController {
 
 	@GetMapping(value = "/image/", produces = MediaType.IMAGE_JPEG_VALUE)
 	public ByteArrayResource getImage(@RequestParam String dni) {
+		log.info("PatientController: method getImage");
 		ByteArrayResource image = patientService.getImage(dni);
 		return image;
 	}

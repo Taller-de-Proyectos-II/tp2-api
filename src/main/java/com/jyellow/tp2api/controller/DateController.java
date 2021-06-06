@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jyellow.tp2api.dto.ResponseDTO;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/dates")
+@Log4j2
 public class DateController {
 	@GetMapping(path = "/listWeekDays/", produces = "application/json")
 	public ResponseEntity<?> listWeekDays(@RequestParam String date) {
+		log.info("DateController: method listWeekDays");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			Calendar now = Calendar.getInstance();
@@ -29,7 +33,7 @@ public class DateController {
 			now.add(Calendar.DAY_OF_MONTH, -1);
 
 			String[] days = new String[7];
-			int delta = -now.get(GregorianCalendar.DAY_OF_WEEK) + 2;
+			int delta = -now.get(GregorianCalendar.DAY_OF_WEEK) + 1;
 			now.add(Calendar.DAY_OF_MONTH, delta);
 			for (int i = 0; i < 7; i++) {
 				days[i] = format.format(now.getTime());

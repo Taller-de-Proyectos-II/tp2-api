@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,19 +20,23 @@ import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.repository.UserLoginRepository;
 import com.jyellow.tp2api.service.PsychologistService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class PsychologistServiceImpl implements PsychologistService {
 
 	@Autowired
 	PsychologistRepository psychologistRepository;
-
 	@Autowired
 	UserLoginRepository userLoginRepository;
+	@Autowired
+	BCryptPasswordEncoder encoder;
 
 	@Transactional
 	@Override
 	public int create(PsychologistDTO psychologistDTO, UserLoginDTO userLoginDTO) {
-
+		log.info("PsychologistServiceImpl: method create");
 		// Comprobar si el dni está registrado con otra cuenta
 		Psychologist psychologistExist = psychologistRepository.findByUserLoginDni(userLoginDTO.getDni());
 		if (psychologistExist != null)
@@ -49,7 +54,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 
 		UserLogin userLogin = new UserLogin();
 		userLogin.setDni(userLoginDTO.getDni());
-		userLogin.setPassword(userLoginDTO.getPassword());
+		userLogin.setPassword(encoder.encode(userLoginDTO.getPassword()));
 
 		Psychologist psychologist = new Psychologist();
 		psychologist.setBirthday(psychologistDTO.getBirthday());
@@ -68,7 +73,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Transactional
 	@Override
 	public int update(PsychologistDTO psychologistDTO) {
-
+		log.info("PsychologistServiceImpl: method update");
 		// Comprobar si el email está registrado con otra cuenta
 		Psychologist psychologistExist = psychologistRepository.findByEmail(psychologistDTO.getEmail());
 		if (psychologistExist != null
@@ -98,6 +103,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Transactional
 	@Override
 	public int updatePassword(ChangePasswordDTO changePasswordDTO) {
+		log.info("PsychologistServiceImpl: method updatePassword");
 		UserLogin userLogin = userLoginRepository.findByDni(changePasswordDTO.getDni());
 		if (userLogin == null) {
 			return -1;
@@ -113,6 +119,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Transactional
 	@Override
 	public PsychologistDTO listByDni(String dni) {
+		log.info("PsychologistServiceImpl: method listByDni");
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(dni);
 		PsychologistDTO psychologistDTO = new PsychologistDTO();
 		psychologistDTO.setBirthday(psychologist.getBirthday());
@@ -131,6 +138,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Transactional
 	@Override
 	public void uploadImage(MultipartFile multipartImage, String dni) throws Exception {
+		log.info("PsychologistServiceImpl: method uploadImage");
 		Image image = new Image();
 		try {
 			image.setName(multipartImage.getName());
@@ -148,6 +156,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Transactional
 	@Override
 	public ByteArrayResource getImage(String dni) {
+		log.info("PsychologistServiceImpl: method getImage");
 		byte[] image = psychologistRepository.findByUserLoginDni(dni).getImage().getContent();
 		return new ByteArrayResource(image);
 	}
@@ -155,6 +164,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Transactional
 	@Override
 	public List<PsychologistDTO> listAll() {
+		log.info("PsychologistServiceImpl: method listAll");
 		List<Psychologist> psychologists = psychologistRepository.findAll();
 		List<PsychologistDTO> psychologistsDTO = new ArrayList<PsychologistDTO>();
 		PsychologistDTO psychologistDTO = new PsychologistDTO();
@@ -179,6 +189,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Transactional
 	@Override
 	public List<PsychologistDTO> listByNamesAndLastNames(String names, String lastNames) {
+		log.info("PsychologistServiceImpl: method listByNamesAndLastNames");
 		List<Psychologist> psychologists = new ArrayList<Psychologist>();
 		if (names == null && lastNames == null)
 			psychologists = psychologistRepository.findAll();

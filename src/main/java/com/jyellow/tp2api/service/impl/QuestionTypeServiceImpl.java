@@ -17,7 +17,10 @@ import com.jyellow.tp2api.repository.QuestionRepository;
 import com.jyellow.tp2api.repository.QuestionTypeRepository;
 import com.jyellow.tp2api.service.QuestionTypeService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class QuestionTypeServiceImpl implements QuestionTypeService {
 
 	private boolean defaultCreation;
@@ -35,6 +38,7 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 	@Transactional
 	@Override
 	public void createDefault() {
+		log.info("QuestionTypeServiceImpl: method createDefault");
 		List<QuestionType> questionTypes = new ArrayList<QuestionType>();
 		List<Question> questions = new ArrayList<Question>();
 		if (defaultCreation == false) {
@@ -47,6 +51,7 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 
 	@Override
 	public List<QuestionTypeDTO> listAll() {
+		log.info("QuestionTypeServiceImpl: method listAll");
 		List<QuestionType> questionTypes = questionTypeRepository.findAll();
 		QuestionTypeDTO questionTypeDTO = new QuestionTypeDTO();
 		List<QuestionTypeDTO> questionTypesDTO = new ArrayList<QuestionTypeDTO>();
@@ -68,6 +73,7 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 
 	@Override
 	public QuestionTypeDTO listById(int idQuestionType) {
+		log.info("QuestionTypeServiceImpl: method listById");
 		QuestionType questionType = questionTypeRepository.findById(idQuestionType).get();
 		QuestionTypeDTO questionTypeDTO = modelMapper.map(questionType, QuestionTypeDTO.class);
 		List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
@@ -82,6 +88,7 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 	
 	@Override
 	public QuestionTypeDTO listByName(String questionTypeName) {
+		log.info("QuestionTypeServiceImpl: method listByName");
 		QuestionType questionType = questionTypeRepository.findByName(questionTypeName);
 		QuestionTypeDTO questionTypeDTO = modelMapper.map(questionType, QuestionTypeDTO.class);
 		List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();

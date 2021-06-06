@@ -26,6 +26,7 @@ public class Tp2ApiApplication {
     }
 	
 	public static void main(String[] args) {
+    	System.setProperty("jasypt.encryptor.password", "tp2-api");
 		SpringApplication.run(Tp2ApiApplication.class, args);
 	}
 	

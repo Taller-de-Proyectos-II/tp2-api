@@ -34,7 +34,10 @@ import com.jyellow.tp2api.repository.TestRepository;
 import com.jyellow.tp2api.service.TestService;
 import com.jyellow.tp2api.util.ScoreOperation;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class TestServiceImpl implements TestService {
 
 	@Autowired
@@ -51,6 +54,7 @@ public class TestServiceImpl implements TestService {
 	@Transactional
 	@Override
 	public List<TestDTO> listByPatientDni(String patientDni) {
+		log.info("TestServiceImpl: method listByPatientDni");
 		List<Test> tests = testRepository.findByPatientUserLoginDni(patientDni);
 		Collections.reverse(tests);
 		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
@@ -81,6 +85,7 @@ public class TestServiceImpl implements TestService {
 	@Override
 	@Transactional
 	public List<TestDTO> listByPatientDniAndTestType(String patientDni, String testType) {
+		log.info("TestServiceImpl: method listByPatientDniAndTestType");
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndTestType(patientDni, testType);
 		Collections.reverse(tests);
 		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
@@ -112,6 +117,7 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public List<TestDashboardDTO> listByPatientDniAndDates(String patientDni, String startDate, String endDate)
 			throws ParseException {
+		log.info("TestServiceImpl: method listByPatientDniAndDates");
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, true);
 		List<TestDashboardDTO> testsDTO = new ArrayList<TestDashboardDTO>();
 		TestDashboardDTO testDashboardDTO = new TestDashboardDTO();
@@ -133,6 +139,7 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public List<TestDTO> listByPatientDniAndDatesManifestation(String patientDni, String startDate, String endDate)
 			throws ParseException {
+		log.info("TestServiceImpl: method listByPatientDniAndDatesManifestation");
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, true);
 		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
 		TestDTO testDTO = new TestDTO();
@@ -164,6 +171,7 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public List<TestDTO> listByPsychologistDniAndDatesManifestation(String psychologistDni, String startDate, String endDate)
 			throws ParseException {
+		log.info("TestServiceImpl: method listByPsychologistDniAndDatesManifestation");
 		List<Test> tests = testRepository.findByPatientPsychologistUserLoginDniAndFinished(psychologistDni, true);
 		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
 		TestDTO testDTO = new TestDTO();
@@ -195,6 +203,7 @@ public class TestServiceImpl implements TestService {
 	@Transactional
 	@Override
 	public List<TestDTO> listByPatientDniAndFinished(String patientDni, boolean finished) {
+		log.info("TestServiceImpl: method listByPatientDniAndFinished");
 		List<Test> tests = testRepository.findByPatientUserLoginDniAndFinished(patientDni, finished);
 		Collections.reverse(tests);
 		List<TestDTO> testsDTO = new ArrayList<TestDTO>();
@@ -225,6 +234,7 @@ public class TestServiceImpl implements TestService {
 	@Transactional
 	@Override
 	public TestDTO create(TestCreateDTO testCreateDTO) {
+		log.info("TestServiceImpl: method create");
 		Patient patient = patientRepository.findByUserLoginDni(testCreateDTO.getPatientDni());
 		Test test = new Test();
 		Date date = Calendar.getInstance().getTime();
@@ -268,6 +278,7 @@ public class TestServiceImpl implements TestService {
 	@Transactional
 	@Override
 	public TestDTO cancel(int idTest) {
+		log.info("TestServiceImpl: method cancel");
 		Test test = testRepository.findById(idTest).get();
 		answerRepository.deleteAll(test.getAnswers());
 		testRepository.deleteById(idTest);
@@ -277,6 +288,7 @@ public class TestServiceImpl implements TestService {
 	@Transactional
 	@Override
 	public TestDTO update(TestUpdateDTO testUpdateDTO) {
+		log.info("TestServiceImpl: method update");
 		Test test = testRepository.findById(testUpdateDTO.getIdTest()).get();
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -321,6 +333,7 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public List<TestDashboardDTO> listByPsychologistDniAndDates(String psychologistDni, String startDate, String endDate)
 			throws ParseException {
+		log.info("TestServiceImpl: method listByPsychologistDniAndDates");
 		List<Test> tests = testRepository.findByPatientPsychologistUserLoginDniAndFinished(psychologistDni, true);
 		List<TestDashboardDTO> testsDTO = new ArrayList<TestDashboardDTO>();
 		TestDashboardDTO testDashboardDTO = new TestDashboardDTO();

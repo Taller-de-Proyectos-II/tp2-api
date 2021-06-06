@@ -26,9 +26,12 @@ import com.jyellow.tp2api.service.QuestionTypeService;
 import com.jyellow.tp2api.service.SymptomService;
 import com.jyellow.tp2api.service.TestService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/dashboard")
+@Log4j2
 public class DashboardController {
 
 	@Autowired
@@ -46,6 +49,7 @@ public class DashboardController {
 	@GetMapping(path = "/", produces = "application/json")
 	public ResponseEntity<?> listDashboard(@RequestParam String patientDni, @RequestParam String startDate,
 			@RequestParam String endDate) throws ParseException {
+		log.info("DashboardController: method listDashboard");
 		ResponseDTO responseDTO = new ResponseDTO();
 
 		List<TestDashboardDTO> testsDTO = testService.listByPatientDniAndDates(patientDni, startDate, endDate);
@@ -124,7 +128,7 @@ public class DashboardController {
 	@GetMapping(path = "/listManifestations/", produces = "application/json")
 	public ResponseEntity<?> listManifestations(@RequestParam String patientDni, @RequestParam String startDate,
 			@RequestParam String endDate) throws ParseException {
-
+		log.info("DashboardController: method listManifestations");
 		ResponseDTO responseDTO = new ResponseDTO();
 		OptionDashboardDTO optionDashboardDTO = new OptionDashboardDTO();
 		int[] result = new int[4];
@@ -169,7 +173,7 @@ public class DashboardController {
 	@GetMapping(path = "/listAlerts/", produces = "application/json")
 	public ResponseEntity<?> listAlerts(@RequestParam String patientDni, @RequestParam String startDate,
 			@RequestParam String endDate) throws ParseException {
-
+		log.info("DashboardController: method listAlerts");
 		ResponseDTO responseDTO = new ResponseDTO();
 		OptionDashboardDTO optionDashboardDTO = new OptionDashboardDTO();
 		int[] result = new int[6];
@@ -215,6 +219,7 @@ public class DashboardController {
 	@GetMapping(path = "/listAllDonut/", produces = "application/json")
 	public ResponseEntity<?> listAllDonut(@RequestParam String psychologistDni,
 			@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
+		log.info("DashboardController: method listAllDonut");
 		ResponseDTO responseDTO = new ResponseDTO();
 
 		int[] resultAlert = new int[2];
@@ -329,6 +334,7 @@ public class DashboardController {
 	@GetMapping(path = "/listDashboardAllPatients/", produces = "application/json")
 	public ResponseEntity<?> listDashboardAllPatients(@RequestParam String psychologistDni, @RequestParam String startDate,
 			@RequestParam String endDate) throws ParseException {
+		log.info("DashboardController: method listDashboardAllPatients");
 		ResponseDTO responseDTO = new ResponseDTO();
 
 		List<TestDashboardDTO> testsDTO = testService.listByPsychologistDniAndDates(psychologistDni, startDate, endDate);
@@ -405,7 +411,7 @@ public class DashboardController {
 	@GetMapping(path = "/listManifestationsAllPatients/", produces = "application/json")
 	public ResponseEntity<?> listManifestationsAllPatients(@RequestParam String psychologistDni, @RequestParam String startDate,
 			@RequestParam String endDate) throws ParseException {
-
+		log.info("DashboardController: method listManifestationsAllPatients");
 		ResponseDTO responseDTO = new ResponseDTO();
 		OptionDashboardDTO optionDashboardDTO = new OptionDashboardDTO();
 		int[] result = new int[4];
@@ -450,7 +456,7 @@ public class DashboardController {
 	@GetMapping(path = "/listAlertsAllPatients/", produces = "application/json")
 	public ResponseEntity<?> listAlertsAllPatients(@RequestParam String psychologistDni, @RequestParam String startDate,
 			@RequestParam String endDate) throws ParseException {
-
+		log.info("DashboardController: method listAlertsAllPatients");
 		ResponseDTO responseDTO = new ResponseDTO();
 		OptionDashboardDTO optionDashboardDTO = new OptionDashboardDTO();
 		int[] result = new int[6];

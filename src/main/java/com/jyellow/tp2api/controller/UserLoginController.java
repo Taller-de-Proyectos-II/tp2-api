@@ -26,10 +26,12 @@ import com.jyellow.tp2api.service.UserLoginService;
 import com.jyellow.tp2api.util.PasswordGenerator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.log4j.Log4j2;
 
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/login")
+@Log4j2
 public class UserLoginController {
 
 	@Autowired
@@ -46,6 +48,7 @@ public class UserLoginController {
 
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
+		log.info("UserLoginController: method login");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int loginSuccessful = userLoginService.loginSuccessful(userLoginDTO.getDni(), userLoginDTO.getPassword());
@@ -67,9 +70,32 @@ public class UserLoginController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
+	
+	@PostMapping(path = "/loginAdmin/", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> loginAdmin(@RequestBody UserLoginDTO userLoginDTO) {
+		log.info("UserLoginController: method login");
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			int loginSuccessful = userLoginService.loginSuccessfulAdmin(userLoginDTO.getPassword());
+			if (loginSuccessful == -1) {
+				responseDTO.setMessage("Contraseña incorrecta");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Login exitoso");
+				String token = getJWTToken("admin", userLoginDTO.getPassword());
+				responseDTO.setToken(token);
+				responseDTO.setStatus(1);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
 
 	@PostMapping(path = "/restorePasswordPsychologist/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> restorePasswordPsychologist(@RequestBody EmailDTO emailDTO) {
+		log.info("UserLoginController: method restorePasswordPsychologist");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			boolean existEmail = userLoginService.existEmailPsychologist(emailDTO.getEmail());
@@ -93,6 +119,7 @@ public class UserLoginController {
 
 	@PostMapping(path = "/restorePasswordPatient/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> restorePasswordPatient(@RequestBody EmailDTO emailDTO) {
+		log.info("UserLoginController: method restorePasswordPatient");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			boolean existEmail = userLoginService.existEmailPatient(emailDTO.getEmail());
@@ -116,6 +143,7 @@ public class UserLoginController {
 
 	@PostMapping(path = "/createPatient/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> createPatient(@RequestBody PatientDTO patientDTO) {
+		log.info("UserLoginController: method createPatient");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int result = patientService.create(patientDTO);
@@ -139,6 +167,7 @@ public class UserLoginController {
 
 	@PostMapping(path = "/createPsychologist/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> createPsychologist(@RequestBody PsychologistDTO psychologistDTO) {
+		log.info("UserLoginController: method createPsychologist");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int result = psychologistService.create(psychologistDTO, psychologistDTO.getUserLoginDTO());
@@ -164,6 +193,7 @@ public class UserLoginController {
 	}
 
 	private String getJWTToken(String dni, String password) {
+		log.info("UserLoginController: method getJWTToken");
 		String secretKey = "mySecretKey";
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
 

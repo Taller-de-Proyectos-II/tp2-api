@@ -18,7 +18,10 @@ import com.jyellow.tp2api.repository.PatientRepository;
 import com.jyellow.tp2api.repository.UserLoginRepository;
 import com.jyellow.tp2api.service.GuardianService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class GuardianServiceImpl implements GuardianService {
 
 	@Autowired
@@ -33,6 +36,7 @@ public class GuardianServiceImpl implements GuardianService {
 	@Transactional
 	@Override
 	public int create(GuardianDTO guardianDTO) {
+		log.info("GuardianServiceImpl: method create");
 		Patient patient = patientRepository.findByUserLoginDni(guardianDTO.getPatientDni());
 		Guardian guardian = guardianRepository.findByDniAndPatientUserLoginDni(guardianDTO.getDni(),
 				guardianDTO.getPatientDni());
@@ -54,6 +58,7 @@ public class GuardianServiceImpl implements GuardianService {
 	@Transactional
 	@Override
 	public int update(GuardianDTO guardianDTO) {
+		log.info("GuardianServiceImpl: method update");
 		Guardian guardian = guardianRepository.findByDni(guardianDTO.getDni());
 		guardian.setBirthday(guardianDTO.getBirthday());
 		guardian.setEmail(guardianDTO.getEmail());
@@ -67,6 +72,7 @@ public class GuardianServiceImpl implements GuardianService {
 	@Transactional
 	@Override
 	public int delete(String dni, String patientDni) {
+		log.info("GuardianServiceImpl: method delete");
 		Guardian guardian = guardianRepository.findByDniAndPatientUserLoginDni(dni, patientDni);
 		if (guardian == null)
 			return -1;
@@ -77,6 +83,7 @@ public class GuardianServiceImpl implements GuardianService {
 	@Transactional
 	@Override
 	public GuardianDTO listByDniAndPatientDni(String dni, String patientDni) {
+		log.info("GuardianServiceImpl: method listByDniAndPatientDni");
 		Guardian guardian = guardianRepository.findByDniAndPatientUserLoginDni(dni, patientDni);
 		GuardianDTO guardianDTO = new GuardianDTO();
 		guardianDTO.setBirthday(guardian.getBirthday());
@@ -92,6 +99,7 @@ public class GuardianServiceImpl implements GuardianService {
 	@Transactional
 	@Override
 	public List<GuardianDTO> listByPatientDni(String patientDni) {
+		log.info("GuardianServiceImpl: method patientDni");
 		List<Guardian> guardians = guardianRepository.findByPatientUserLoginDni(patientDni);
 		List<GuardianDTO> guardiansDTO = new ArrayList<GuardianDTO>();
 		GuardianDTO guardianDTO = new GuardianDTO();
@@ -113,6 +121,7 @@ public class GuardianServiceImpl implements GuardianService {
 	@Transactional
 	@Override
 	public void uploadImage(MultipartFile multipartImage, String dni, String patientDni) throws Exception {
+		log.info("GuardianServiceImpl: method uploadImage");
 		Image image = new Image();
 		try {
 			image.setName(multipartImage.getName());
@@ -130,6 +139,7 @@ public class GuardianServiceImpl implements GuardianService {
 	@Transactional
 	@Override
 	public ByteArrayResource getImage(String dni, String patientDni) {
+		log.info("GuardianServiceImpl: method patientDni");
 		byte[] image = guardianRepository.findByDniAndPatientUserLoginDni(dni, patientDni).getImage().getContent();
 		return new ByteArrayResource(image);
 	}

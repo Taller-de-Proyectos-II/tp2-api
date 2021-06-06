@@ -32,7 +32,10 @@ import com.jyellow.tp2api.repository.SymptomRepository;
 import com.jyellow.tp2api.service.AlertService;
 import com.jyellow.tp2api.util.ScoreOperation;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class AlertServiceImpl implements AlertService {
 	@Autowired
 	private AlertRepository alertRepository;
@@ -47,6 +50,7 @@ public class AlertServiceImpl implements AlertService {
 	@Transactional
 	@Override
 	public List<AlertDTO> listByPatientDni(String patientDni) {
+		log.info("AlertServiceImpl: method listByPatientDni");
 		List<Alert> alerts = alertRepository.findByPatientUserLoginDni(patientDni);
 		Collections.reverse(alerts);
 		List<AlertDTO> alertsDTO = new ArrayList<AlertDTO>();
@@ -77,6 +81,7 @@ public class AlertServiceImpl implements AlertService {
 	@Transactional
 	@Override
 	public List<AlertDTO> listByPatientDniAndDates(String patientDni, String startDate, String endDate) throws ParseException {
+		log.info("AlertServiceImpl: method listByPatientDniAndDates");
 		List<Alert> alerts = alertRepository.findByPatientUserLoginDni(patientDni);
 		List<AlertDTO> alertsDTO = new ArrayList<AlertDTO>();
 		AlertDTO alertDTO = new AlertDTO();
@@ -108,6 +113,7 @@ public class AlertServiceImpl implements AlertService {
 	@Transactional
 	@Override
 	public List<AlertDTO> listByPatientDniAndImportant(String patientDni, boolean important) {
+		log.info("AlertServiceImpl: method listByPatientDniAndImportant");
 		List<Alert> alerts = alertRepository.findByPatientUserLoginDniAndImportant(patientDni, important);
 		Collections.reverse(alerts);
 		List<AlertDTO> alertsDTO = new ArrayList<AlertDTO>();
@@ -138,6 +144,7 @@ public class AlertServiceImpl implements AlertService {
 	@Transactional
 	@Override
 	public AlertDTO create(AlertCreateDTO alertCreateDTO) {
+		log.info("AlertServiceImpl: method create");
 		Patient patient = patientRepository.findByUserLoginDni(alertCreateDTO.getPatientDni());
 		Alert alert = new Alert();
 		Date date = Calendar.getInstance().getTime();
@@ -176,6 +183,7 @@ public class AlertServiceImpl implements AlertService {
 	@Transactional
 	@Override
 	public AlertDTO update(AlertUpdateDTO alertUpdateDTO) {
+		log.info("AlertServiceImpl: method update");
 		Alert alert = alertRepository.findById(alertUpdateDTO.getIdAlert()).get();
 		List<AlertAnswer> alertAnswers = new ArrayList<AlertAnswer>();
 		AlertAnswer alertAnswer = new AlertAnswer();
@@ -208,6 +216,7 @@ public class AlertServiceImpl implements AlertService {
 	@Transactional
 	@Override
 	public List<AlertDTO> listByPsychologistDniAndDates(String psychologistDni, String startDate, String endDate) throws ParseException {
+		log.info("AlertServiceImpl: method listByPsychologistDniAndDates");
 		List<Alert> alerts = alertRepository.findByPatientPsychologistUserLoginDni(psychologistDni);
 		List<AlertDTO> alertsDTO = new ArrayList<AlertDTO>();
 		AlertDTO alertDTO = new AlertDTO();
