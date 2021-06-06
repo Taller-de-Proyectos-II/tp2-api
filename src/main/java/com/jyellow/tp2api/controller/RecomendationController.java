@@ -13,15 +13,19 @@ import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.dto.RecomendationDTO;
 import com.jyellow.tp2api.service.RecomendationService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/recomendations")
+@Log4j2
 public class RecomendationController {
 	@Autowired
 	private RecomendationService recomendationService;
 
 	@GetMapping(path = "/listAll/", produces = "application/json")
 	public ResponseEntity<?> listAll() {
+		log.info("RecomendationController: method listAll");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<RecomendationDTO> recomendationsDTO = recomendationService.listAll();
@@ -37,6 +41,7 @@ public class RecomendationController {
 
 	@GetMapping(path = "/createDefault/", produces = "application/json")
 	public ResponseEntity<?> createDefault() {
+		log.info("RecomendationController: method createDefault");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			recomendationService.createDefault();

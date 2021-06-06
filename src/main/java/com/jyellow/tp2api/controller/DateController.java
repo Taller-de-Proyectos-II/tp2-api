@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jyellow.tp2api.dto.ResponseDTO;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/dates")
+@Log4j2
 public class DateController {
 	@GetMapping(path = "/listWeekDays/", produces = "application/json")
 	public ResponseEntity<?> listWeekDays(@RequestParam String date) {
+		log.info("DateController: method listWeekDays");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			Calendar now = Calendar.getInstance();

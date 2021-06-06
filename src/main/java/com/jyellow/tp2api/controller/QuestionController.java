@@ -14,9 +14,12 @@ import com.jyellow.tp2api.dto.QuestionDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.service.QuestionService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/question")
+@Log4j2
 public class QuestionController {
 
 	@Autowired
@@ -24,6 +27,7 @@ public class QuestionController {
 
 	@GetMapping(path = "/listAll/", produces = "application/json")
 	public ResponseEntity<?> listAll() {
+		log.info("QuestionController: method listAll");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<QuestionDTO> questionsDTO = questionService.listAll();
@@ -39,6 +43,7 @@ public class QuestionController {
 
 	@GetMapping(path = "/listByQuestionTypeId/", produces = "application/json")
 	public ResponseEntity<?> listByQuestionTypeId(@RequestParam int idQuestionType) {
+		log.info("QuestionController: method listByQuestionTypeId");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<QuestionDTO> questionsDTO = questionService.listByQuestionTypeId(idQuestionType);
@@ -54,6 +59,7 @@ public class QuestionController {
 
 	@GetMapping(path = "/createDefault/", produces = "application/json")
 	public ResponseEntity<?> createDefault() {
+		log.info("QuestionController: method createDefault");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			questionService.createDefault();

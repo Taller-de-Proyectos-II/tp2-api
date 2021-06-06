@@ -24,7 +24,10 @@ import com.jyellow.tp2api.repository.ScheduleRepository;
 import com.jyellow.tp2api.repository.SessionRepository;
 import com.jyellow.tp2api.service.ScheduleService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class ScheduleServiceImpl implements ScheduleService {
 
 	@Autowired
@@ -38,6 +41,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Transactional
 	@Override
 	public List<ScheduleDTO> listAll() {
+		log.info("ScheduleServiceImpl: method listAll");
 		List<Schedule> schedules = scheduleRepository.findAll();
 		return schedules.stream().map(schedule -> modelMapper.map(schedule, ScheduleDTO.class))
 				.collect(Collectors.toList());
@@ -46,6 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Transactional
 	@Override
 	public List<ScheduleDTO> listByPsychologistDni(String psychologistDni) {
+		log.info("ScheduleServiceImpl: method listByPsychologistDni");
 		List<Schedule> schedules = scheduleRepository.findByPsychologistsUserLoginDni(psychologistDni);
 		return schedules.stream().map(schedule -> modelMapper.map(schedule, ScheduleDTO.class))
 				.collect(Collectors.toList());
@@ -54,6 +59,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Transactional
 	@Override
 	public List<ScheduleDTO> update(ScheduleUpdateDTO scheduleUpdateDTO) {
+		log.info("ScheduleServiceImpl: method update");
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(scheduleUpdateDTO.getPsychologistDni());
 		Schedule schedule = new Schedule();
 		List<Schedule> schedules = new ArrayList<Schedule>();
@@ -71,6 +77,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public List<ScheduleDTO> listByPsychologistDniPatientView(String psychologistDni, String dateRequest)
 			throws ParseException {
+		log.info("ScheduleServiceImpl: method listByPsychologistDniPatientView");
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 		List<Schedule> schedules = scheduleRepository.findByPsychologistsUserLoginDni(psychologistDni);
@@ -100,6 +107,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public List<ScheduleDTO> listByPsychologistDniSessionsInSchedule(String psychologistDni, String dateRequest)
 			throws ParseException {
+		log.info("ScheduleServiceImpl: method listByPsychologistDniSessionsInSchedule");
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 		List<ScheduleDTO> schedulesDTO = new ArrayList<ScheduleDTO>();
@@ -131,6 +139,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Transactional
 	@Override
 	public void createDefault() {
+		log.info("ScheduleServiceImpl: method createDefault");
 		List<Schedule> schedules = new ArrayList<Schedule>();
 		List<Psychologist> psychologists = new ArrayList<Psychologist>();
 		List<Session> sessions = new ArrayList<Session>();

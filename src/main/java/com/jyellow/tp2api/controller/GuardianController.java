@@ -21,9 +21,12 @@ import com.jyellow.tp2api.dto.GuardianDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.service.GuardianService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/guardian")
+@Log4j2
 public class GuardianController {
 
 	@Autowired
@@ -31,6 +34,7 @@ public class GuardianController {
 
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody GuardianDTO guardianDTO) {
+		log.info("GuardianController: method create");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int result = guardianService.create(guardianDTO);
@@ -54,6 +58,7 @@ public class GuardianController {
 
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody GuardianDTO guardianDTO) {
+		log.info("GuardianController: method update");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int result = guardianService.update(guardianDTO);
@@ -74,6 +79,7 @@ public class GuardianController {
 
 	@DeleteMapping(path = "/", produces = "application/json")
 	public ResponseEntity<?> delete(@RequestParam String dni, @RequestParam String patientDni) {
+		log.info("GuardianController: method delete");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			int result = guardianService.delete(dni, patientDni);
@@ -94,6 +100,7 @@ public class GuardianController {
 
 	@GetMapping(path = "/listByDniAndPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByDniAndPatientDni(@RequestParam String dni, @RequestParam String patientDni) {
+		log.info("GuardianController: method listByDniAndPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			GuardianDTO guardianDTO = guardianService.listByDniAndPatientDni(dni, patientDni);
@@ -114,6 +121,7 @@ public class GuardianController {
 
 	@GetMapping(path = "/listByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDni(@RequestParam String dni) {
+		log.info("GuardianController: method listByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<GuardianDTO> guardiansDTO = guardianService.listByPatientDni(dni);
@@ -135,6 +143,7 @@ public class GuardianController {
 	@PostMapping(path = "/image/")
 	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile multipartImage, @RequestParam String dni, @RequestParam String patientDni)
 			throws Exception {
+		log.info("GuardianController: method uploadImage");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			this.guardianService.uploadImage(multipartImage, dni, patientDni);
@@ -149,6 +158,7 @@ public class GuardianController {
 
 	@GetMapping(value = "/image/", produces = MediaType.IMAGE_JPEG_VALUE)
 	public ByteArrayResource getImage(@RequestParam String dni, @RequestParam String patientDni) {
+		log.info("GuardianController: method getImage");
 		ByteArrayResource image = guardianService.getImage(dni, patientDni);
 		return image;
 	}

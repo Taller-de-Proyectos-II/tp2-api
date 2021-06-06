@@ -13,7 +13,10 @@ import com.jyellow.tp2api.model.Symptom;
 import com.jyellow.tp2api.repository.SymptomRepository;
 import com.jyellow.tp2api.service.SymptomService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class SymptomServiceImpl implements SymptomService {
 	@Autowired
 	private SymptomRepository symptomRepository;
@@ -21,6 +24,7 @@ public class SymptomServiceImpl implements SymptomService {
 
 	@Override
 	public List<SymptomDTO> listAll() {
+		log.info("SymptomServiceImpl: method listAll");
 		List<Symptom> symptoms = symptomRepository.findAll();
 		List<SymptomDTO> symptomsDTO = new ArrayList<SymptomDTO>();
 		SymptomDTO symptomDTO = new SymptomDTO();
@@ -34,6 +38,7 @@ public class SymptomServiceImpl implements SymptomService {
 
 	@Override
 	public void createDefault() {
+		log.info("SymptomServiceImpl: method createDefault");
 		List<Symptom> symptoms = new ArrayList<Symptom>();
 		List<AlertAnswer> alertAnswers = new ArrayList<AlertAnswer>();
 		symptoms.add(new Symptom(0, "Sensación de ahogo u opresión en el pecho", alertAnswers));

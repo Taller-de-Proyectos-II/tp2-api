@@ -14,7 +14,10 @@ import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.repository.WorkExperienceRepository;
 import com.jyellow.tp2api.service.WorkExperienceService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class WorkExperienceServiceImpl implements WorkExperienceService {
 	@Autowired
 	WorkExperienceRepository workExperienceRepository;
@@ -25,6 +28,7 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
 	@Transactional
 	@Override
 	public void create(WorkExperienceDTO workExperienceDTO) {
+		log.info("UserLoginServiceImpl: method create");
 		WorkExperience workExperience = new WorkExperience();
 		workExperience.setCurrent(workExperienceDTO.isCurrent());
 		workExperience.setDescription(workExperienceDTO.getDescription());
@@ -41,6 +45,7 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
 	@Transactional
 	@Override
 	public void update(WorkExperienceDTO workExperienceDTO) {
+		log.info("UserLoginServiceImpl: method update");
 		WorkExperience workExperience = workExperienceRepository.findById(workExperienceDTO.getIdWorkExperience()).get();
 		workExperience.setCurrent(workExperienceDTO.isCurrent());
 		workExperience.setDescription(workExperienceDTO.getDescription());
@@ -55,12 +60,14 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
 	@Transactional
 	@Override
 	public void delete(int idWorkExperience) {
+		log.info("UserLoginServiceImpl: method delete");
 		workExperienceRepository.deleteById(idWorkExperience);
 	}
 
 	@Transactional
 	@Override
 	public List<WorkExperienceDTO> listByDni(String dni) {
+		log.info("UserLoginServiceImpl: method listByDni");
 		List<WorkExperience> workExperiences = workExperienceRepository.findByPsychologistUserLoginDni(dni);
 		List<WorkExperienceDTO> workExperiencesDTO = new ArrayList<WorkExperienceDTO>();
 		WorkExperienceDTO workExperienceDTO = new WorkExperienceDTO();

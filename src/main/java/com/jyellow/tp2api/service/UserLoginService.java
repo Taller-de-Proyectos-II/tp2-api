@@ -11,4 +11,8 @@ public interface UserLoginService {
 	void changePasswordPsychologist(String email, String password);
 
 	void changePasswordPatient(String email, String password);
+
+	int loginSuccessfulAdmin(String password);
+
+	void convertPasswords();
 }

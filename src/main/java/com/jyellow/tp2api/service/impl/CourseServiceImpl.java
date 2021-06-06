@@ -14,7 +14,10 @@ import com.jyellow.tp2api.repository.CourseRepository;
 import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.service.CourseService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class CourseServiceImpl implements CourseService {
 	@Autowired
 	CourseRepository courseRepository;
@@ -25,6 +28,7 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	@Override
 	public void create(CourseDTO courseDTO) {
+		log.info("CourseServiceImpl: method create");
 		Course course = new Course();
 		course.setName(courseDTO.getName());
 		course.setDescription(courseDTO.getDescription());
@@ -37,6 +41,7 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	@Override
 	public void update(CourseDTO courseDTO) {
+		log.info("CourseServiceImpl: method update");
 		Course course = courseRepository.findById(courseDTO.getIdCourse()).get();
 		course.setName(courseDTO.getName());
 		course.setDescription(courseDTO.getDescription());
@@ -47,12 +52,14 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	@Override
 	public void delete(int idCourse) {
+		log.info("CourseServiceImpl: method delete");
 		courseRepository.deleteById(idCourse);
 	}
 
 	@Transactional
 	@Override
 	public List<CourseDTO> listByDni(String dni) {
+		log.info("CourseServiceImpl: method listByDni");
 		List<Course> courses = courseRepository.findByPsychologistUserLoginDni(dni);
 		List<CourseDTO> coursesDTO = new ArrayList<CourseDTO>();
 		CourseDTO courseDTO = new CourseDTO();

@@ -1,9 +1,13 @@
 package com.jyellow.tp2api.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jyellow.tp2api.config.PropertyServiceForJasyptStarter;
 import com.jyellow.tp2api.model.Patient;
 import com.jyellow.tp2api.model.Psychologist;
 import com.jyellow.tp2api.model.UserLogin;
@@ -12,26 +16,32 @@ import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.repository.UserLoginRepository;
 import com.jyellow.tp2api.service.UserLoginService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class UserLoginServiceImpl implements UserLoginService {
 	
 	@Autowired
 	UserLoginRepository userLoginRepository;
-	
 	@Autowired
 	PatientRepository patientRepository;
-	
 	@Autowired
 	PsychologistRepository psychologistRepository;
+	@Autowired
+	PropertyServiceForJasyptStarter encryptorService;
+	@Autowired
+	BCryptPasswordEncoder encoder;
 	
 	@Override
 	@Transactional
 	public int loginSuccessful(String dni, String password) {
+		log.info("UserLoginServiceImpl: method loginSuccessful");
 		UserLogin userLogin = userLoginRepository.findByDni(dni);
 		if (userLogin == null)
 			return -1;
 		else {
-			if (!userLogin.getPassword().equals(password))
+			if (!userLogin.getPassword().equals(encoder.encode(password)))
 				return -2;
 			else
 				return 1;
@@ -40,7 +50,19 @@ public class UserLoginServiceImpl implements UserLoginService {
 	
 	@Override
 	@Transactional
+	public int loginSuccessfulAdmin(String password) {
+		log.info("UserLoginServiceImpl: method loginSuccessfulAdmin");
+		if (encryptorService.getAdminPassword().equals(password))
+			return 1;
+		else {
+			return -1;
+		}
+	}
+	
+	@Override
+	@Transactional
 	public boolean existEmailPsychologist(String email) {
+		log.info("UserLoginServiceImpl: method existEmailPsychologist");
 		Psychologist psychologist = psychologistRepository.findByEmail(email);
 		if (psychologist == null)
 			return false;
@@ -52,6 +74,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 	@Override
 	@Transactional
 	public boolean existEmailPatient(String email) {
+		log.info("UserLoginServiceImpl: method existEmailPatient");
 		Patient patient = patientRepository.findByEmail(email);
 		if (patient == null)
 			return false;
@@ -63,17 +86,29 @@ public class UserLoginServiceImpl implements UserLoginService {
 	@Transactional
 	@Override
 	public void changePasswordPatient(String email, String password) {
+		log.info("UserLoginServiceImpl: method changePasswordPatient");
 		Patient patient = patientRepository.findByEmail(email);
-		patient.getUserLogin().setPassword(password);
+		patient.getUserLogin().setPassword(encoder.encode(password));
 		patientRepository.save(patient);
 	}
 	
 	@Transactional
 	@Override
 	public void changePasswordPsychologist(String email, String password) {
+		log.info("UserLoginServiceImpl: method changePasswordPsychologist");
 		Psychologist psychologist = psychologistRepository.findByEmail(email);
-		psychologist.getUserLogin().setPassword(password);
+		psychologist.getUserLogin().setPassword(encoder.encode(password));
 		psychologistRepository.save(psychologist);
+	}
+	
+	@Transactional
+	@Override
+	public void convertPasswords() {
+		List<UserLogin> users = userLoginRepository.findAll();
+		for(UserLogin user: users) {
+			user.setPassword(encoder.encode(user.getPassword()));
+			userLoginRepository.save(user);
+		}
 	}
 	
 }

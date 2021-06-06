@@ -19,15 +19,19 @@ import com.jyellow.tp2api.dto.AlertUpdateDTO;
 import com.jyellow.tp2api.dto.ResponseDTO;
 import com.jyellow.tp2api.service.AlertService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/alerts")
+@Log4j2
 public class AlertController {
 	@Autowired
 	private AlertService alertService;
 	
 	@GetMapping(path = "/listByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDni(@RequestParam String patientDni) {
+		log.info("AlertController: method listByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<AlertDTO> alertsDTO = alertService.listByPatientDni(patientDni);
@@ -48,6 +52,7 @@ public class AlertController {
 	
 	@GetMapping(path = "/listImportantByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listImportantByPatientDni(@RequestParam String patientDni) {
+		log.info("AlertController: method listImportantByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<AlertDTO> alertsDTO = alertService.listByPatientDniAndImportant(patientDni, true);
@@ -68,6 +73,7 @@ public class AlertController {
 	
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody AlertCreateDTO alertCreateDTO) {
+		log.info("AlertController: method create");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			AlertDTO alertDTO = alertService.create(alertCreateDTO);
@@ -84,6 +90,7 @@ public class AlertController {
 	
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody AlertUpdateDTO alertUpdateDTO) {
+		log.info("AlertController: method update");
 		ResponseDTO responseDTO = new ResponseDTO();
 
 			AlertDTO alertDTO = alertService.update(alertUpdateDTO);

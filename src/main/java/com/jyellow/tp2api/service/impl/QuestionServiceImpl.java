@@ -17,7 +17,10 @@ import com.jyellow.tp2api.repository.QuestionRepository;
 import com.jyellow.tp2api.repository.QuestionTypeRepository;
 import com.jyellow.tp2api.service.QuestionService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class QuestionServiceImpl implements QuestionService {
 
 	private boolean defaultCreation;
@@ -34,6 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public List<QuestionDTO> listByQuestionTypeId(int questionTypeId) {
+		log.info("QuestionServiceImpl: method listByQuestionTypeId");
 		List<Question> questions = questionRepository.findByQuestionTypeIdQuestionType(questionTypeId);
 		List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
 		QuestionDTO questionDTO = new QuestionDTO();
@@ -48,6 +52,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public List<QuestionDTO> listAll() {
+		log.info("QuestionServiceImpl: method listAll");
 		List<Question> questions = questionRepository.findAll();
 		List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
 		QuestionDTO questionDTO = new QuestionDTO();
@@ -63,6 +68,7 @@ public class QuestionServiceImpl implements QuestionService {
 	@Transactional
 	@Override
 	public void createDefault() {
+		log.info("QuestionServiceImpl: method createDefault");
 		List<Question> questions = new ArrayList<Question>();
 		QuestionType questionType = new QuestionType();
 		List<Answer> answers = new ArrayList<Answer>();

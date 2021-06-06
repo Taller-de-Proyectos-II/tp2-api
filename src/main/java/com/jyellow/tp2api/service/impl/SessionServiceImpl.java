@@ -28,7 +28,10 @@ import com.jyellow.tp2api.repository.ScheduleRepository;
 import com.jyellow.tp2api.repository.SessionRepository;
 import com.jyellow.tp2api.service.SessionService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class SessionServiceImpl implements SessionService {
 
 	@Autowired
@@ -44,6 +47,7 @@ public class SessionServiceImpl implements SessionService {
 	@Transactional
 	@Override
 	public List<SessionDTO> listByPsychologistUserLoginDni(String psychologistDni) {
+		log.info("SessionServiceImpl: method listByPsychologistUserLoginDni");
 		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDni(psychologistDni);
 		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
 		SessionDTO sessionDTO = new SessionDTO();
@@ -68,6 +72,7 @@ public class SessionServiceImpl implements SessionService {
 	@Override
 	public List<SessionDTO> listByPsychologistUserLoginDniAndAceptedAndFinished(String psychologistDni, boolean acepted,
 			boolean finished) {
+		log.info("SessionServiceImpl: method listByPsychologistUserLoginDniAndAceptedAndFinished");
 		List<Session> sessions = sessionRepository.findByPsychologistUserLoginDniAndAceptedAndFinished(psychologistDni,
 				acepted, finished);
 		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
@@ -92,6 +97,7 @@ public class SessionServiceImpl implements SessionService {
 	@Transactional
 	@Override
 	public List<SessionDTO> listByPatientUserLoginDni(String patientDni) {
+		log.info("SessionServiceImpl: method listByPatientUserLoginDni");
 		List<Session> sessions = sessionRepository.findByPatientUserLoginDni(patientDni);
 		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
 		SessionDTO sessionDTO = new SessionDTO();
@@ -116,6 +122,7 @@ public class SessionServiceImpl implements SessionService {
 	@Override
 	public List<SessionDTO> listByPatientUserLoginDniAndAceptedAndFinished(String patientDni, boolean acepted,
 			boolean finished) {
+		log.info("SessionServiceImpl: method listByPatientUserLoginDniAndAceptedAndFinished");
 		List<Session> sessions = sessionRepository.findByPatientUserLoginDniAndAceptedAndFinished(patientDni, acepted,
 				finished);
 		List<SessionDTO> sessionsDTO = new ArrayList<SessionDTO>();
@@ -140,6 +147,7 @@ public class SessionServiceImpl implements SessionService {
 	@Transactional
 	@Override
 	public String create(SessionCreateDTO sessionCreateDTO) throws ParseException {
+		log.info("SessionServiceImpl: method create");
 		Session session = new Session();
 		Patient patient = patientRepository.findByUserLoginDni(sessionCreateDTO.getPatientDni());
 		if (patient == null)
@@ -186,6 +194,7 @@ public class SessionServiceImpl implements SessionService {
 	@Transactional
 	@Override
 	public SessionDTO updateAcepted(SessionUpdateDTO sessionUpdateDTO) {
+		log.info("SessionServiceImpl: method updateAcepted");
 		Session session = sessionRepository.findById(sessionUpdateDTO.getIdSession()).get();
 		session.setAcepted(true);
 		session.setMeetingLink(sessionUpdateDTO.getMeetingLink());
@@ -202,6 +211,7 @@ public class SessionServiceImpl implements SessionService {
 	@Transactional
 	@Override
 	public SessionDTO updateFinished(int idSession) {
+		log.info("SessionServiceImpl: method updateFinished");
 		Session session = sessionRepository.findById(idSession).get();
 		session.setFinished(true);
 		sessionRepository.save(session);
@@ -217,8 +227,8 @@ public class SessionServiceImpl implements SessionService {
 	@Transactional
 	@Override
 	public SessionDTO listById(int idSession) {
+		log.info("SessionServiceImpl: method listById");
 		Session session = sessionRepository.findById(idSession).get();
-
 		UserLoginDTO userLoginDTO = modelMapper.map(session.getPatient().getUserLogin(), UserLoginDTO.class);
 		PatientDTO patientDTO = modelMapper.map(session.getPatient(), PatientDTO.class);
 		patientDTO.setUserLoginDTO(userLoginDTO);
@@ -231,6 +241,7 @@ public class SessionServiceImpl implements SessionService {
 	@Override
 	public List<SessionDTO> listByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(
 			String psychologistDni, boolean acepted, boolean finished, String patientDni) {
+		log.info("SessionServiceImpl: method listByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni");
 		List<Session> sessions = sessionRepository
 				.findByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni, acepted,
 						finished, patientDni);

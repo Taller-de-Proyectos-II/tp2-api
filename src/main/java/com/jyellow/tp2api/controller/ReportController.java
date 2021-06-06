@@ -25,9 +25,12 @@ import com.jyellow.tp2api.service.ReportService;
 import com.jyellow.tp2api.util.ReportPDFExporter;
 import com.lowagie.text.DocumentException;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/report")
+@Log4j2
 public class ReportController {
 
 	@Autowired
@@ -38,6 +41,7 @@ public class ReportController {
 
 	@GetMapping(path = "/listByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDni(@RequestParam String patientDni) {
+		log.info("ReportController: method listByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<ReportDTO> reportsDTO = reportService.listByPatientDni(patientDni);
@@ -58,6 +62,7 @@ public class ReportController {
 
 	@GetMapping(path = "/listByPatientDniAndType/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDniAndType(@RequestParam String patientDni, @RequestParam String type) {
+		log.info("ReportController: method listByPatientDniAndType");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<ReportDTO> reportsDTO = reportService.listByPatientDniAndType(patientDni, type);
@@ -78,6 +83,7 @@ public class ReportController {
 
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody ReportCreateDTO reportCreateDTO) {
+		log.info("ReportController: method create");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			ReportDTO reportDTO = reportService.create(reportCreateDTO);
@@ -94,6 +100,7 @@ public class ReportController {
 
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody ReportUpdateDTO reportUpdateDTO) {
+		log.info("ReportController: method update");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			ReportDTO reportDTO = reportService.update(reportUpdateDTO);
@@ -110,6 +117,7 @@ public class ReportController {
 
 	@DeleteMapping(path = "/", produces = "application/json")
 	public ResponseEntity<?> delete(@RequestParam int idReport) {
+		log.info("ReportController: method delete");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			ReportDTO reportDTO = reportService.delete(idReport);
@@ -127,6 +135,7 @@ public class ReportController {
 	@GetMapping("/export/")
 	public void export(@RequestParam int idReport, HttpServletResponse response)
 			throws DocumentException, IOException {
+		log.info("ReportController: method export");
 		response.setContentType("application/pdf");
 		String headerKey = "Content-Disposition";
 		String headerValue = "attachment; filename=report.pdf";

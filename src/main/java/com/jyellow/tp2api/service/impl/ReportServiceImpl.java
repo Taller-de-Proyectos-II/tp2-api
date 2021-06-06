@@ -25,7 +25,10 @@ import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.repository.ReportRepository;
 import com.jyellow.tp2api.service.ReportService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class ReportServiceImpl implements ReportService {
 
 	@Autowired
@@ -39,6 +42,7 @@ public class ReportServiceImpl implements ReportService {
 	@Transactional
 	@Override
 	public ReportDTO create(ReportCreateDTO reportCreateDTO) {
+		log.info("ReportServiceImpl: method create");
 		Patient patient = patientRepository.findByUserLoginDni(reportCreateDTO.getPatientDni());
 		Psychologist psychologist = psychologistRepository.findByUserLoginDni(reportCreateDTO.getPsychologistDni());
 		Report report = new Report();
@@ -58,6 +62,7 @@ public class ReportServiceImpl implements ReportService {
 	@Transactional
 	@Override
 	public ReportDTO update(ReportUpdateDTO reportUpdateDTO) {
+		log.info("ReportServiceImpl: method update");
 		Report report = reportRepository.findById(reportUpdateDTO.getIdReport()).get();
 		report.setDescription(reportUpdateDTO.getDescription());
 		reportRepository.save(report);
@@ -67,6 +72,7 @@ public class ReportServiceImpl implements ReportService {
 	@Transactional
 	@Override
 	public ReportDTO delete(int idReport) {
+		log.info("ReportServiceImpl: method delete");
 		Report report = reportRepository.findById(idReport).get();
 		reportRepository.deleteById(idReport);
 		return modelMapper.map(report, ReportDTO.class);
@@ -75,14 +81,16 @@ public class ReportServiceImpl implements ReportService {
 	@Transactional
 	@Override
 	public List<ReportDTO> listByPatientDni(String patientDni) {
+		log.info("ReportServiceImpl: method listByPatientDni");
 		List<Report> reports = reportRepository.findByPatientUserLoginDni(patientDni);
 		Collections.reverse(reports);
 		return reports.stream().map(report -> modelMapper.map(report, ReportDTO.class)).collect(Collectors.toList());
 	}
-	
+
 	@Transactional
 	@Override
 	public List<ReportDTO> listByPatientDniAndType(String patientDni, String type) {
+		log.info("ReportServiceImpl: method listByPatientDniAndType");
 		List<Report> reports = reportRepository.findByPatientUserLoginDniAndType(patientDni, type);
 		Collections.reverse(reports);
 		return reports.stream().map(report -> modelMapper.map(report, ReportDTO.class)).collect(Collectors.toList());

@@ -17,9 +17,12 @@ import com.jyellow.tp2api.dto.ScheduleDTO;
 import com.jyellow.tp2api.dto.ScheduleUpdateDTO;
 import com.jyellow.tp2api.service.ScheduleService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/schedule")
+@Log4j2
 public class ScheduleController {
 
 	@Autowired
@@ -27,6 +30,7 @@ public class ScheduleController {
 
 	@GetMapping(path = "/listSchedules/", produces = "application/json")
 	public ResponseEntity<?> listSchedules() {
+		log.info("ScheduleController: method listSchedules");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<ScheduleDTO> schedulesDTO = scheduleServcie.listAll();
@@ -42,6 +46,7 @@ public class ScheduleController {
 
 	@GetMapping(path = "/listSchedulesByPsychologistDni/", produces = "application/json")
 	public ResponseEntity<?> listSchedulesByPsychologistDni(@RequestParam String psychologistDni) {
+		log.info("ScheduleController: method listSchedulesByPsychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<ScheduleDTO> schedulesDTO = scheduleServcie.listByPsychologistDni(psychologistDni);
@@ -62,6 +67,7 @@ public class ScheduleController {
 	
 	@GetMapping(path = "/listSchedulesByPsychologistDniPatientView/", produces = "application/json")
 	public ResponseEntity<?> listSchedulesByPsychologistDniPatientView(@RequestParam String psychologistDni, @RequestParam String date) {
+		log.info("ScheduleController: method listSchedulesByPsychologistDniPatientView");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<ScheduleDTO> schedulesDTO = scheduleServcie.listByPsychologistDniPatientView(psychologistDni, date);
@@ -82,6 +88,7 @@ public class ScheduleController {
 	
 	@GetMapping(path = "/listSchedulesByPsychologistDniSessionsInSchedule/", produces = "application/json")
 	public ResponseEntity<?> listSchedulesByPsychologistDniSessionsInSchedule(@RequestParam String psychologistDni, @RequestParam String date) {
+		log.info("ScheduleController: method listSchedulesByPsychologistDniSessionsInSchedule");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<ScheduleDTO> schedulesDTO = scheduleServcie.listByPsychologistDniSessionsInSchedule(psychologistDni, date);
@@ -102,6 +109,7 @@ public class ScheduleController {
 
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody ScheduleUpdateDTO scheduleUpdateDTO) {
+		log.info("ScheduleController: method update");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<ScheduleDTO> schedulesDTO = scheduleServcie.update(scheduleUpdateDTO);
@@ -118,6 +126,7 @@ public class ScheduleController {
 	
 	@GetMapping(path = "/createDefault/", produces = "application/json")
 	public ResponseEntity<?> createDefault() {
+		log.info("ScheduleController: method createDefault");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			scheduleServcie.createDefault();

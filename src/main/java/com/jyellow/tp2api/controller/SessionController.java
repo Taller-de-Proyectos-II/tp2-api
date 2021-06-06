@@ -20,9 +20,12 @@ import com.jyellow.tp2api.dto.SessionUpdateDTO;
 import com.jyellow.tp2api.service.EmailService;
 import com.jyellow.tp2api.service.SessionService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/session")
+@Log4j2
 public class SessionController {
 
 	@Autowired
@@ -32,6 +35,7 @@ public class SessionController {
 
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody SessionCreateDTO sessionCreateDTO) {
+		log.info("SessionController: method create");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			String message = sessionService.create(sessionCreateDTO);
@@ -71,6 +75,7 @@ public class SessionController {
 
 	@PutMapping(path = "/updateAcepted/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> updateAcepted(@RequestBody SessionUpdateDTO sessionUPdateDTO) {
+		log.info("SessionController: method updateAcepted");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			SessionDTO sessionDTO = sessionService.updateAcepted(sessionUPdateDTO);
@@ -103,6 +108,7 @@ public class SessionController {
 
 	@PutMapping(path = "/updateFinished/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> updateFinished(@RequestBody SessionUpdateDTO sessionUpdateDTO) {
+		log.info("SessionController: method updateFinished");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			SessionDTO sessionDTO = sessionService.updateFinished(sessionUpdateDTO.getIdSession());
@@ -119,6 +125,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listAllByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listAllByPatientDni(@RequestParam String patientDni) {
+		log.info("SessionController: method listAllByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService.listByPatientUserLoginDni(patientDni);
@@ -140,6 +147,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listPendingByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listPendingByPatientDni(@RequestParam String patientDni) {
+		log.info("SessionController: method listPendingByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService.listByPatientUserLoginDniAndAceptedAndFinished(patientDni,
@@ -162,6 +170,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listAceptedByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listAceptedByPatientDni(@RequestParam String patientDni) {
+		log.info("SessionController: method listAceptedByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService.listByPatientUserLoginDniAndAceptedAndFinished(patientDni,
@@ -184,6 +193,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listFinishedByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listFinishedByPatientDni(@RequestParam String patientDni) {
+		log.info("SessionController: method listFinishedByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService.listByPatientUserLoginDniAndAceptedAndFinished(patientDni,
@@ -206,6 +216,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listAllByPsychologistDni/", produces = "application/json")
 	public ResponseEntity<?> listAllByPsychologistDni(@RequestParam String psychologistDni) {
+		log.info("SessionController: method listAllByPsychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService.listByPsychologistUserLoginDni(psychologistDni);
@@ -227,6 +238,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listPendingByPsychologistDni/", produces = "application/json")
 	public ResponseEntity<?> listPendingByPsychologistDni(@RequestParam String psychologistDni) {
+		log.info("SessionController: method listPendingByPsychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService
@@ -249,6 +261,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listAceptedByPsychologistDni/", produces = "application/json")
 	public ResponseEntity<?> listAceptedByPsychologistDni(@RequestParam String psychologistDni) {
+		log.info("SessionController: method listAceptedByPsychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService
@@ -268,13 +281,16 @@ public class SessionController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@GetMapping(path = "/listFinishedByPsychologistDniAndPsychologistDni/", produces = "application/json")
-	public ResponseEntity<?> listFinishedByPsychologistDniAndPsychologistDni(@RequestParam String psychologistDni, @RequestParam String patientDni) {
+	public ResponseEntity<?> listFinishedByPsychologistDniAndPsychologistDni(@RequestParam String psychologistDni,
+			@RequestParam String patientDni) {
+		log.info("SessionController: method listFinishedByPsychologistDniAndPsychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService
-					.listByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni, true, true, patientDni);
+					.listByPsychologistUserLoginDniAndAceptedAndFinishedAndPatientUserLoginDni(psychologistDni, true,
+							true, patientDni);
 			if (sessionsDTO == null || sessionsDTO.size() == 0) {
 				responseDTO.setMessage("No se encontraron Sesiones");
 				responseDTO.setStatus(0);
@@ -293,6 +309,7 @@ public class SessionController {
 
 	@GetMapping(path = "/listFinishedByPsychologistDni/", produces = "application/json")
 	public ResponseEntity<?> listFinishedByPsychologistDni(@RequestParam String psychologistDni) {
+		log.info("SessionController: method listFinishedByPsychologistDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<SessionDTO> sessionsDTO = sessionService

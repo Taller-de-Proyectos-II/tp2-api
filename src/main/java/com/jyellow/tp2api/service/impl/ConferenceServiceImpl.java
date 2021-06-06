@@ -14,7 +14,10 @@ import com.jyellow.tp2api.repository.ConferenceRepository;
 import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.service.ConferenceService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class ConferenceServiceImpl implements ConferenceService {
 
 	@Autowired
@@ -26,6 +29,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 	@Transactional
 	@Override
 	public void create(ConferenceDTO conferenceDTO) {
+		log.info("ConferenceServiceImpl: method create");
 		Conference conference = new Conference();
 		conference.setName(conferenceDTO.getName());
 		conference.setDescription(conferenceDTO.getDescription());
@@ -38,6 +42,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 	@Transactional
 	@Override
 	public void update(ConferenceDTO conferenceDTO) {
+		log.info("ConferenceServiceImpl: method update");
 		Conference conference = conferenceRepository.findById(conferenceDTO.getIdConference()).get();
 		conference.setName(conferenceDTO.getName());
 		conference.setDescription(conferenceDTO.getDescription());
@@ -48,12 +53,14 @@ public class ConferenceServiceImpl implements ConferenceService {
 	@Transactional
 	@Override
 	public void delete(int idConference) {
+		log.info("ConferenceServiceImpl: method delete");
 		conferenceRepository.deleteById(idConference);
 	}
 
 	@Transactional
 	@Override
 	public List<ConferenceDTO> listByDni(String dni) {
+		log.info("ConferenceServiceImpl: method listByDni");
 		List<Conference> conferences = conferenceRepository.findByPsychologistUserLoginDni(dni);
 		List<ConferenceDTO> conferencesDTO = new ArrayList<ConferenceDTO>();
 		ConferenceDTO conferenceDTO = new ConferenceDTO();

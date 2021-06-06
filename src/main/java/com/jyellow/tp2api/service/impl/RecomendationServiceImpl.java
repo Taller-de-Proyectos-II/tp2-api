@@ -12,7 +12,10 @@ import com.jyellow.tp2api.model.Recomendation;
 import com.jyellow.tp2api.repository.RecomendationRepository;
 import com.jyellow.tp2api.service.RecomendationService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class RecomendationServiceImpl implements RecomendationService {
 	@Autowired
 	private RecomendationRepository recomendationRepository;
@@ -20,6 +23,7 @@ public class RecomendationServiceImpl implements RecomendationService {
 
 	@Override
 	public List<RecomendationDTO> listAll() {
+		log.info("RecomendationServiceImpl: method listAll");
 		List<Recomendation> recomendations = recomendationRepository.findAll();
 		List<RecomendationDTO> recomendationsDTO = new ArrayList<RecomendationDTO>();
 		for (Recomendation recomendation : recomendations) {
@@ -30,6 +34,7 @@ public class RecomendationServiceImpl implements RecomendationService {
 
 	@Override
 	public void createDefault() {
+		log.info("RecomendationServiceImpl: method createDefault");
 		List<Recomendation> recomendations = new ArrayList<Recomendation>();
 		recomendations.add(new Recomendation(0,
 				"Respire despacio y profundamente. Inspire por la nariz llenando el abdomen y expire lentamente por la boca"));

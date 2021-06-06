@@ -20,9 +20,12 @@ import com.jyellow.tp2api.dto.TestDTO;
 import com.jyellow.tp2api.dto.TestUpdateDTO;
 import com.jyellow.tp2api.service.TestService;
 
+import lombok.extern.log4j.Log4j2;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/test")
+@Log4j2
 public class TestController {
 
 	@Autowired
@@ -30,6 +33,7 @@ public class TestController {
 
 	@GetMapping(path = "/listByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDni(@RequestParam String patientDni) {
+		log.info("TestController: method listByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<TestDTO> testsDTO = testService.listByPatientDni(patientDni);
@@ -51,6 +55,7 @@ public class TestController {
 	@GetMapping(path = "/listByPatientDniAndTestType/", produces = "application/json")
 	public ResponseEntity<?> listByPatientDniAndTestType(@RequestParam String patientDni,
 			@RequestParam String testType) {
+		log.info("TestController: method listByPatientDniAndTestType");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<TestDTO> testsDTO = testService.listByPatientDniAndTestType(patientDni, testType);
@@ -71,6 +76,7 @@ public class TestController {
 
 	@GetMapping(path = "/listFinishedByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listFinishedByPatientDni(@RequestParam String patientDni) {
+		log.info("TestController: method listFinishedByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<TestDTO> testsDTO = testService.listByPatientDniAndFinished(patientDni, true);
@@ -91,6 +97,7 @@ public class TestController {
 
 	@GetMapping(path = "/listUnfinishedByPatientDni/", produces = "application/json")
 	public ResponseEntity<?> listUnfinishedByPatientDni(@RequestParam String patientDni) {
+		log.info("TestController: method listUnfinishedByPatientDni");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			List<TestDTO> testsDTO = testService.listByPatientDniAndFinished(patientDni, false);
@@ -111,6 +118,7 @@ public class TestController {
 
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> create(@RequestBody TestCreateDTO testCreateDTO) {
+		log.info("TestController: method create");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			TestDTO testDTO = testService.create(testCreateDTO);
@@ -127,6 +135,7 @@ public class TestController {
 
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> update(@RequestBody TestUpdateDTO testUpdateDTO) {
+		log.info("TestController: method update");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			TestDTO testDTO = testService.update(testUpdateDTO);
@@ -142,6 +151,7 @@ public class TestController {
 
 	@DeleteMapping(path = "/", produces = "application/json")
 	public ResponseEntity<?> delete(@RequestParam int idTest) {
+		log.info("TestController: method delete");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			TestDTO testDTO = testService.cancel(idTest);

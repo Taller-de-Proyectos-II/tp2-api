@@ -14,7 +14,10 @@ import com.jyellow.tp2api.repository.PsychologistRepository;
 import com.jyellow.tp2api.repository.StudyRepository;
 import com.jyellow.tp2api.service.StudyService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class StudyServiceImpl implements StudyService {
 	@Autowired
 	StudyRepository studyRepository;
@@ -25,6 +28,7 @@ public class StudyServiceImpl implements StudyService {
 	@Transactional
 	@Override
 	public void create(StudyDTO studyDTO) {
+		log.info("StudyServiceImpl: method create");
 		Study study = new Study();
 		study.setAcademicDiscipline(studyDTO.getAcademicDiscipline());
 		study.setComplete(studyDTO.isComplete());
@@ -41,6 +45,7 @@ public class StudyServiceImpl implements StudyService {
 	@Transactional
 	@Override
 	public void update(StudyDTO studyDTO) {
+		log.info("StudyServiceImpl: method update");
 		Study study = studyRepository.findById(studyDTO.getIdStudy()).get();
 		study.setAcademicDiscipline(studyDTO.getAcademicDiscipline());
 		study.setComplete(studyDTO.isComplete());
@@ -55,12 +60,14 @@ public class StudyServiceImpl implements StudyService {
 	@Transactional
 	@Override
 	public void delete(int idStudy) {
+		log.info("StudyServiceImpl: method delete");
 		studyRepository.deleteById(idStudy);
 	}
 
 	@Transactional
 	@Override
 	public List<StudyDTO> listByDni(String dni) {
+		log.info("StudyServiceImpl: method listByDni");
 		List<Study> studies = studyRepository.findByPsychologistUserLoginDni(dni);
 		List<StudyDTO> studiesDTO = new ArrayList<StudyDTO>();
 		StudyDTO studyDTO = new StudyDTO();
