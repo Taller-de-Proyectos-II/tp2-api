@@ -51,6 +51,8 @@ public class Tp2ApiApplication {
 				.antMatchers(HttpMethod.POST, "/login/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/patient/image/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/patient/image/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/psychologist/image/**").permitAll()
+				.antMatchers(HttpMethod.POST, "/psychologist/image/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/guardian/image/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/guardian/image/**").permitAll()
 				.anyRequest().authenticated();
