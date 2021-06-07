@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,7 +108,7 @@ public class PsychologistServiceImpl implements PsychologistService {
 		if (userLogin == null) {
 			return -1;
 		}
-		if (!userLogin.getPassword().equals(changePasswordDTO.getPassword())) {
+		if (!encoder.matches(changePasswordDTO.getPassword(), userLogin.getPassword())) {
 			return -2;
 		}
 		userLogin.setPassword(changePasswordDTO.getNewPassword());

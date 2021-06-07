@@ -107,7 +107,7 @@ public class PatientServiceImpl implements PatientService {
 		if (userLogin == null) {
 			return -1;
 		}
-		if (!userLogin.getPassword().equals(changePasswordDTO.getPassword())) {
+		if (!encoder.matches(changePasswordDTO.getPassword(), userLogin.getPassword())) {
 			return -2;
 		}
 		userLogin.setPassword(changePasswordDTO.getNewPassword());
