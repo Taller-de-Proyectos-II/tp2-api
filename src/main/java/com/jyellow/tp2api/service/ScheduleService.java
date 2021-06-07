@@ -12,5 +12,5 @@ public interface ScheduleService {
 	List<ScheduleDTO> update(ScheduleUpdateDTO scheduleUpdateDTO);
 	List<ScheduleDTO> listByPsychologistDniPatientView(String psychologistDni, String dateRequest) throws ParseException;
 	List<ScheduleDTO> listByPsychologistDniSessionsInSchedule(String psychologistDni, String dateRequest) throws ParseException;
-	void createDefault();
+	int createDefault();
 }

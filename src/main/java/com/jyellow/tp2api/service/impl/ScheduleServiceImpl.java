@@ -138,17 +138,22 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Transactional
 	@Override
-	public void createDefault() {
+	public int createDefault() {
 		log.info("ScheduleServiceImpl: method createDefault");
 		List<Schedule> schedules = new ArrayList<Schedule>();
 		List<Psychologist> psychologists = new ArrayList<Psychologist>();
 		List<Session> sessions = new ArrayList<Session>();
+		List<Schedule> schedulesAux = new ArrayList<Schedule>();
 
-		for (int i = 1; i < 8; i++) {
-			for (int j = 8; j < 20; j++) {
-				schedules.add(new Schedule(0, j, i, psychologists, sessions));
+		if (schedulesAux == null || schedulesAux.size() == 0) {
+			for (int i = 1; i < 8; i++) {
+				for (int j = 8; j < 20; j++) {
+					schedules.add(new Schedule(0, j, i, psychologists, sessions));
+				}
 			}
-		}
-		scheduleRepository.saveAll(schedules);
+			scheduleRepository.saveAll(schedules);
+			return 1;
+		} else
+			return -1;
 	}
 }

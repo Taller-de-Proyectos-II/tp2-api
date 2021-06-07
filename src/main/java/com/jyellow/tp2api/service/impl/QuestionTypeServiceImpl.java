@@ -23,12 +23,6 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class QuestionTypeServiceImpl implements QuestionTypeService {
 
-	private boolean defaultCreation;
-
-	public QuestionTypeServiceImpl() {
-		defaultCreation = false;
-	}
-
 	@Autowired
 	private QuestionTypeRepository questionTypeRepository;
 	@Autowired
@@ -37,16 +31,19 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 
 	@Transactional
 	@Override
-	public void createDefault() {
+	public int createDefault() {
 		log.info("QuestionTypeServiceImpl: method createDefault");
 		List<QuestionType> questionTypes = new ArrayList<QuestionType>();
 		List<Question> questions = new ArrayList<Question>();
-		if (defaultCreation == false) {
+		List<QuestionType> questionTypesAux = new ArrayList<QuestionType>();
+		
+		if (questionTypesAux == null || questionTypesAux.size() == 0) {
 			questionTypes.add(new QuestionType(0, "Depresión", "Test de Depresión", questions));
 			questionTypes.add(new QuestionType(0, "Ansiedad", "Test de Ansiedad", questions));
 			questionTypes.add(new QuestionType(0, "Manifestaciones", "Test de Manifestaciones", questions));
-		}
-		questionTypeRepository.saveAll(questionTypes);
+			questionTypeRepository.saveAll(questionTypes);
+			return 1;
+		} else return -1;
 	}
 
 	@Override

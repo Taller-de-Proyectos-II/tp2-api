@@ -6,5 +6,5 @@ import com.jyellow.tp2api.dto.SymptomDTO;
 
 public interface SymptomService {
 	List<SymptomDTO> listAll();
-	void createDefault();
+	int createDefault();
 }

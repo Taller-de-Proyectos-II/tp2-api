@@ -67,9 +67,14 @@ public class QuestionTypeController {
 		log.info("QuestionTypeController: method createDefault");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			questionTypeService.createDefault();
+			int result = questionTypeService.createDefault();
+			if(result == 1) {
 			responseDTO.setMessage("Creación Default exitosa");
 			responseDTO.setStatus(1);
+			} else {
+				responseDTO.setMessage("Los tipos de preguntas por defecto ya fueron creados");
+				responseDTO.setStatus(0);
+			}
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);

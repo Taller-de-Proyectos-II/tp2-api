@@ -62,9 +62,17 @@ public class QuestionController {
 		log.info("QuestionController: method createDefault");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			questionService.createDefault();
-			responseDTO.setMessage("Creación Default exitosa");
-			responseDTO.setStatus(1);
+			int result = questionService.createDefault();
+			if (result == 1) {
+				responseDTO.setMessage("Creación Default exitosa");
+				responseDTO.setStatus(1);
+			} else if (result == -1) {
+				responseDTO.setMessage("Los tipos de pregunta aún no están creados");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Las preguntas por defecto ya fueron creadas");
+				responseDTO.setStatus(0);
+			}
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);

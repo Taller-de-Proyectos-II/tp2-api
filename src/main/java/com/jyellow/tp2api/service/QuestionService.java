@@ -7,5 +7,5 @@ import com.jyellow.tp2api.dto.QuestionDTO;
 public interface QuestionService {
 	List<QuestionDTO> listByQuestionTypeId(int questionTypeId);
 	List<QuestionDTO> listAll();
-	void createDefault();
+	int createDefault();
 }

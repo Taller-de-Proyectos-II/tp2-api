@@ -23,12 +23,6 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class QuestionServiceImpl implements QuestionService {
 
-	private boolean defaultCreation;
-
-	public QuestionServiceImpl() {
-		defaultCreation = false;
-	}
-
 	@Autowired
 	private QuestionRepository questionRepository;
 	@Autowired
@@ -67,12 +61,17 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Transactional
 	@Override
-	public void createDefault() {
+	public int createDefault() {
 		log.info("QuestionServiceImpl: method createDefault");
 		List<Question> questions = new ArrayList<Question>();
 		QuestionType questionType = new QuestionType();
 		List<Answer> answers = new ArrayList<Answer>();
-		if (defaultCreation == false) {
+		List<Question> questionsAux = questionRepository.findAll();
+		List<QuestionType> questionsTypeAux = questionTypeRepository.findAll();
+		if(questionsTypeAux == null || questionsTypeAux.size() == 0) {
+			return -1;
+		}
+		if ((questionsAux == null || questionsAux.size() == 0)) {
 			questionType = questionTypeRepository.findByName("Ansiedad");
 			questions.add(new Question(0, "Me siento más intranquilo(a) y nervioso(a) que de costumbre", questionType,
 					answers));
@@ -134,7 +133,9 @@ public class QuestionServiceImpl implements QuestionService {
 			questions.add(new Question(0,
 					"Tengo tres o más de los siguientes síntomas: pensamientos distorcionados, rumiación: pensamientos constantes, dificultades para concentrarme, preocupaciones excesivas, anticipaciones amenazantes o expectativas negativas",
 					questionType, answers));
-		}
-		questionRepository.saveAll(questions);
+
+			questionRepository.saveAll(questions);
+			return 1;
+		} else return -2;
 	}
 }

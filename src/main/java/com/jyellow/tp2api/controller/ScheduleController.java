@@ -64,9 +64,10 @@ public class ScheduleController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@GetMapping(path = "/listSchedulesByPsychologistDniPatientView/", produces = "application/json")
-	public ResponseEntity<?> listSchedulesByPsychologistDniPatientView(@RequestParam String psychologistDni, @RequestParam String date) {
+	public ResponseEntity<?> listSchedulesByPsychologistDniPatientView(@RequestParam String psychologistDni,
+			@RequestParam String date) {
 		log.info("ScheduleController: method listSchedulesByPsychologistDniPatientView");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
@@ -85,13 +86,15 @@ public class ScheduleController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@GetMapping(path = "/listSchedulesByPsychologistDniSessionsInSchedule/", produces = "application/json")
-	public ResponseEntity<?> listSchedulesByPsychologistDniSessionsInSchedule(@RequestParam String psychologistDni, @RequestParam String date) {
+	public ResponseEntity<?> listSchedulesByPsychologistDniSessionsInSchedule(@RequestParam String psychologistDni,
+			@RequestParam String date) {
 		log.info("ScheduleController: method listSchedulesByPsychologistDniSessionsInSchedule");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			List<ScheduleDTO> schedulesDTO = scheduleServcie.listByPsychologistDniSessionsInSchedule(psychologistDni, date);
+			List<ScheduleDTO> schedulesDTO = scheduleServcie.listByPsychologistDniSessionsInSchedule(psychologistDni,
+					date);
 			if (schedulesDTO == null || schedulesDTO.size() == 0) {
 				responseDTO.setMessage("No se encontraron Horarios");
 				responseDTO.setStatus(1);
@@ -123,15 +126,20 @@ public class ScheduleController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
 	@GetMapping(path = "/createDefault/", produces = "application/json")
 	public ResponseEntity<?> createDefault() {
 		log.info("ScheduleController: method createDefault");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			scheduleServcie.createDefault();
-			responseDTO.setMessage("Creación Default exitosa");
-			responseDTO.setStatus(1);
+			int result = scheduleServcie.createDefault();
+			if (result == 1) {
+				responseDTO.setMessage("Creación Default exitosa");
+				responseDTO.setStatus(1);
+			} else {
+				responseDTO.setMessage("Los horarios por defecto ya fueron creados");
+				responseDTO.setStatus(00);
+			}
 		} catch (Exception e) {
 			responseDTO.setMessage("Error");
 			responseDTO.setStatus(0);
