@@ -37,12 +37,28 @@ public class UserLoginServiceImpl implements UserLoginService {
 	@Transactional
 	public int loginSuccessful(String dni, String password) {
 		log.info("UserLoginServiceImpl: method loginSuccessful");
-		UserLogin userLogin = userLoginRepository.findByDni(dni);
+		Patient patientExist = patientRepository.findByUserLoginDni(dni);
 		log.info("UserLoginServiceImpl: method loginSuccessful");
-		if (userLogin == null)
+		if (patientExist == null)
 			return -1;
 		else {
-			if (!encoder.matches(password, userLogin.getPassword()))
+			if (!encoder.matches(password, patientExist.getUserLogin().getPassword()))
+				return -2;
+			else
+				return 1;
+		}
+	}
+	
+	@Override
+	@Transactional
+	public int loginSuccessfulPsychologist(String dni, String password) {
+		log.info("UserLoginServiceImpl: method loginSuccessfulPsychologist");
+		Patient patientExist = patientRepository.findByUserLoginDni(dni);
+		log.info("UserLoginServiceImpl: method loginSuccessful");
+		if (patientExist == null)
+			return -1;
+		else {
+			if (!encoder.matches(password, patientExist.getUserLogin().getPassword()))
 				return -2;
 			else
 				return 1;

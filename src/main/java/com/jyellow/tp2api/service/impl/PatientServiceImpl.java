@@ -103,15 +103,15 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public int updatePassword(ChangePasswordDTO changePasswordDTO) {
 		log.info("PatientServiceImpl: method updatePassword");
-		UserLogin userLogin = userLoginRepository.findByDni(changePasswordDTO.getDni());
-		if (userLogin == null) {
+		Patient patientExist = patientRepository.findByUserLoginDni(changePasswordDTO.getDni());
+		if (patientExist == null) {
 			return -1;
 		}
-		if (!encoder.matches(changePasswordDTO.getPassword(), userLogin.getPassword())) {
+		if (!encoder.matches(changePasswordDTO.getPassword(), patientExist.getUserLogin().getPassword())) {
 			return -2;
 		}
-		userLogin.setPassword(encoder.encode(changePasswordDTO.getNewPassword()));
-		userLoginRepository.save(userLogin);
+		patientExist.getUserLogin().setPassword(encoder.encode(changePasswordDTO.getNewPassword()));
+		userLoginRepository.save(patientExist.getUserLogin());
 		return 1;
 	}
 

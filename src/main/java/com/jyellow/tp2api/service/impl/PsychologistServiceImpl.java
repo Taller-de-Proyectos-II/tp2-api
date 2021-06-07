@@ -104,15 +104,15 @@ public class PsychologistServiceImpl implements PsychologistService {
 	@Override
 	public int updatePassword(ChangePasswordDTO changePasswordDTO) {
 		log.info("PsychologistServiceImpl: method updatePassword");
-		UserLogin userLogin = userLoginRepository.findByDni(changePasswordDTO.getDni());
-		if (userLogin == null) {
+		Psychologist psychologistExist = psychologistRepository.findByUserLoginDni(changePasswordDTO.getDni());
+		if (psychologistExist == null) {
 			return -1;
 		}
-		if (!encoder.matches(changePasswordDTO.getPassword(), userLogin.getPassword())) {
+		if (!encoder.matches(changePasswordDTO.getPassword(), psychologistExist.getUserLogin().getPassword())) {
 			return -2;
 		}
-		userLogin.setPassword(encoder.encode(changePasswordDTO.getNewPassword()));
-		userLoginRepository.save(userLogin);
+		psychologistExist.getUserLogin().setPassword(encoder.encode(changePasswordDTO.getNewPassword()));
+		userLoginRepository.save(psychologistExist.getUserLogin());
 		return 1;
 	}
 

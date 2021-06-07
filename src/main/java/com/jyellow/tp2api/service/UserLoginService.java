@@ -15,4 +15,6 @@ public interface UserLoginService {
 	int loginSuccessfulAdmin(String password);
 
 	void convertPasswords();
+
+	int loginSuccessfulPsychologist(String dni, String password);
 }

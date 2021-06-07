@@ -71,7 +71,33 @@ public class UserLoginController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
-	
+
+	@PostMapping(path = "/loginPsychologist/", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> loginPsychologist(@RequestBody UserLoginDTO userLoginDTO) {
+		log.info("UserLoginController: method loginPsychologist");
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			int loginSuccessful = userLoginService.loginSuccessfulPsychologist(userLoginDTO.getDni(),
+					userLoginDTO.getPassword());
+			if (loginSuccessful == -1) {
+				responseDTO.setMessage("Usuario no registrado");
+				responseDTO.setStatus(0);
+			} else if (loginSuccessful == -2) {
+				responseDTO.setMessage("Contraseña incorrecta");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setMessage("Login exitoso");
+				String token = getJWTToken(userLoginDTO.getDni(), userLoginDTO.getPassword());
+				responseDTO.setToken(token);
+				responseDTO.setStatus(1);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
+
 	@PostMapping(path = "/loginAdmin/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> loginAdmin(@RequestBody UserLoginDTO userLoginDTO) {
 		log.info("UserLoginController: method login");
@@ -209,19 +235,12 @@ public class UserLoginController {
 	}
 
 	/*
-	@PostMapping(path = "/convertDefault/", produces = "application/json")
-	public ResponseEntity<?> convertDefault() {
-		log.info("UserLoginController: method convertDefault");
-		ResponseDTO responseDTO = new ResponseDTO();
-		try {
-			userLoginService.convertPasswords();
-			responseDTO.setStatus(1);
-			responseDTO.setMessage("Conversión exitosa");
-		} catch (Exception e) {
-			responseDTO.setMessage("Error");
-			responseDTO.setStatus(0);
-		}
-		return ResponseEntity.ok(responseDTO);
-	}
-	*/
+	 * @PostMapping(path = "/convertDefault/", produces = "application/json") public
+	 * ResponseEntity<?> convertDefault() {
+	 * log.info("UserLoginController: method convertDefault"); ResponseDTO
+	 * responseDTO = new ResponseDTO(); try { userLoginService.convertPasswords();
+	 * responseDTO.setStatus(1); responseDTO.setMessage("Conversión exitosa"); }
+	 * catch (Exception e) { responseDTO.setMessage("Error");
+	 * responseDTO.setStatus(0); } return ResponseEntity.ok(responseDTO); }
+	 */
 }
