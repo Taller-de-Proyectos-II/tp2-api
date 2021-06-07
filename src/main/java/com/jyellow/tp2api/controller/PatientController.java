@@ -117,6 +117,27 @@ public class PatientController {
 		}
 		return ResponseEntity.ok(responseDTO);
 	}
+	
+	@GetMapping(path = "/listAll/", produces = "application/json")
+	public ResponseEntity<?> listAll() {
+		log.info("PatientController: method listAll");
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			List<PatientDTO> patientsDTO = patientService.listAll();
+			if (patientsDTO == null || patientsDTO.size() == 0) {
+				responseDTO.setMessage("No existen pacientes");
+				responseDTO.setStatus(0);
+			} else {
+				responseDTO.setPatientsDTO(patientsDTO);
+				responseDTO.setMessage("Pacientes");
+				responseDTO.setStatus(1);
+			}
+		} catch (Exception e) {
+			responseDTO.setMessage("Error");
+			responseDTO.setStatus(0);
+		}
+		return ResponseEntity.ok(responseDTO);
+	}
 
 	@GetMapping(path = "/assignToPsychologist/", produces = "application/json")
 	public ResponseEntity<?> assignToPsychologist(@RequestParam String patientDni,

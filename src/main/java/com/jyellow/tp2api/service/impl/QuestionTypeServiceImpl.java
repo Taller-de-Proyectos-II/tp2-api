@@ -35,7 +35,7 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
 		log.info("QuestionTypeServiceImpl: method createDefault");
 		List<QuestionType> questionTypes = new ArrayList<QuestionType>();
 		List<Question> questions = new ArrayList<Question>();
-		List<QuestionType> questionTypesAux = new ArrayList<QuestionType>();
+		List<QuestionType> questionTypesAux = questionTypeRepository.findAll();
 		
 		if (questionTypesAux == null || questionTypesAux.size() == 0) {
 			questionTypes.add(new QuestionType(0, "Depresión", "Test de Depresión", questions));

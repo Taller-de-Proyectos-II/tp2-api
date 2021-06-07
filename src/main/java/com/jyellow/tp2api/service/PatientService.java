@@ -20,4 +20,5 @@ public interface PatientService {
 	void uploadImage(MultipartFile multipartImage, String dni) throws Exception;
 	ByteArrayResource getImage(String dni);
 	int updatePassword(ChangePasswordDTO changePasswordDTO);
+	List<PatientDTO> listAll();
 }

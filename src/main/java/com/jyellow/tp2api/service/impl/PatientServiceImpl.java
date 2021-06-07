@@ -205,4 +205,24 @@ public class PatientServiceImpl implements PatientService {
 		byte[] image = patientRepository.findByUserLoginDni(dni).getImage().getContent();
 		return new ByteArrayResource(image);
 	}
+
+	@Override
+	public List<PatientDTO> listAll() {
+		log.info("PatientServiceImpl: method listAll");
+		List<Patient> patients = patientRepository.findAll();
+		List<PatientDTO> patientsDTO = new ArrayList<PatientDTO>();
+		PatientDTO patientDTO = new PatientDTO();
+		for (Patient patient : patients) {
+			patientDTO = new PatientDTO();
+			patientDTO.setBirthday(patient.getBirthday());
+			patientDTO.setDescription(patient.getDescription());
+			patientDTO.setEmail(patient.getEmail());
+			patientDTO.setLastNames(patient.getLastNames());
+			patientDTO.setNames(patient.getNames());
+			patientDTO.setPhone(patient.getPhone());
+			patientDTO.setUserLoginDTO(new UserLoginDTO(patient.getUserLogin().getDni(), ""));
+			patientsDTO.add(patientDTO);
+		}
+		return patientsDTO;
+	}
 }
