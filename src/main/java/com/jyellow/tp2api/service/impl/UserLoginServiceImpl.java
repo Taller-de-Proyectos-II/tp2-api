@@ -38,7 +38,6 @@ public class UserLoginServiceImpl implements UserLoginService {
 	public int loginSuccessful(String dni, String password) {
 		log.info("UserLoginServiceImpl: method loginSuccessful");
 		Patient patientExist = patientRepository.findByUserLoginDni(dni);
-		log.info("UserLoginServiceImpl: method loginSuccessful");
 		if (patientExist == null)
 			return -1;
 		else {
@@ -53,12 +52,11 @@ public class UserLoginServiceImpl implements UserLoginService {
 	@Transactional
 	public int loginSuccessfulPsychologist(String dni, String password) {
 		log.info("UserLoginServiceImpl: method loginSuccessfulPsychologist");
-		Patient patientExist = patientRepository.findByUserLoginDni(dni);
-		log.info("UserLoginServiceImpl: method loginSuccessful");
-		if (patientExist == null)
+		Psychologist psychologistExist = psychologistRepository.findByUserLoginDni(dni);
+		if (psychologistExist == null)
 			return -1;
 		else {
-			if (!encoder.matches(password, patientExist.getUserLogin().getPassword()))
+			if (!encoder.matches(password, psychologistExist.getUserLogin().getPassword()))
 				return -2;
 			else
 				return 1;
