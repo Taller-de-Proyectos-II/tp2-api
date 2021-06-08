@@ -142,7 +142,7 @@ public class ScoreOperation {
 				color = "green";
 			}
 		} else {
-			final String uri = "http://localhost:8081/manifestations";
+			final String uri = "http://18.209.7.204:8081/manifestations";
 			chain = chain.substring(1, chain.length());
 			RestTemplate restTemplate = new RestTemplate();
 			String reqBody = "{ \"manifestations\": [" + chain + "] }";
@@ -166,7 +166,7 @@ public class ScoreOperation {
 		for (AlertAnswer alertAnswer : alertAnswers)
 			chain = chain + "," + alertAnswer.getScore();
 
-		final String uri = "http://localhost:8081/alerts";
+		final String uri = "http://18.209.7.204:8081/alerts";
 		chain = chain.substring(1, chain.length());
 		RestTemplate restTemplate = new RestTemplate();
 		String reqBody = "{ \"alerts\": [" + chain + "] }";
