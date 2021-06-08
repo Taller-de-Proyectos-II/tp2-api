@@ -29,7 +29,7 @@ public class TrainingController {
 		log.info("TrainingController: method trainingAlerts");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			final String uri = "https://app-tp2-ia.herokuapp.com/alerts/training";
+			final String uri = "http://localhost:8081/alerts/training";
 			String chain = trainingDTO.getJson();
 			RestTemplate restTemplate = new RestTemplate();
 			String reqBody = chain;
@@ -54,7 +54,7 @@ public class TrainingController {
 		log.info("TrainingController: method trainingManifestations");
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
-			final String uri = "https://app-tp2-ia.herokuapp.com/manifestations/training";
+			final String uri = "http://localhost:8081/manifestations/training";
 			String chain = trainingDTO.getJson();
 			RestTemplate restTemplate = new RestTemplate();
 			String reqBody = chain;
